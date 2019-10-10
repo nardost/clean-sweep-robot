@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Hashtable;
 
-public class ConfigManager {
+class ConfigManager {
 
     private static Hashtable<String, String> configurationTable = null;
 

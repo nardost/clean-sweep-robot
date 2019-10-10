@@ -1,5 +1,7 @@
 package com.team4.robot;
 
+import static com.team4.robot.State.*;
+
 public class Robot {
 
     private State state;
@@ -10,10 +12,11 @@ public class Robot {
     private static Robot robot = null;
 
     private Robot() throws RobotException {
-        setState(State.OFF);
+        setState(OFF);
         String locationTuple = ConfigManager.getConfiguration("initLocation");
         int x = Utilities.extractXOutOfTuple(locationTuple);
         int y = Utilities.extractYOutOfTuple(locationTuple);
+
         setLocation(new Location(x, y));
         setNavigator(new NavigatorAlpha());
     }
@@ -69,7 +72,7 @@ public class Robot {
 
     public void turnOn() {
         try {
-            setState(State.STANDBY);
+            setState(STANDBY);
         } catch (RobotException re) {
             re.printStackTrace();
         }
@@ -77,7 +80,7 @@ public class Robot {
 
     public void turnOff() {
         try {
-            setState(State.OFF);
+            setState(OFF);
         } catch (RobotException re) {
             re.printStackTrace();
         }
@@ -88,7 +91,7 @@ public class Robot {
     }
 
     public void traverse() throws RobotException {
-        if(getState() != State.OFF) {
+        if(getState() != OFF) {
             getNavigator().traverseFloor();
         } else {
             System.out.println("TURN ME ON!!!");

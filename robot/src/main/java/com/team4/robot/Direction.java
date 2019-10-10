@@ -1,6 +1,6 @@
 package com.team4.robot;
 
-public enum Direction {
+enum Direction {
     NORTH,
     SOUTH,
     EAST,

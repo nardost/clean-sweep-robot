@@ -1,6 +1,6 @@
 package com.team4.robot;
 
-public enum State {
+enum State {
     OFF,
     STANDBY,
     WORKING

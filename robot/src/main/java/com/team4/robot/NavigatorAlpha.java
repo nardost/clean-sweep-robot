@@ -1,8 +1,10 @@
 package com.team4.robot;
 
 import com.team4.sensor.SensorSimulator;
+import static com.team4.robot.Direction.*;
+import static com.team4.robot.State.*;
 
-public class NavigatorAlpha implements Navigator {
+class NavigatorAlpha implements Navigator {
 
     private static final int FLOOR_WIDTH = SensorSimulator.getFloorDimension()[0];
     private static final int FLOOR_LENGTH = SensorSimulator.getFloorDimension()[1];
@@ -10,9 +12,9 @@ public class NavigatorAlpha implements Navigator {
     @Override
     public void traverseFloor() throws RobotException {
         System.out.println("Robot in " + Robot.getInstance().getState() + " mode.");
-        System.out.println("Robot going into " + State.WORKING.toString() + " mode");
-        Robot.getInstance().setState(State.WORKING);
-        Direction next = Direction.EAST;
+        System.out.println("Robot going into " + WORKING.toString() + " mode");
+        Robot.getInstance().setState(WORKING);
+        Direction next = EAST;
         int x = Robot.getInstance().getLocation().getX();
         int y = Robot.getInstance().getLocation().getY();
         for(int j = 0; j < y; j++) {
@@ -25,7 +27,7 @@ public class NavigatorAlpha implements Navigator {
                 if(Robot.getInstance().getLocation().getY() == FLOOR_LENGTH - 1) {
                     break;
                 }
-                move(Direction.SOUTH);
+                move(SOUTH);
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
@@ -42,14 +44,14 @@ public class NavigatorAlpha implements Navigator {
                 if(Robot.getInstance().getLocation().getX() == FLOOR_WIDTH - 1) {
                     break;
                 }
-                move(Direction.EAST);
-                tabs = (next == Direction.EAST) ? tabs + "\t" : tabs;
-                next = (next == Direction.EAST) ? Direction.SOUTH : Direction.EAST;
+                move(EAST);
+                tabs = (next == EAST) ? tabs + "\t" : tabs;
+                next = (next == EAST) ? SOUTH : EAST;
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
         }
-        Robot.getInstance().setState(State.STANDBY);
+        Robot.getInstance().setState(STANDBY);
         System.out.println("\nRobot in " + Robot.getInstance().getState() + " mode.");
     }
 

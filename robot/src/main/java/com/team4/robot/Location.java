@@ -1,6 +1,6 @@
 package com.team4.robot;
 
-public class Location {
+class Location {
 
     private int x;
     private int y;
