@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<configuration>
+    <property name="initX" value="0" />
+    <property name="initY" value="4" />
+</configuration>
