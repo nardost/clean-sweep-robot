@@ -1,8 +1,8 @@
-package com.team4.robot;
+package com.team4.commons;
 
 public class RobotException extends Exception {
 
-    RobotException(String message) {
+    public RobotException(String message) {
         super(message);
     }
 

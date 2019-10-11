@@ -1,8 +1,11 @@
 package com.team4.robot;
 
+import com.team4.commons.Direction;
+import com.team4.commons.Location;
+import com.team4.commons.RobotException;
 import com.team4.sensor.SensorSimulator;
-import static com.team4.robot.Direction.*;
-import static com.team4.robot.State.*;
+import static com.team4.commons.Direction.*;
+import static com.team4.commons.State.*;
 
 class NavigatorAlpha implements Navigator {
 

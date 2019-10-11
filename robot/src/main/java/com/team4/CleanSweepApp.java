@@ -1,6 +1,6 @@
 package com.team4;
 
-import com.team4.robot.RobotException;
+import com.team4.commons.RobotException;
 import com.team4.robot.Robot;
 
 public class CleanSweepApp {

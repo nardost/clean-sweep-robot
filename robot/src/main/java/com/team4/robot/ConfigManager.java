@@ -1,5 +1,6 @@
 package com.team4.robot;
 
+import com.team4.commons.RobotException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -52,8 +53,8 @@ class ConfigManager {
     static String getConfiguration(String config) {
         try {
             initializeSystemConfiguration();
-        } catch(RobotException ese) {
-            System.out.println(ese.getMessage());
+        } catch(RobotException re) {
+            System.out.println(re.getMessage());
         }
         return configurationTable.get(config);
     }

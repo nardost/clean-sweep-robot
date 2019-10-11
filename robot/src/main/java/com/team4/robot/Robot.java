@@ -1,6 +1,11 @@
 package com.team4.robot;
 
-import static com.team4.robot.State.*;
+import com.team4.commons.Location;
+import com.team4.commons.RobotException;
+import com.team4.commons.State;
+import com.team4.commons.Utilities;
+
+import static com.team4.commons.State.*;
 
 public class Robot {
 

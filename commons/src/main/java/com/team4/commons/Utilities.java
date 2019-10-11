@@ -1,6 +1,6 @@
-package com.team4.robot;
+package com.team4.commons;
 
-class Utilities {
+public class Utilities {
     /**
      * Extracts the first entry of a tuple of form (x, y)
      * The parentheses and the comma are important. Otherwise, an
