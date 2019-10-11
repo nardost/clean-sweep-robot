@@ -9,13 +9,19 @@ public class Utilities {
      * @param tuple
      * @return int
      */
-    public static int extractXOutOfTuple(String tuple) {
+    public static int extractXOutOfTuple(String tuple) throws RobotException {
+        if(!isValidTuple(tuple)) {
+            throw new RobotException(tuple + " is not a valid pair of coordinates.");
+        }
         String parenthesisLeftRemoved = tuple.split("\\(")[1];
         String parenthesesRemoved = parenthesisLeftRemoved.split("\\)")[0];
         int x = Integer.parseInt(parenthesesRemoved.split(",")[0].replaceAll(" ", ""));
         return x;
     }
-    public static int extractYOutOfTuple(String tuple) {
+    public static int extractYOutOfTuple(String tuple) throws RobotException {
+        if(!isValidTuple(tuple)) {
+            throw new RobotException(tuple + " is not a valid pair of coordinates.");
+        }
         String parenthesisLeftRemoved = tuple.split("\\(")[1];
         String parenthesesRemoved = parenthesisLeftRemoved.split("\\)")[0];
         int y = Integer.parseInt(parenthesesRemoved.split(",")[1].replaceAll(" ", ""));

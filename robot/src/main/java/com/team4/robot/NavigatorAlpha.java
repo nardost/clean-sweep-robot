@@ -9,11 +9,10 @@ import static com.team4.commons.State.*;
 
 class NavigatorAlpha implements Navigator {
 
-    private static final int FLOOR_WIDTH = SensorSimulator.getFloorDimension()[0];
-    private static final int FLOOR_LENGTH = SensorSimulator.getFloorDimension()[1];
-
     @Override
     public void traverseFloor() throws RobotException {
+        final int FLOOR_WIDTH = SensorSimulator.getInstance().getFloorDimension()[0];
+        final int FLOOR_LENGTH = SensorSimulator.getInstance().getFloorDimension()[1];
         System.out.println("Robot in " + Robot.getInstance().getState() + " mode.");
         System.out.println("Robot going into " + WORKING.toString() + " mode");
         Robot.getInstance().setState(WORKING);
@@ -59,6 +58,8 @@ class NavigatorAlpha implements Navigator {
     }
 
     void move(Direction direction) throws RobotException {
+        final int FLOOR_WIDTH = SensorSimulator.getInstance().getFloorDimension()[0];
+        final int FLOOR_LENGTH = SensorSimulator.getInstance().getFloorDimension()[1];
 
         int currentX = Robot.getInstance().getLocation().getX();
         int currentY = Robot.getInstance().getLocation().getY();

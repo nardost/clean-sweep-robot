@@ -1,6 +1,5 @@
-package com.team4.robot;
+package com.team4.commons;
 
-import com.team4.commons.RobotException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -12,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Hashtable;
 
-class ConfigManager {
+public class ConfigManager {
 
     private static Hashtable<String, String> configurationTable = null;
 
@@ -40,7 +39,7 @@ class ConfigManager {
         }
     }
 
-    static void initializeSystemConfiguration() throws RobotException {
+    public static void initializeSystemConfiguration() throws RobotException {
         if(configurationTable == null) {
             synchronized (ConfigManager.class) {
                 if(configurationTable == null) {
@@ -50,7 +49,7 @@ class ConfigManager {
         }
     }
 
-    static String getConfiguration(String config) {
+    public static String getConfiguration(String config) {
         try {
             initializeSystemConfiguration();
         } catch(RobotException re) {

@@ -1,9 +1,6 @@
 package com.team4.robot;
 
-import com.team4.commons.Location;
-import com.team4.commons.RobotException;
-import com.team4.commons.State;
-import com.team4.commons.Utilities;
+import com.team4.commons.*;
 
 import static com.team4.commons.State.*;
 
@@ -15,7 +12,6 @@ public class Robot {
     private Navigator navigator;
 
     private static Robot robot = null;
-
     private Robot() throws RobotException {
         setState(OFF);
         String locationTuple = ConfigManager.getConfiguration("initLocation");
