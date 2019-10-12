@@ -76,6 +76,7 @@ public class RobotCleanSweep implements Robot {
     public void turnOn() throws RobotException {
         setState(STANDBY);
         //Robot waits for cleaning schedule.
+        System.out.println("Waiting for scheduled cleaning time...");
         try {
             Thread.sleep(5000L);
         } catch (InterruptedException ie) {
