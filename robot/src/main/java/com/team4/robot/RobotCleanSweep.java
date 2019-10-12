@@ -104,7 +104,7 @@ public class RobotCleanSweep implements Robot {
          *          if(there is undone tile saved) {
          *              get saved undone tile and make it my next tile
          *          } else {
-         *              ask navigator what my next tile is
+         *              decide where to go next <- the traversal algorithm picks which Tile is next.
          *          }
          *          go to next tile
          *          ask sensor simulator information about current tile and save info
