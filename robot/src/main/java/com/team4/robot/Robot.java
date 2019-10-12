@@ -10,15 +10,16 @@ public class Robot {
     private Location location;
 
     private Navigator navigator;
+    private VacuumCleaner cleaner;
+    private PowerManager powerManager;
 
     private static Robot robot = null;
     private Robot() throws RobotException {
         setState(OFF);
         String locationTuple = ConfigManager.getConfiguration("initLocation");
-        int x = Utilities.extractXOutOfTuple(locationTuple);
-        int y = Utilities.extractYOutOfTuple(locationTuple);
-
-        setLocation(new Location(x, y));
+        int x = Utilities.xFromTupleString(locationTuple);
+        int y = Utilities.yFromTupleString(locationTuple);
+        setLocation(LocationFactory.createLocation(x, y));
         setNavigator(new NavigatorAlpha());
     }
 
@@ -88,7 +89,7 @@ public class Robot {
     }
 
     void gotoChargingStation() throws RobotException {
-        setLocation(new Location(0, 0));
+        setLocation(LocationFactory.createLocation(0, 0));
     }
 
     public void traverse() throws RobotException {

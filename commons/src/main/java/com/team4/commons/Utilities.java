@@ -9,7 +9,7 @@ public class Utilities {
      * @param tuple
      * @return int
      */
-    public static int extractXOutOfTuple(String tuple) throws RobotException {
+    public static int xFromTupleString(String tuple) throws RobotException {
         if(!isValidTuple(tuple)) {
             throw new RobotException(tuple + " is not a valid pair of coordinates.");
         }
@@ -18,7 +18,7 @@ public class Utilities {
         int x = Integer.parseInt(parenthesesRemoved.split(",")[0].replaceAll(" ", ""));
         return x;
     }
-    public static int extractYOutOfTuple(String tuple) throws RobotException {
+    public static int yFromTupleString(String tuple) throws RobotException {
         if(!isValidTuple(tuple)) {
             throw new RobotException(tuple + " is not a valid pair of coordinates.");
         }
@@ -35,5 +35,24 @@ public class Utilities {
      */
     public static boolean isValidTuple(String tuple) {
         return true;
+    }
+
+    /**
+     * Converts a pair of comma separated non-negative integers
+     * into a string.
+     * @param x
+     * @param y
+     * @return "(x,y)"
+     */
+    public static String tupleToString(int x, int y) throws RobotException {
+        if(x < 0 || y < 0) {
+            throw new RobotException("Negative coordinates not allowed in tuple to string conversion.");
+        }
+        StringBuilder sb = new StringBuilder("(");
+        sb.append(x);
+        sb.append(",");
+        sb.append(y);
+        sb.append(")");
+        return sb.toString();
     }
 }

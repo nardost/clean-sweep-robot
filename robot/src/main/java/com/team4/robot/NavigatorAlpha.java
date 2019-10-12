@@ -2,6 +2,7 @@ package com.team4.robot;
 
 import com.team4.commons.Direction;
 import com.team4.commons.Location;
+import com.team4.commons.LocationFactory;
 import com.team4.commons.RobotException;
 import com.team4.sensor.SensorSimulator;
 import static com.team4.commons.Direction.*;
@@ -68,25 +69,25 @@ class NavigatorAlpha implements Navigator {
                 if(currentX == FLOOR_WIDTH - 1) {
                     return;
                 }
-                Robot.getInstance().setLocation(new Location(currentX + 1, currentY));
+                Robot.getInstance().setLocation(LocationFactory.createLocation(currentX + 1, currentY));
                 return;
             case WEST:
                 if(currentX == 0) {
                     return;
                 }
-                Robot.getInstance().setLocation(new Location(currentX - 1, currentY));
+                Robot.getInstance().setLocation(LocationFactory.createLocation(currentX - 1, currentY));
                 return;
             case NORTH:
                 if(currentY == 0) {
                     return;
                 }
-                Robot.getInstance().setLocation(new Location(currentX, currentY - 1));
+                Robot.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY - 1));
                 return;
             case SOUTH:
                 if(currentX == FLOOR_LENGTH) {
                     return;
                 }
-                Robot.getInstance().setLocation(new Location(currentX, currentY + 1));
+                Robot.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY + 1));
                 return;
         }
     }

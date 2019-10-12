@@ -4,6 +4,7 @@ import static com.team4.commons.FloorType.*;
 
 import com.team4.commons.ConfigManager;
 import com.team4.commons.Location;
+import com.team4.commons.LocationFactory;
 import com.team4.commons.RobotException;
 
 import java.util.HashMap;
@@ -53,7 +54,7 @@ class Floor {
     private void buildCornerTiles(int W, int L) throws RobotException  {
         Tile t = null;
         Location l = null;
-        l = new Location(0,0);
+        l = LocationFactory.createLocation(0,0);
         t = TileFactory.createTile(l);
         t.setFloorType(BARE);
         t.setClean(true);
@@ -62,7 +63,7 @@ class Floor {
         t.setSouthOpen(true);
         t.setEastOpen(true);
         getTiles().put(l, t);
-        l = new Location(W - 1,0);
+        l = LocationFactory.createLocation(W - 1,0);
         t = TileFactory.createTile(l);
         t.setFloorType(BARE);
         t.setClean(true);
@@ -71,7 +72,7 @@ class Floor {
         t.setSouthOpen(true);
         t.setEastOpen(false);
         getTiles().put(l, t);
-        l = new Location(0,L - 1);
+        l = LocationFactory.createLocation(0,L - 1);
         t = TileFactory.createTile(l);
         t.setFloorType(BARE);
         t.setClean(true);
@@ -80,7 +81,7 @@ class Floor {
         t.setSouthOpen(false);
         t.setEastOpen(true);
         getTiles().put(l, t);
-        l = new Location(W - 1,L - 1);
+        l = LocationFactory.createLocation(W - 1,L - 1);
         t = TileFactory.createTile(l);
         t.setFloorType(BARE);
         t.setClean(true);
@@ -95,7 +96,7 @@ class Floor {
         for(int i = 1; i <= W - 2; i++) {
             Tile t = null;
             Location l = null;
-            l = new Location(i,0);
+            l = LocationFactory.createLocation(i,0);
             t = TileFactory.createTile(l);
             t.setFloorType(BARE);
             t.setClean(true);
@@ -111,7 +112,7 @@ class Floor {
         for(int i = 1; i <= W - 2; i++) {
             Tile t = null;
             Location l = null;
-            l = new Location(i,L - 1);
+            l = LocationFactory.createLocation(i,L - 1);
             t = TileFactory.createTile(l);
             t.setFloorType(BARE);
             t.setClean(true);
@@ -127,7 +128,7 @@ class Floor {
         for(int j = 1; j <= L - 2; j++) {
             Tile t = null;
             Location l = null;
-            l = new Location(0, j);
+            l = LocationFactory.createLocation(0, j);
             t = TileFactory.createTile(l);
             t.setFloorType(BARE);
             t.setClean(true);
@@ -143,7 +144,7 @@ class Floor {
         for(int j = 1; j <= L - 2; j++) {
             Tile t = null;
             Location l = null;
-            l = new Location(W - 1, j);
+            l = LocationFactory.createLocation(W - 1, j);
             t = TileFactory.createTile(l);
             t.setFloorType(BARE);
             t.setClean(true);
@@ -160,7 +161,7 @@ class Floor {
             for(int j = 1; j <= L - 2; j++) {
                 Tile t = null;
                 Location l = null;
-                l = new Location(i, j);
+                l = LocationFactory.createLocation(i, j);
                 t = TileFactory.createTile(l);
                 t.setFloorType(BARE);
                 t.setClean(true);

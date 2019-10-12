@@ -10,7 +10,7 @@ public class Location {
     private Location() {
     }
 
-    public Location(int x, int y) throws RobotException {
+    Location(int x, int y) throws RobotException {
         setX(x);
         setY(y);
     }

@@ -5,7 +5,7 @@ import com.team4.commons.Location;
 import java.util.HashMap;
 
 /**
- * This makes sure there is only one Tile object per location (sort of).
+ * This makes sure there is only one Tile object per unique location.
  * NOTE: This is not a perfect flyweight pattern implementation.
  */
 class TileFactory {
