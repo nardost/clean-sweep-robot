@@ -32,7 +32,7 @@ public class LocationFactoryTest {
     }
 
     @Test
-    public void location_factory_does_creates_only_one_location_object_per_unique_coordinates() {
+    public void location_factory_creates_only_one_location_object_per_unique_coordinates() {
         assertEquals(first, second);
     }
 }
