@@ -10,11 +10,11 @@ public class RobotCleanSweep implements Robot {
     private Location location;
 
     private Navigator navigator;
-    private VacuumCleaner cleaner;
+    private VacuumCleaner vacuumCleaner;
     private PowerManager powerManager;
 
     private static RobotCleanSweep robotCleanSweep = null;
-    private RobotCleanSweep() throws RobotException {
+    private RobotCleanSweep() {
         setState(OFF);
         String locationTuple = ConfigManager.getConfiguration("initLocation");
         int x = Utilities.xFromTupleString(locationTuple);
@@ -28,7 +28,7 @@ public class RobotCleanSweep implements Robot {
      *
      * @return Robot
      */
-    public static RobotCleanSweep getInstance() throws RobotException {
+    public static RobotCleanSweep getInstance() {
         if(robotCleanSweep == null) {
             synchronized (RobotCleanSweep.class) {
                 if(robotCleanSweep == null) {
@@ -43,7 +43,7 @@ public class RobotCleanSweep implements Robot {
         return state;
     }
 
-    void setState(State state) throws RobotException {
+    void setState(State state) {
         if(state == null) {
             throw new RobotException("Null state is not allowed.");
         }
@@ -54,7 +54,7 @@ public class RobotCleanSweep implements Robot {
         return location;
     }
 
-    void setLocation(Location location) throws RobotException {
+    void setLocation(Location location) {
         if(location == null) {
             throw new RobotException("Null location object not allowed.");
         }
@@ -65,7 +65,7 @@ public class RobotCleanSweep implements Robot {
         return navigator;
     }
 
-    void setNavigator(Navigator navigator) throws RobotException {
+    void setNavigator(Navigator navigator) {
         if(navigator == null) {
             throw new RobotException("Null navigator object not allowed.");
         }
@@ -73,7 +73,7 @@ public class RobotCleanSweep implements Robot {
     }
 
     @Override
-    public void turnOn() throws RobotException {
+    public void turnOn() {
         setState(STANDBY);
         //Robot waits for cleaning schedule.
         System.out.println("Waiting for scheduled cleaning time...");
@@ -92,7 +92,13 @@ public class RobotCleanSweep implements Robot {
     }
 
     private void work() {
-        /** while(mode is STANDBY && there are tiles not yet visited) {
+        /** //check if there is enough battery to make it to the nearest charging station
+         *  //if(there is enough battery to make it to the nearest charging station) {
+         *  //    continue working... ?
+         *  //} else {
+         *  //    set state low battery... etc..
+         *  //}
+         *  while(mode is STANDBY && there are tiles not yet visited) {
          *      if(dirt tank is full) {
          *          save current tile as the last tile not done
          *          change mode to FULL_TANK
@@ -125,14 +131,10 @@ public class RobotCleanSweep implements Robot {
          *      }
          *  }
         */
-        try {
-            if (getState() != OFF) {
-                getNavigator().traverseFloor();
-            } else {
-                System.out.println("TURN ME ON!!!");
-            }
-        } catch (RobotException re) {
-            re.printStackTrace();
+        if (getState() != OFF) {
+            getNavigator().traverseFloor();
+        } else {
+            System.out.println("TURN ME ON!!!");
         }
     }
 }

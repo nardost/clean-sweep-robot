@@ -1,13 +1,11 @@
 package com.team4.sensor;
 
-import com.team4.commons.RobotException;
-
 public class SensorSimulator {
 
     private static Floor floor;
 
     private static SensorSimulator simulator = null;
-    private SensorSimulator() throws RobotException {
+    private SensorSimulator() {
         this.floor = Floor.getInstance();
     }
 
@@ -16,7 +14,7 @@ public class SensorSimulator {
      *
      * @return SensorSimulator
      */
-    public static SensorSimulator getInstance() throws RobotException {
+    public static SensorSimulator getInstance() {
         if(simulator == null) {
             synchronized (SensorSimulator.class) {
                 if(simulator == null) {

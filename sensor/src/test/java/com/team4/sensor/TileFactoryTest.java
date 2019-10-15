@@ -27,7 +27,7 @@ public class TileFactoryTest {
     }
 
     @Parameters(name = "{index}")
-    public static Collection<Object[]> data() throws RobotException {
+    public static Collection<Object[]> data() {
         Location [] locations = new Location[] {
                 LocationFactory.createLocation(0, 0),
                 LocationFactory.createLocation(10, 0),

@@ -5,7 +5,6 @@ import static com.team4.commons.FloorType.*;
 import com.team4.commons.ConfigManager;
 import com.team4.commons.Location;
 import com.team4.commons.LocationFactory;
-import com.team4.commons.RobotException;
 
 import java.util.HashMap;
 
@@ -16,13 +15,13 @@ class Floor {
     private HashMap<Location, Tile> tiles = new HashMap<>();
 
     private static Floor theFloor = null;
-    private Floor() throws RobotException {
+    private Floor() {
         WIDTH = Integer.parseInt(ConfigManager.getConfiguration("floorWidth"));
         LENGTH = Integer.parseInt(ConfigManager.getConfiguration("floorLength"));
         buildFloorPlan();
     }
 
-    static Floor getInstance() throws RobotException {
+    static Floor getInstance() {
         if(theFloor == null) {
             synchronized (Floor.class) {
                 if(theFloor == null) {
@@ -41,7 +40,7 @@ class Floor {
         return getTiles().get(location);
     }
 
-    private void buildFloorPlan() throws RobotException {
+    private void buildFloorPlan() {
         final int W = WIDTH;
         final int L = LENGTH;
         buildCornerTiles(W, L);
@@ -51,7 +50,7 @@ class Floor {
         buildEastWall(W, L);
     }
 
-    private void buildCornerTiles(int W, int L) throws RobotException  {
+    private void buildCornerTiles(int W, int L)  {
         Tile t = null;
         Location l = null;
         l = LocationFactory.createLocation(0,0);
@@ -92,7 +91,7 @@ class Floor {
         getTiles().put(l, t);
     }
 
-    private void buildNorthWall(int W, int L) throws RobotException {
+    private void buildNorthWall(int W, int L) {
         for(int i = 1; i <= W - 2; i++) {
             Tile t = null;
             Location l = null;
@@ -108,7 +107,7 @@ class Floor {
         }
     }
 
-    private void buildSouthWall(int W, int L) throws RobotException {
+    private void buildSouthWall(int W, int L) {
         for(int i = 1; i <= W - 2; i++) {
             Tile t = null;
             Location l = null;
@@ -124,7 +123,7 @@ class Floor {
         }
     }
 
-    private void buildWestWall(int W, int L) throws RobotException {
+    private void buildWestWall(int W, int L) {
         for(int j = 1; j <= L - 2; j++) {
             Tile t = null;
             Location l = null;
@@ -140,7 +139,7 @@ class Floor {
         }
     }
 
-    private void buildEastWall(int W, int L) throws RobotException {
+    private void buildEastWall(int W, int L) {
         for(int j = 1; j <= L - 2; j++) {
             Tile t = null;
             Location l = null;
@@ -156,7 +155,7 @@ class Floor {
         }
     }
 
-    private void buildInteriorTiles(int W, int L) throws RobotException {
+    private void buildInteriorTiles(int W, int L) {
         for(int i = 1; i <= W - 2; i++) {
             for(int j = 1; j <= L - 2; j++) {
                 Tile t = null;

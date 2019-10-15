@@ -24,7 +24,7 @@ public class LocationFactoryTest {
     }
 
     @Parameters(name = "{index}")
-    public static Collection<Object[]> data() throws RobotException {
+    public static Collection<Object[]> data() {
         return (ArrayList<Object[]>) Stream.of(new Object[][] {
                 { LocationFactory.createLocation(0, 0), LocationFactory.createLocation(0, 0) },
                 { LocationFactory.createLocation(1, 9), LocationFactory.createLocation(1, 9) }

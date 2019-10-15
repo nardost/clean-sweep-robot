@@ -2,7 +2,6 @@ package com.team4.robot;
 
 import com.team4.commons.Direction;
 import com.team4.commons.LocationFactory;
-import com.team4.commons.RobotException;
 import com.team4.sensor.SensorSimulator;
 import static com.team4.commons.Direction.*;
 import static com.team4.commons.State.*;
@@ -10,7 +9,7 @@ import static com.team4.commons.State.*;
 class NavigatorAlpha implements Navigator {
 
     @Override
-    public void traverseFloor() throws RobotException {
+    public void traverseFloor() {
         final int FLOOR_WIDTH = SensorSimulator.getInstance().getFloorDimension()[0];
         final int FLOOR_LENGTH = SensorSimulator.getInstance().getFloorDimension()[1];
         System.out.println("Robot in " + RobotCleanSweep.getInstance().getState() + " mode.");
@@ -57,7 +56,7 @@ class NavigatorAlpha implements Navigator {
         System.out.println("\nRobot in " + RobotCleanSweep.getInstance().getState() + " mode.");
     }
 
-    void move(Direction direction) throws RobotException {
+    void move(Direction direction) {
         final int FLOOR_WIDTH = SensorSimulator.getInstance().getFloorDimension()[0];
         final int FLOOR_LENGTH = SensorSimulator.getInstance().getFloorDimension()[1];
 

@@ -50,7 +50,7 @@ class Tile {
         return isClean;
     }
 
-    void setFloorType(FloorType floorType) throws RobotException {
+    void setFloorType(FloorType floorType) {
         if(floorType == null) {
             throw new RobotException("Null floor type not allowed in Tiles.");
         }

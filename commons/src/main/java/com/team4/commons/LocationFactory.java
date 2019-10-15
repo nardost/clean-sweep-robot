@@ -16,7 +16,7 @@ public class LocationFactory {
         return existingLocations;
     }
 
-    public static Location createLocation(int x, int y) throws RobotException {
+    public static Location createLocation(int x, int y) {
         if(x < 0 || y < 0) {
             throw new RobotException("Negative coordinates not allowed in location creation.");
         }

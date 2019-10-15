@@ -10,7 +10,7 @@ public class Location {
     private Location() {
     }
 
-    Location(int x, int y) throws RobotException {
+    Location(int x, int y) {
         setX(x);
         setY(y);
     }
@@ -19,7 +19,7 @@ public class Location {
         return x;
     }
 
-    public void setX(int x) throws RobotException {
+    public void setX(int x) {
         if( x < 0 ) {
             throw new RobotException("Negative coordinates are not allowed in locations.");
         }
@@ -30,7 +30,7 @@ public class Location {
         return y;
     }
 
-    public void setY(int y) throws RobotException {
+    public void setY(int y) {
         if( y < 0) {
             throw new RobotException("Negative coordinates are not allowed in locations.");
         }

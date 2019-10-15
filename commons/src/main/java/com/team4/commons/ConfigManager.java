@@ -15,7 +15,7 @@ public class ConfigManager {
 
     private static Hashtable<String, String> configurationTable = null;
 
-    private ConfigManager() throws RobotException {
+    private ConfigManager() {
         configurationTable = new Hashtable<>();
         String configurationFile = "configuration.xml";
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(configurationFile);
@@ -39,7 +39,7 @@ public class ConfigManager {
         }
     }
 
-    public static void initializeSystemConfiguration() throws RobotException {
+    public static void initializeSystemConfiguration() {
         if(configurationTable == null) {
             synchronized (ConfigManager.class) {
                 if(configurationTable == null) {
@@ -50,11 +50,7 @@ public class ConfigManager {
     }
 
     public static String getConfiguration(String config) {
-        try {
-            initializeSystemConfiguration();
-        } catch(RobotException re) {
-            System.out.println(re.getMessage());
-        }
+        initializeSystemConfiguration();
         return configurationTable.get(config);
     }
 
