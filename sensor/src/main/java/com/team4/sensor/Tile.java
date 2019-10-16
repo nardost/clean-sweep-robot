@@ -9,6 +9,7 @@ import static com.team4.commons.FloorType.*;
 class Tile {
     private Location location;
     private FloorType floorType;
+    private boolean isChargingStation;
     private boolean isNorthOpen;
     private boolean isSouthOpen;
     private boolean isEastOpen;
@@ -28,6 +29,10 @@ class Tile {
 
     FloorType getFloorType() {
         return floorType;
+    }
+
+    boolean isChargingStation() {
+        return isChargingStation;
     }
 
     boolean isNorthOpen() {
@@ -55,6 +60,10 @@ class Tile {
             throw new RobotException("Null floor type not allowed in Tiles.");
         }
         this.floorType = floorType;
+    }
+
+    void setChargingStation(boolean chargingStation) {
+        isChargingStation = chargingStation;
     }
 
     void setNorthOpen(boolean northOpen) {

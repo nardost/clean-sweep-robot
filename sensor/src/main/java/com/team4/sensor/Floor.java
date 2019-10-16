@@ -48,6 +48,7 @@ class Floor {
         buildSouthWall(W, L);
         buildWestWall(W, L);
         buildEastWall(W, L);
+        buildInteriorTiles(W, L);
     }
 
     private void buildCornerTiles(int W, int L)  {
