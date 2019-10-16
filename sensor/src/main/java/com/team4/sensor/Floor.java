@@ -131,9 +131,9 @@ class Floor {
             t = TileFactory.createTile(l);
             t.setFloorType(BARE);
             t.setClean(true);
-            t.setWestOpen(true);
+            t.setWestOpen(false);
             t.setNorthOpen(true);
-            t.setSouthOpen(false);
+            t.setSouthOpen(true);
             t.setEastOpen(true);
             getTiles().put(l, t);
         }
