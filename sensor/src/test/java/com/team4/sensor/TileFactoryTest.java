@@ -28,17 +28,11 @@ public class TileFactoryTest {
 
     @Parameters(name = "{index}")
     public static Collection<Object[]> data() {
-        Location [] locations = new Location[] {
-                LocationFactory.createLocation(0, 0),
-                LocationFactory.createLocation(10, 0),
-                LocationFactory.createLocation(0, 10),
-                LocationFactory.createLocation(12, 21)
-        };
         return (ArrayList<Object[]>) Stream.of(new Object[][] {
-                { TileFactory.createTile(locations[0]), TileFactory.createTile(locations[0]) },
-                { TileFactory.createTile(locations[1]), TileFactory.createTile(locations[1]) },
-                { TileFactory.createTile(locations[2]), TileFactory.createTile(locations[2]) },
-                { TileFactory.createTile(locations[3]), TileFactory.createTile(locations[3]) },
+                { TileFactory.createTile(LocationFactory.createLocation(0, 0)), TileFactory.createTile(LocationFactory.createLocation(0, 0)) },
+                { TileFactory.createTile(LocationFactory.createLocation(10, 0)), TileFactory.createTile(LocationFactory.createLocation(10, 0)) },
+                { TileFactory.createTile(LocationFactory.createLocation(0, 10)), TileFactory.createTile(LocationFactory.createLocation(0, 10)) },
+                { TileFactory.createTile(LocationFactory.createLocation(12, 21)), TileFactory.createTile(LocationFactory.createLocation(12, 21)) },
         }).collect(Collectors.toList());
     }
 

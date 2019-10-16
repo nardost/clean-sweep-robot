@@ -2,6 +2,8 @@ package com.team4.robot;
 
 import com.team4.commons.*;
 
+import java.util.HashMap;
+
 import static com.team4.commons.State.*;
 
 public class RobotCleanSweep implements Robot {
@@ -12,6 +14,8 @@ public class RobotCleanSweep implements Robot {
     private Navigator navigator;
     private VacuumCleaner vacuumCleaner;
     private PowerManager powerManager;
+
+    private HashMap<Location, DirtUnits> doneTiles = new HashMap<>();
 
     private static RobotCleanSweep robotCleanSweep = null;
     private RobotCleanSweep() {
