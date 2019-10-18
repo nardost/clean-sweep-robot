@@ -1,6 +1,7 @@
 package com.team4.robot;
 
 import com.team4.commons.Direction;
+
 import com.team4.commons.LocationFactory;
 import com.team4.sensor.SensorSimulator;
 import static com.team4.commons.Direction.*;
