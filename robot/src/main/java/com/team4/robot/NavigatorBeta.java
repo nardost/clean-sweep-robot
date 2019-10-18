@@ -21,7 +21,6 @@ public class NavigatorBeta implements Navigator{
 		final int FLOOR_WIDTH = SensorSimulator.getInstance().getFloorDimension()[0];
         final int FLOOR_LENGTH = SensorSimulator.getInstance().getFloorDimension()[1];
 	
-		RobotCleanSweep.getInstance().setState(WORKING);
         int x = RobotCleanSweep.getInstance().getLocation().getX();
         int y = RobotCleanSweep.getInstance().getLocation().getY();
         System.out.println("("+x+", "+y+")");
