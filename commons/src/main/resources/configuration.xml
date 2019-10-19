@@ -5,7 +5,7 @@
     <property name="batteryLife" value="250" />
     <property name="dirtCapacity" value="50" />
     <property name="chargingStationDetectionRadius" value="2" />
-    <property name="navigator" value="alpha" />
+    <property name="navigator" value="beta" />
 
     <!-- Sensor Simulator Configuration Parameters -->
     <property name="floorWidth" value="12" />

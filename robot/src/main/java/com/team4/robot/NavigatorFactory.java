@@ -12,8 +12,10 @@ public class NavigatorFactory {
             case "null":
                 return new NavigatorNull();
             case "alpha":
-            default:
                 return new NavigatorAlpha();
+            case "beta":
+            default:
+                return new NavigatorBeta();
         }
     }
 
