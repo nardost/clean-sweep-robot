@@ -75,7 +75,9 @@ public class RobotCleanSweep implements Robot {
         this.visited.put(key, location);
     }
     
-    boolean visitedLocation(int x, int y) {
+    boolean visitedLocation(Location location) {
+        int x = location.getX();
+        int y = location.getY();
     	String key = Utilities.tupleToString(x,y);
     	return this.visited.containsKey(key);
     }
@@ -196,14 +198,11 @@ public class RobotCleanSweep implements Robot {
     	   return true;
     	   
        case SOUTH:
-    	   
     	   if(currentY == FLOOR_LENGTH - 1) {
     		   System.out.println("WALL!");
     		   return false;
     	   }
     	   RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY + 1));
-    	   
-    	  
     	   return true;
     	 
        case WEST:
@@ -212,7 +211,6 @@ public class RobotCleanSweep implements Robot {
     		  return false;
     	  }
     	  RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX - 1, currentY));
-
     	  return true;
        
        case EAST:

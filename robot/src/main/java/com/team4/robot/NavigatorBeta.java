@@ -1,14 +1,9 @@
 package com.team4.robot;
 
-
-
-
 import com.team4.commons.Direction;
-
 import com.team4.commons.LocationFactory;
 import com.team4.sensor.SensorSimulator;
 import static com.team4.commons.Direction.*;
-import static com.team4.commons.State.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,32 +25,28 @@ public class NavigatorBeta implements Navigator{
         
         ArrayList<Direction> dirList = new ArrayList<Direction>(Arrays.asList(directions));
         
-        if(dirList.contains(SOUTH) && !(RobotCleanSweep.getInstance().visitedLocation(x,y+1))) {
+        if(dirList.contains(SOUTH) && !(RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x,y+1)))) {
         	if(!(dirList.contains(WEST))){
         		return SOUTH;
         	}
-        	if((dirList.contains(WEST)) && (RobotCleanSweep.getInstance().visitedLocation(x-1,y))) {
+        	if((dirList.contains(WEST)) && (RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x-1,y)))) {
         		return SOUTH;
         	}	
         }
         
-        if(dirList.contains(EAST) && !(RobotCleanSweep.getInstance().visitedLocation(x+1,y))) {
+        if(dirList.contains(EAST) && !(RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x+1,y)))) {
         	return EAST;
         }
         
-        if(dirList.contains(NORTH) && !(RobotCleanSweep.getInstance().visitedLocation(x,y-1))) {
+        if(dirList.contains(NORTH) && !(RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x,y-1)))) {
         	return NORTH;
         }
         
-        if(dirList.contains(WEST) && !(RobotCleanSweep.getInstance().visitedLocation(x-1,y))) {
+        if(dirList.contains(WEST) && !(RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x-1,y)))) {
         	return WEST;
         }
         return null;
-        
-
-		
 	}
-	
 }
 
 
