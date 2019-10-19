@@ -23,7 +23,6 @@ public class NavigatorBeta implements Navigator{
 	
         int x = RobotCleanSweep.getInstance().getLocation().getX();
         int y = RobotCleanSweep.getInstance().getLocation().getY();
-        System.out.println("("+x+", "+y+")");
         
         //SOUTH --> EAST --> NORTH --> WEST
         //only if-statements because it is in order of priority
@@ -37,8 +36,7 @@ public class NavigatorBeta implements Navigator{
         	}
         	if((dirList.contains(WEST)) && (RobotCleanSweep.getInstance().visitedLocation(x-1,y))) {
         		return SOUTH;
-        	}
-        	
+        	}	
         }
         
         if(dirList.contains(EAST) && !(RobotCleanSweep.getInstance().visitedLocation(x+1,y))) {
@@ -52,7 +50,6 @@ public class NavigatorBeta implements Navigator{
         if(dirList.contains(WEST) && !(RobotCleanSweep.getInstance().visitedLocation(x-1,y))) {
         	return WEST;
         }
-        
         return null;
         
 
