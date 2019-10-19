@@ -24,7 +24,7 @@ public class RobotCleanSweep implements Robot {
         int x = Utilities.xFromTupleString(locationTuple);
         int y = Utilities.yFromTupleString(locationTuple);
         setLocation(LocationFactory.createLocation(x, y));
-        setNavigator(new NavigatorAlpha());
+        setNavigator(NavigatorFactory.createNavigator());
     }
 
     /**
