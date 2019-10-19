@@ -8,7 +8,5 @@ public class CleanSweepApp {
         Robot cleanSweepRobot = RobotCleanSweep.getInstance();
         cleanSweepRobot.turnOn();
         cleanSweepRobot.turnOff();
-        
-        
     }
 }
