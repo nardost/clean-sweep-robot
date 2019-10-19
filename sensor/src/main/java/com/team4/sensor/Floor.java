@@ -10,14 +10,13 @@ import java.util.HashMap;
 
 class Floor {
 
-    final int WIDTH;
-    final int LENGTH;
+    static final int WIDTH = Integer.parseInt(ConfigManager.getConfiguration("floorWidth"));
+    static final int LENGTH = Integer.parseInt(ConfigManager.getConfiguration("floorLength"));
+
     private HashMap<Location, Tile> tiles = new HashMap<>();
 
     private static Floor theFloor = null;
     private Floor() {
-        WIDTH = Integer.parseInt(ConfigManager.getConfiguration("floorWidth"));
-        LENGTH = Integer.parseInt(ConfigManager.getConfiguration("floorLength"));
         buildFloorPlan();
     }
 

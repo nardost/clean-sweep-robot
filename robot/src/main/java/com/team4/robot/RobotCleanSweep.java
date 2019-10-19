@@ -2,6 +2,8 @@ package com.team4.robot;
 
 import com.team4.commons.*;
 
+import java.util.HashMap;
+
 import static com.team4.commons.State.*;
 
 public class RobotCleanSweep implements Robot {
@@ -13,6 +15,8 @@ public class RobotCleanSweep implements Robot {
     private VacuumCleaner vacuumCleaner;
     private PowerManager powerManager;
 
+    private HashMap<Location, DirtUnits> doneTiles = new HashMap<>();
+
     private static RobotCleanSweep robotCleanSweep = null;
     private RobotCleanSweep() {
         setState(OFF);
@@ -20,7 +24,7 @@ public class RobotCleanSweep implements Robot {
         int x = Utilities.xFromTupleString(locationTuple);
         int y = Utilities.yFromTupleString(locationTuple);
         setLocation(LocationFactory.createLocation(x, y));
-        setNavigator(new NavigatorAlpha());
+        setNavigator(NavigatorFactory.createNavigator());
     }
 
     /**

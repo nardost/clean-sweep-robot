@@ -57,6 +57,7 @@ public class SensorSimulator implements Sensor {
         }
         dao.openPassages = Arrays.copyOf(directions, index);
         dao.chargingStations = getNeighborsWithinChargingStationDetectionRadius(tile.getLocation());
+        dao.isClean = tile.isClean();
         return dao;
     }
 
@@ -92,8 +93,8 @@ public class SensorSimulator implements Sensor {
         }
     }
     private Location [] neighborsWithinRadiusOf1(Location location) {
-        final int WIDTH = 1000; //get WIDTH of Wall
-        final int LENGTH = 1000; //get LENGTH of Wall
+        final int WIDTH = Integer.parseInt(ConfigManager.getConfiguration("floorWidth"));
+        final int LENGTH = Integer.parseInt(ConfigManager.getConfiguration("floorLength"));
         final int NUMBER_OF_NEIGHBORS_WITHIN_RADIUS = getNumberOfNeighborsWithinRadius(1);
         Location [] neighbors = new Location[NUMBER_OF_NEIGHBORS_WITHIN_RADIUS];
         int index = 0;
