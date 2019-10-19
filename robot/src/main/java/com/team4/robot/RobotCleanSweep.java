@@ -1,15 +1,10 @@
 package com.team4.robot;
 
 import com.team4.commons.*;
-
-
-
 import com.team4.sensor.SensorSimulator;
 import com.team4.sensor.FloorDao;
 import static com.team4.commons.Direction.*;
-
 import static com.team4.commons.State.*;
-
 
 import java.util.HashMap;
 
@@ -23,12 +18,10 @@ public class RobotCleanSweep implements Robot {
     private PowerManager powerManager;
     
     //Robot's memory of visited cells
-    
     private HashMap<String, Location> visited;
     
     //Path class for printing
-    
-    
+    private HashMap<Location, DirtUnits> doneTiles = new HashMap<>();
 
     private static RobotCleanSweep robotCleanSweep = null;
     
@@ -38,10 +31,8 @@ public class RobotCleanSweep implements Robot {
         int x = Utilities.xFromTupleString(locationTuple);
         int y = Utilities.yFromTupleString(locationTuple);
         this.visited = new HashMap<>();
-        setLocation(LocationFactory.createLocation(x, y));   //creates initial Location
-        //setNavigator(new NavigatorAlpha());
-        setNavigator(new NavigatorBeta());
-        
+        setLocation(LocationFactory.createLocation(x, y));
+        setNavigator(NavigatorFactory.createNavigator());
     }
 
     /**
@@ -165,8 +156,7 @@ public class RobotCleanSweep implements Robot {
         if (getState() != OFF) {
         	//robot moves around floor
         	setState(WORKING);
-        	
-        	
+
         	System.out.println( "Current Location: " + "("+RobotCleanSweep.getInstance().getLocation().getX()+", "+ RobotCleanSweep.getInstance().getLocation().getY() +")");
         	while(getState()== WORKING) {
         		
@@ -203,9 +193,6 @@ public class RobotCleanSweep implements Robot {
     		   return false;
     	   }
     	   RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY - 1));
-    	   
-    	   
-    	   
     	   return true;
     	   
        case SOUTH:
@@ -225,8 +212,7 @@ public class RobotCleanSweep implements Robot {
     		  return false;
     	  }
     	  RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX - 1, currentY));
-    	  
- 
+
     	  return true;
        
        case EAST:
@@ -235,18 +221,8 @@ public class RobotCleanSweep implements Robot {
     		  return false;
     	  }
     	  RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX + 1, currentY));
-    	  
-    	  
     	  return true;
        }
-       return false;
-       
-       
-       
-       
-    	   
-        
+       return false;   
     }
-    
-    
 }
