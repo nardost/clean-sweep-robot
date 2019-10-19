@@ -176,50 +176,49 @@ public class RobotCleanSweep implements Robot {
             System.out.println("TURN ME ON!!!");
         }
     }
-    
     boolean move(Direction direction) {
+    	
+       final int FLOOR_WIDTH = SensorSimulator.getInstance().getFloorDimension()[0];
+       final int FLOOR_LENGTH = SensorSimulator.getInstance().getFloorDimension()[1];
+        
+       int currentX = RobotCleanSweep.getInstance().getLocation().getX();
+       int currentY = RobotCleanSweep.getInstance().getLocation().getY();
 
-        final int FLOOR_WIDTH = SensorSimulator.getInstance().getFloorDimension()[0];
-        final int FLOOR_LENGTH = SensorSimulator.getInstance().getFloorDimension()[1];
-
-        int currentX = RobotCleanSweep.getInstance().getLocation().getX();
-        int currentY = RobotCleanSweep.getInstance().getLocation().getY();
-
-        switch(direction) {
-
-            case NORTH:
-
-               if(currentY == 0) {
-                   System.out.println("WALL!");
-                   return false;
-               }
-               RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY - 1));
-               return true;
-
-            case SOUTH:
-               if(currentY == FLOOR_LENGTH - 1) {
-                   System.out.println("WALL!");
-                   return false;
-               }
-               RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY + 1));
-               return true;
-
-            case WEST:
-              if(currentX == 0) {
-                  System.out.println("WALL!");
-                  return false;
-              }
-              RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX - 1, currentY));
-              return true;
-
-            case EAST:
-              if(currentX == FLOOR_WIDTH - 1) {
-                  System.out.println("WALL!");
-                  return false;
-              }
-              RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX + 1, currentY));
-              return true;
-        }
-        return false;
+       switch(direction) {
+       	
+       case NORTH:
+    	   
+    	   if(currentY == 0) {
+    		   System.out.println("WALL!");
+    		   return false;
+    	   }
+    	   RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY - 1));
+    	   return true;
+    	   
+       case SOUTH:
+    	   if(currentY == FLOOR_LENGTH - 1) {
+    		   System.out.println("WALL!");
+    		   return false;
+    	   }
+    	   RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY + 1));
+    	   return true;
+    	 
+       case WEST:
+    	  if(currentX == 0) {
+    		  System.out.println("WALL!");
+    		  return false;
+    	  }
+    	  RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX - 1, currentY));
+    	  return true;
+       
+       case EAST:
+    	  if(currentX == FLOOR_WIDTH - 1) {
+    		  System.out.println("WALL!");
+    		  return false;
+    	  }
+    	  RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX + 1, currentY));
+    	  return true;
+       }
+       return false;
     }
 }
