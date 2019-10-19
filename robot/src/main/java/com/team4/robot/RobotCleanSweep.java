@@ -1,10 +1,12 @@
 package com.team4.robot;
 
 import com.team4.commons.*;
+import com.team4.sensor.SensorSimulator;
+import com.team4.sensor.FloorDao;
+import static com.team4.commons.Direction.*;
+import static com.team4.commons.State.*;
 
 import java.util.HashMap;
-
-import static com.team4.commons.State.*;
 
 public class RobotCleanSweep implements Robot {
 
@@ -14,15 +16,21 @@ public class RobotCleanSweep implements Robot {
     private Navigator navigator;
     private VacuumCleaner vacuumCleaner;
     private PowerManager powerManager;
-
+    
+    //Robot's memory of visited cells
+    private HashMap<String, Location> visited;
+    
+    //Path class for printing
     private HashMap<Location, DirtUnits> doneTiles = new HashMap<>();
 
     private static RobotCleanSweep robotCleanSweep = null;
+    
     private RobotCleanSweep() {
         setState(OFF);
         String locationTuple = ConfigManager.getConfiguration("initLocation");
         int x = Utilities.xFromTupleString(locationTuple);
         int y = Utilities.yFromTupleString(locationTuple);
+        this.visited = new HashMap<>();
         setLocation(LocationFactory.createLocation(x, y));
         setNavigator(NavigatorFactory.createNavigator());
     }
@@ -62,8 +70,16 @@ public class RobotCleanSweep implements Robot {
         if(location == null) {
             throw new RobotException("Null location object not allowed.");
         }
+        String key = Utilities.tupleToString(location.getX(), location.getY());
         this.location = location;
+        this.visited.put(key, location);
     }
+    
+    boolean visitedLocation(int x, int y) {
+    	String key = Utilities.tupleToString(x,y);
+    	return this.visited.containsKey(key);
+    }
+    
 
     Navigator getNavigator() {
         return navigator;
@@ -81,6 +97,7 @@ public class RobotCleanSweep implements Robot {
         setState(STANDBY);
         //Robot waits for cleaning schedule.
         System.out.println("Waiting for scheduled cleaning time...");
+        System.out.println();
         try {
             Thread.sleep(5000L);
         } catch (InterruptedException ie) {
@@ -95,7 +112,8 @@ public class RobotCleanSweep implements Robot {
         setState(OFF);
     }
 
-    private void work() {
+   
+	private void work() {
         /** //check if there is enough battery to make it to the nearest charging station
          *  //if(there is enough battery to make it to the nearest charging station) {
          *  //    continue working... ?
@@ -114,9 +132,9 @@ public class RobotCleanSweep implements Robot {
          *          if(there is undone tile saved) {
          *              get saved undone tile and make it my next tile
          *          } else {
-         *              decide where to go next <- the traversal algorithm picks which Tile is next.
+         *              decide where to go next <- the traversal algorithm picks which Tile is next. (navigator)
          *          }
-         *          go to next tile
+         *          go to next tile (move)
          *          ask sensor simulator information about current tile and save info
          *          if(tile is not clean) {
          *              check if there is enough battery to clean tile
@@ -136,9 +154,75 @@ public class RobotCleanSweep implements Robot {
          *  }
         */
         if (getState() != OFF) {
-            getNavigator().traverseFloor();
+        	//robot moves around floor
+        	setState(WORKING);
+
+        	System.out.println( "Current Location: " + "("+RobotCleanSweep.getInstance().getLocation().getX()+", "+ RobotCleanSweep.getInstance().getLocation().getY() +")");
+        	while(getState()== WORKING) {
+        		
+        		FloorDao fd = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+                Direction direction = getNavigator().traverseFloor(fd.openPassages);
+                if(direction!=null) {
+                	move(direction);
+                	System.out.println( "Current Location: " + "("+RobotCleanSweep.getInstance().getLocation().getX()+", "+ RobotCleanSweep.getInstance().getLocation().getY() +")");
+                }
+                else {
+                	setState(OFF);  
+                }
+        	}
         } else {
             System.out.println("TURN ME ON!!!");
         }
+    }
+    
+     boolean move(Direction direction) {
+    	
+    	
+       final int FLOOR_WIDTH = SensorSimulator.getInstance().getFloorDimension()[0];
+       final int FLOOR_LENGTH = SensorSimulator.getInstance().getFloorDimension()[1];
+        
+       int currentX = RobotCleanSweep.getInstance().getLocation().getX();
+       int currentY = RobotCleanSweep.getInstance().getLocation().getY();
+
+       switch(direction) {
+       	
+       case NORTH:
+    	   
+    	   if(currentY == 0) {
+    		   System.out.println("WALL!");
+    		   return false;
+    	   }
+    	   RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY - 1));
+    	   return true;
+    	   
+       case SOUTH:
+    	   
+    	   if(currentY == FLOOR_LENGTH - 1) {
+    		   System.out.println("WALL!");
+    		   return false;
+    	   }
+    	   RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY + 1));
+    	   
+    	  
+    	   return true;
+    	 
+       case WEST:
+    	  if(currentX == 0) {
+    		  System.out.println("WALL!");
+    		  return false;
+    	  }
+    	  RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX - 1, currentY));
+
+    	  return true;
+       
+       case EAST:
+    	  if(currentX == FLOOR_WIDTH - 1) {
+    		  System.out.println("WALL!");
+    		  return false;
+    	  }
+    	  RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX + 1, currentY));
+    	  return true;
+       }
+       return false;   
     }
 }

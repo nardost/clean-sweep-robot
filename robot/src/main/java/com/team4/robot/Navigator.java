@@ -1,5 +1,6 @@
 package com.team4.robot;
+import com.team4.commons.Direction;
 
 interface Navigator {
-    void traverseFloor();
+    Direction traverseFloor(Direction [] directions);
 }
