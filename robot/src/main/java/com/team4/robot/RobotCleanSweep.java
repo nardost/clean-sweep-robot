@@ -5,7 +5,6 @@ import com.team4.sensor.SensorSimulator;
 import com.team4.sensor.FloorDao;
 import static com.team4.commons.State.*;
 
-import java.sql.SQLOutput;
 import java.util.HashMap;
 
 public class RobotCleanSweep implements Robot {
@@ -114,12 +113,15 @@ public class RobotCleanSweep implements Robot {
         //Robot waits for cleaning schedule.
         System.out.println();
         System.out.println("                              +-----------------------------------------------------+");
-        System.out.println("                              +                    CLEAN SWEEP ROBOT                +");
-        System.out.println("                              +         waiting for scheduled cleaning time         +");
+        System.out.println("                              |                    CLEAN SWEEP ROBOT                |");
         System.out.println("                              +-----------------------------------------------------+");
         System.out.println();
         try {
-            Thread.sleep(5000L);
+            for(int i = 1; i <= 5; i++) {
+                LogManager.print("waiting for scheduled cleaning time...", getZeroTime());
+                Thread.sleep(1000L);
+            }
+            System.out.println();
         } catch (InterruptedException ie) {
             ie.printStackTrace();
         }
@@ -177,8 +179,8 @@ public class RobotCleanSweep implements Robot {
             setState(WORKING);
             FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
             StringBuilder sb = new StringBuilder();
-            System.out.println("[00:00:00]  DIRECTION  LOCATION       DIRT  FLOOR TYPE\t             OPEN DIRECTIONS\tCHARGING STATIONS NEARBY");
-            System.out.println("----------  ---------  --------  ---------  ----------\t----------------------------\t--------------------------------------------------------------------------------------------------------");
+            System.out.println("            DIRECTION  LOCATION       DIRT  FLOOR TYPE\t             OPEN DIRECTIONS\tCHARGING STATIONS NEARBY");
+            System.out.println("            ---------  --------  ---------  ----------\t----------------------------\t--------------------------------------------------------------------------------------------------------");
             sb.append(Utilities.padSpacesToFront("", 9));
             sb.append("  ");
             sb.append(Utilities.padSpacesToFront("(" + RobotCleanSweep.getInstance().getLocation().getX() + ", " + RobotCleanSweep.getInstance().getLocation().getY() + ")", 8));
