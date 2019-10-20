@@ -5,9 +5,12 @@ import com.team4.sensor.SensorSimulator;
 import com.team4.sensor.FloorDao;
 import static com.team4.commons.State.*;
 
+import java.sql.SQLOutput;
 import java.util.HashMap;
 
 public class RobotCleanSweep implements Robot {
+
+    private static long zeroTime;
 
     private State state;
     private Location location;
@@ -25,6 +28,8 @@ public class RobotCleanSweep implements Robot {
     private static RobotCleanSweep robotCleanSweep = null;
     
     private RobotCleanSweep() {
+
+        setZeroTime(System.currentTimeMillis());
         setState(OFF);
         String locationTuple = ConfigManager.getConfiguration("initLocation");
         int x = Utilities.xFromTupleString(locationTuple);
@@ -48,6 +53,17 @@ public class RobotCleanSweep implements Robot {
             }
         }
         return robotCleanSweep;
+    }
+
+    long getZeroTime() {
+        return zeroTime;
+    }
+
+    private static void setZeroTime(long zeroTime) {
+        if(zeroTime < 0) {
+            throw new RobotException("Negative time millis is not allowed.");
+        }
+        RobotCleanSweep.zeroTime = zeroTime;
     }
 
     State getState() {
@@ -96,7 +112,11 @@ public class RobotCleanSweep implements Robot {
     public void turnOn() {
         setState(STANDBY);
         //Robot waits for cleaning schedule.
-        System.out.println("Waiting for scheduled cleaning time...");
+        System.out.println();
+        System.out.println("+-------------------------------------+");
+        System.out.println("+          CLEAN SWEEP ROBOT          +");
+        System.out.println("+ waiting for scheduled cleaning time +");
+        System.out.println("+-------------------------------------+");
         System.out.println();
         try {
             Thread.sleep(5000L);
@@ -155,20 +175,46 @@ public class RobotCleanSweep implements Robot {
         if (getState() != OFF) {
             //robot moves around floor
             setState(WORKING);
-
-            System.out.println( "Current Location: " + "("+RobotCleanSweep.getInstance().getLocation().getX()+", "+ RobotCleanSweep.getInstance().getLocation().getY() +")");
+            FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+            StringBuilder sb = new StringBuilder();
+            System.out.println("[00:00:00]  DIRECTION  LOCATION       DIRT  FLOOR TYPE\t             OPEN DIRECTIONS\tCHARGING STATIONS NEARBY");
+            System.out.println("----------  ---------  --------  ---------  ----------\t----------------------------\t--------------------------------------------------------------------------------------------------------");
+            sb.append(Utilities.padSpacesToFront("", 9));
+            sb.append("  ");
+            sb.append(Utilities.padSpacesToFront("(" + RobotCleanSweep.getInstance().getLocation().getX() + ", " + RobotCleanSweep.getInstance().getLocation().getY() + ")", 8));
+            sb.append("  ");
+            sb.append( Utilities.padSpacesToFront((floorDao.isClean) ? "CLEAN" : "NOT CLEAN", 9));
+            sb.append("  ");
+            sb.append(Utilities.padSpacesToFront(floorDao.floorType.toString(), 10));
+            sb.append("\t");
+            sb.append( Utilities.padSpacesToFront(Utilities.arrayToString(floorDao.openPassages), 28) );
+            sb.append("\t");
+            sb.append(Utilities.arrayToString(floorDao.chargingStations));
+            LogManager.print( sb.toString() , getZeroTime());
             while(getState() == WORKING) {
                 try {
                     //add delay to simulate Robot staying in a tile while working.
-                    Thread.sleep(5L);
+                    Thread.sleep(1000L);
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
-                FloorDao fd = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
-                Direction direction = getNavigator().traverseFloor(fd.openPassages);
-                if(direction!=null) {
+                floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+                Direction direction = getNavigator().traverseFloor(floorDao.openPassages);
+                if(direction != null) {
                     move(direction);
-                    System.out.println( "Current Location: " + "("+RobotCleanSweep.getInstance().getLocation().getX()+", "+ RobotCleanSweep.getInstance().getLocation().getY() +")");
+                    sb = new StringBuilder();
+                    sb.append(Utilities.padSpacesToFront(direction.toString(), 9));
+                    sb.append("  ");
+                    sb.append(Utilities.padSpacesToFront("(" + RobotCleanSweep.getInstance().getLocation().getX() + ", " + RobotCleanSweep.getInstance().getLocation().getY() + ")", 8));
+                    sb.append("  ");
+                    sb.append( Utilities.padSpacesToFront((floorDao.isClean) ? "CLEAN" : "NOT CLEAN", 9));
+                    sb.append("  ");
+                    sb.append(Utilities.padSpacesToFront(floorDao.floorType.toString(), 10));
+                    sb.append('\t');
+                    sb.append( Utilities.padSpacesToFront(Utilities.arrayToString(floorDao.openPassages), 28) );
+                    sb.append("\t");
+                    sb.append(Utilities.arrayToString(floorDao.chargingStations));
+                    LogManager.print(sb.toString() , getZeroTime());
                 }
                 else {
                     setState(OFF);
@@ -180,6 +226,7 @@ public class RobotCleanSweep implements Robot {
     }
 
     boolean move(Direction direction) {
+
         final int FLOOR_WIDTH = SensorSimulator.getInstance().getFloorDimension()[0];
         final int FLOOR_LENGTH = SensorSimulator.getInstance().getFloorDimension()[1];
 

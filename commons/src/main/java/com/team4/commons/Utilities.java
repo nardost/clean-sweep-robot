@@ -55,4 +55,27 @@ public class Utilities {
         sb.append(")");
         return sb.toString();
     }
+
+    public static <T> String arrayToString(T [] elements) {
+        StringBuilder sb = new StringBuilder("{ ");
+        for(T element : elements) {
+            sb.append(element.toString());
+            sb.append(", ");
+        }
+        sb.replace(sb.length() - 2, sb.length(), "");
+        sb.append(" }");
+        return sb.toString();
+    }
+
+    public static String padSpacesToFront(String str, int fixedSize) {
+        if(str.length() >= fixedSize) {
+            return str;
+        }
+        StringBuilder sb = new StringBuilder();
+        for(int i = 1; i <= fixedSize - str.length(); i++) {
+            sb.append(" ");
+        }
+        sb.append(str);
+        return sb.toString();
+    }
 }
