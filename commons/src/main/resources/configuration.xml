@@ -6,6 +6,8 @@
     <property name="dirtCapacity" value="50" />
     <property name="chargingStationDetectionRadius" value="2" />
     <property name="navigator" value="beta" />
+    <property name="scheduledWait" value="5" />
+    <property name="timeInTile" value="1" />
 
     <!-- Sensor Simulator Configuration Parameters -->
     <property name="floorWidth" value="6" />

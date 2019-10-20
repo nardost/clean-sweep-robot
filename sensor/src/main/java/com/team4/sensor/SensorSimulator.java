@@ -1,12 +1,17 @@
 package com.team4.sensor;
 
 import com.team4.commons.*;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
+
 import static com.team4.commons.Direction.*;
 
 public class SensorSimulator implements Sensor {
 
     private static Floor floor;
+    private ArrayList<Location> doneTiles = new ArrayList<>();
 
     private static SensorSimulator simulator = null;
     private SensorSimulator() {
@@ -31,6 +36,10 @@ public class SensorSimulator implements Sensor {
 
     static Floor getFloor() {
         return floor;
+    }
+
+    ArrayList<Location> getDoneTiles() {
+        return doneTiles;
     }
 
     @Override
@@ -61,8 +70,24 @@ public class SensorSimulator implements Sensor {
         return dao;
     }
 
-    public static int getNumberOfTiles() {
-        return getFloor().getTiles().size();
+    @Override
+    public void setTileDone(Location location) {
+        if(location == null) {
+            throw new RobotException("Null location is not allowed");
+        }
+        getDoneTiles().add(location);
+    }
+
+    /**
+     * Right now, done means all tiles visited.
+     *
+     * @return boolean
+     */
+    public boolean isFloorDone() {
+        if(getDoneTiles().size() == getDoneTiles().size()) {
+            return true;
+        }
+        return false;
     }
 
     public static int [] getFloorDimension() {
