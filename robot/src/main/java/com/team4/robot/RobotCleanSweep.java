@@ -112,9 +112,9 @@ public class RobotCleanSweep implements Robot {
         setState(STANDBY);
         //Robot waits for cleaning schedule.
         System.out.println();
-        System.out.println("                              +-----------------------------------------------------+");
-        System.out.println("                              |                    CLEAN SWEEP ROBOT                |");
-        System.out.println("                              +-----------------------------------------------------+");
+        System.out.println("+=======================================================+");
+        System.out.println("|                     CLEAN SWEEP ROBOT                 |");
+        System.out.println("+=======================================================+");
         System.out.println();
         try {
             int scheduledWait = Integer.parseInt(ConfigManager.getConfiguration("scheduledWait"));
@@ -181,6 +181,7 @@ public class RobotCleanSweep implements Robot {
         */
         if (getState() != OFF) {
             setState(WORKING);
+            System.out.println("begin working...\n");
             FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
             if(mode == Mode.VERBOSE) {
                 System.out.println("            DIRECTION  LOCATION       DIRT  FLOOR TYPE\t             OPEN DIRECTIONS\tCHARGING STATIONS NEARBY");

@@ -7,6 +7,11 @@ import com.team4.sensor.SensorSimulator;
 import static com.team4.commons.Direction.*;
 import static com.team4.commons.State.*;
 
+/**
+ * This class was just for test and demo purposes
+ *  only and is now supplanted by NavigatorBeta
+ */
+
 class NavigatorAlpha implements Navigator {
 
     @Override
