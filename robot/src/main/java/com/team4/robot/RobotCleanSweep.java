@@ -36,6 +36,7 @@ public class RobotCleanSweep implements Robot {
         this.visited = new HashMap<>();
         setLocation(LocationFactory.createLocation(x, y));
         setNavigator(NavigatorFactory.createNavigator());
+        setPowerManager(new PowerUnit());
     }
 
     /**
@@ -100,11 +101,22 @@ public class RobotCleanSweep implements Robot {
         return navigator;
     }
 
-    void setNavigator(Navigator navigator) {
+    private void setNavigator(Navigator navigator) {
         if(navigator == null) {
             throw new RobotException("Null navigator object not allowed.");
         }
         this.navigator = navigator;
+    }
+
+    PowerManager getPowerManager() {
+        return powerManager;
+    }
+
+    private void setPowerManager(PowerManager powerManager) {
+        if(powerManager == null) {
+            throw new RobotException("Null power manager is not allowed.");
+        }
+        this.powerManager = powerManager;
     }
 
     @Override
@@ -266,6 +278,10 @@ public class RobotCleanSweep implements Robot {
             throw new RobotException("Null location is not allowed.");
         }
         SensorSimulator.getInstance().setTileDone(location);
+    }
+
+    void recharge() {
+        getPowerManager().recharge();
     }
 
     private void logTileInfo(FloorDao floorDao, Direction direction) {

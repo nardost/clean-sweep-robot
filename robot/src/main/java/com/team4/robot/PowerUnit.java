@@ -6,7 +6,7 @@ public class PowerUnit implements PowerManager {
 
     private int batteryLevel;
 
-    private PowerUnit() {
+    PowerUnit() {
         int maxBatteryLevel = Integer.parseInt(ConfigManager.getConfiguration("maxBatteryLevel"));
         setBatteryLevel(maxBatteryLevel);
     }
@@ -16,6 +16,7 @@ public class PowerUnit implements PowerManager {
         try {
             //simulate delay while charging.
             long timeToCharge = Long.parseLong(ConfigManager.getConfiguration("timeToCharge"));
+            System.out.println("\nbattery charging ...\n");
             Thread.sleep(timeToCharge * 1000L);
         } catch (InterruptedException ie) {
             ie.printStackTrace();
