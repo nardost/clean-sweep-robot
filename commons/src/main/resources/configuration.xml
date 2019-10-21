@@ -2,11 +2,15 @@
 <configuration>
     <!-- Robot Configuration Parameters -->
     <property name="initLocation" value="(0, 0)" />
-    <property name="maxBatteryLevel" value="250" />
+    <property name="batteryLife" value="250" />
     <property name="dirtCapacity" value="50" />
     <property name="chargingStationDetectionRadius" value="2" />
+    <property name="navigator" value="beta" />
+    <property name="scheduledWait" value="5" />
+    <property name="timeInTile" value="1" />
+    <property name="timeToCharge" value="5" />
 
     <!-- Sensor Simulator Configuration Parameters -->
-    <property name="floorWidth" value="12" />
-    <property name="floorLength" value="10" />
+    <property name="floorWidth" value="6" />
+    <property name="floorLength" value="5" />
 </configuration>
