@@ -1,12 +1,17 @@
 package com.team4.sensor;
 
 import com.team4.commons.*;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
+
 import static com.team4.commons.Direction.*;
 
 public class SensorSimulator implements Sensor {
 
     private static Floor floor;
+    private ArrayList<Location> doneTiles = new ArrayList<>();
 
     private static SensorSimulator simulator = null;
     private SensorSimulator() {
@@ -33,6 +38,10 @@ public class SensorSimulator implements Sensor {
         return floor;
     }
 
+    ArrayList<Location> getDoneTiles() {
+        return doneTiles;
+    }
+
     @Override
     public FloorDao getLocationInfo(Location location) {
         Tile tile = getFloor().getTile(location);
@@ -57,11 +66,28 @@ public class SensorSimulator implements Sensor {
         }
         dao.openPassages = Arrays.copyOf(directions, index);
         dao.chargingStations = getNeighborsWithinChargingStationDetectionRadius(tile.getLocation());
+        dao.isClean = tile.isClean();
         return dao;
     }
 
-    public static int getNumberOfTiles() {
-        return getFloor().getTiles().size();
+    @Override
+    public void setTileDone(Location location) {
+        if(location == null) {
+            throw new RobotException("Null location is not allowed");
+        }
+        getDoneTiles().add(location);
+    }
+
+    /**
+     * Right now, done means all tiles visited.
+     *
+     * @return boolean
+     */
+    public boolean isFloorDone() {
+        if(getDoneTiles().size() == getDoneTiles().size()) {
+            return true;
+        }
+        return false;
     }
 
     public static int [] getFloorDimension() {
@@ -92,8 +118,8 @@ public class SensorSimulator implements Sensor {
         }
     }
     private Location [] neighborsWithinRadiusOf1(Location location) {
-        final int WIDTH = 1000; //get WIDTH of Wall
-        final int LENGTH = 1000; //get LENGTH of Wall
+        final int WIDTH = Integer.parseInt(ConfigManager.getConfiguration("floorWidth"));
+        final int LENGTH = Integer.parseInt(ConfigManager.getConfiguration("floorLength"));
         final int NUMBER_OF_NEIGHBORS_WITHIN_RADIUS = getNumberOfNeighborsWithinRadius(1);
         Location [] neighbors = new Location[NUMBER_OF_NEIGHBORS_WITHIN_RADIUS];
         int index = 0;
