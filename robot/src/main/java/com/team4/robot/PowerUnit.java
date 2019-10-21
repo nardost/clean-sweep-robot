@@ -1,32 +1,39 @@
 package com.team4.robot;
-import com.team4.commons.*;
 
+import com.team4.commons.ConfigManager;
 
 public class PowerUnit implements PowerManager {
-	private final int MAX_BATTERY;
-	private float batteryUnits;
+
+	private int batteryLevel;
 	
 	private PowerUnit() {
-		this->MAX_BATTERY = ConfigManager.getConfiguration("batteryLife");
-		this->batteryUnits = this->MAX_BATTERY;
+		int maxBatteryLevel = Integer.parseInt(ConfigManager.getConfiguration("maxBatteryLevel"));
+		setBatteryLevel(maxBatteryLevel);
 	}
 	
 	@Override
-	public void Recharge() {
-		this->batterUnits = this->MAX_BATTERY;
-	}
-	
-	@Override
-	public void DeductBattery(float units) {
-		this->batteryUnits -= units;
-		
-		if(this->batteryUnits <= 0) {
-			this->batteryUnits = 0;
+	public void recharge() {
+		try {
+			//simulate delay while charging.
+			Thread.sleep(2000L);
+		} catch (InterruptedException ie) {
+			ie.printStackTrace();
 		}
+		int maxBatteryLevel = Integer.parseInt(ConfigManager.getConfiguration("maxBatteryLevel"));
+		setBatteryLevel(maxBatteryLevel);
 	}
-	
+
 	@Override
-	public void GetBattery() {
-		return this->batteryUnits;
+	public int getBatteryLevel() {
+		return batteryLevel;
+	}
+
+	@Override
+	public void updateBatteryLevel(int units) {
+		setBatteryLevel(getBatteryLevel() - units);
+	}
+
+	private void setBatteryLevel(int batteryLevel) {
+		this.batteryLevel = batteryLevel;
 	}
 }
