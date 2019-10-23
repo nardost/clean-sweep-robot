@@ -13,4 +13,5 @@
     <!-- Sensor Simulator Configuration Parameters -->
     <property name="floorWidth" value="6" />
     <property name="floorLength" value="5" />
+    <property name="floorBuilderType" value="inMemory" />
 </configuration>
