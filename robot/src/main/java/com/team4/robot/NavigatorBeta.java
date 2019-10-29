@@ -18,6 +18,7 @@ public class NavigatorBeta implements Navigator {
         //SOUTH --> EAST --> NORTH --> WEST
         //only if-statements because it is in order of priority
         //if one if-statement doesn't return, then we will check the next
+        //System.out.println(Arrays.toString(directions));
         
         ArrayList<Direction> dirList = new ArrayList<>(Arrays.asList(directions));
         
@@ -39,6 +40,7 @@ public class NavigatorBeta implements Navigator {
         }
         
         if(dirList.contains(WEST) && !(RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x-1,y)))) {
+
         	return WEST;
         }
         return null;
