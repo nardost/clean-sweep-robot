@@ -19,29 +19,29 @@ public class PrintPath {
 				if(width>10 && length >10) {
 					if(i>=10) {
 						if(j<10) {
-							grid[i][j] = " (" + j + "," + i + ")";
+							grid[i][j] = "  " + j + "." + i + " ";
 						}
 						else {
 							
 						
-						grid[i][j] = "(" + j + "," + i + ")";
+						grid[i][j] = " " + j + "." + i + " ";
 						}
 					}
 					else {
 						if(j>=10) {
-							grid[i][j] = " (" + j + "," + i + ")";
+							grid[i][j] = "  " + j + "." + i + " ";
 						}
 						else {
 							
 						
-						grid[i][j] = "  (" + j + "," + i + ")";
+						grid[i][j] = "   " + j + "." + i + " ";
 						}
 					}
 					grid[0][0] = " START ";
 					
 				}
 				else {
-					grid[i][j] = "(" + j + "," + i + ")";
+					grid[i][j] = " " + j + "." + i + " ";
 					grid[0][0] = "START";
 				}
 			}
@@ -53,7 +53,7 @@ public class PrintPath {
 		//System.out.println(Arrays.deepToString(grid).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
 	
 	
-	public void VertWall(int xFr, int yFr, int yTo) {
+	public void VertWall(int xFr, int yFr, int yTo, boolean val) {
 		String temp;
 		for (int i = yFr; i <= yTo; i++) {
 			if(width>10 && length >10) {
@@ -63,14 +63,21 @@ public class PrintPath {
 			grid[i][xFr] = "   | ";
 			}
 			else {
-				grid[i][xFr] = "  |  ";
+				if(val) {
+					grid[i][xFr] = "|"+grid[i][xFr].substring(1);
+					//grid[i][xFr] = "|"+grid[i][xFr];
+				}
+				else {
+					grid[i][xFr] = grid[i][xFr].substring(1)+"|";
+					
+				}
 				
 			}
 		}
 
 	}
 	
-	public void HorWall(int xFr, int xTo, int yFr) {
+	public void HorWall(int xFr, int xTo, int yFr, boolean val) {
 		
 //		for (int i = xFr; i <= xTo; i++) {
 //			if(width>10 && length >10) {
@@ -83,22 +90,36 @@ public class PrintPath {
 //		}
 		int total;
 		int sub;
+		String space;
 		if(width>10 && length >10) {
 			 total = width * 7 + (width*2) - 2;
-			 sub = ((xTo -xFr+1)*8)-2;;
+			 sub = ((xTo -xFr+1)*8)-2;
+			 space = "       ";
 		}
 		else {
 			
 			 total = width * 5 + (width*2) - 2;
 			 //sub = (xFr *5) + xFr;
 			 sub = ((xTo -xFr+1)*6)-1;
+			 space = "     ";
 			 
 			
 		}
+		if(val) {
+			String verticSpace = "|" + new String(new char[total-sub]).replace("\0", " ") ;
+			String verticWall =  new String(new char[(sub)]).replace("\0", "-") ;
+			grid[yFr][xTo] = grid[yFr][xTo]+"|\n" + verticSpace + verticWall;
+			
+			
+		}
 
-		String verticSpace = "|" + new String(new char[total-sub]).replace("\0", " ") ;
-		String verticWall =  new String(new char[(sub)]).replace("\0", "-") ;
-		grid[yFr][xTo] = grid[yFr][xTo]+"|\n" + verticSpace + verticWall;
+		else {
+			String verticSpace = " " + new String(new char[total-sub-2]).replace("\0", " ") ;
+			String verticWall =  "|" + new String(new char[(sub)]).replace("\0", "-") ;
+			grid[yFr-1][width-1] = grid[yFr-1][width-1]+"|\n" +verticWall+ (verticSpace)+"*" ;
+			//(grid[yFr-1][width-1]+"|\n").replace("\n", "");
+		}
+
 
 	}
 	
@@ -139,8 +160,8 @@ public class PrintPath {
 		System.out.println(" " + horWall);
 		
 		
-		System.out.println(Arrays.deepToString(grid).replace("], ", "|\n" +verticWall).replace("[[", "|").replace("]]", "|").replace(",", " ").replace("[", "\n|").replace("-|\n", "-"));
-		System.out.println(" " + horWall);;
+		System.out.println(Arrays.deepToString(grid).replace("], ", "|\n" +verticWall).replace("[[", "|").replace("]]", "|").replace(",", " ").replace("[", "\n|").replace("-|\n", "-").replace("*|\n", " ").replace(".", ","));
+		System.out.println(" " + horWall);
 		System.out.println();
 		
 
@@ -169,7 +190,7 @@ public class PrintPath {
 			grid[x][y]="   }   ";
 			}
 			else {
-				grid[x][y]= "  }  ";
+				grid[x][y]= "}    ";
 				
 			}
 		

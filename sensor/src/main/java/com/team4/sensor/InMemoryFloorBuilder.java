@@ -32,14 +32,27 @@ class InMemoryFloorBuilder implements FloorBuilder {
         buildWestWall(W, L);
         buildEastWall(W, L);
         buildInteriorTiles(W, L);
+        //vert wall
         buildWall(
                 LocationFactory.createLocation(W - 3, 0),
                 LocationFactory.createLocation(W - 3, L - 3),
-                new Location [] { LocationFactory.createLocation(W - 3, L - 2) }); //changed from L-3
+                new Location [] { LocationFactory.createLocation(W - 3, L - 2) }, true); //changed from L-3
+        //hor wall
         buildWall(
                 LocationFactory.createLocation(W - 3, L - 2),
                 LocationFactory.createLocation(W - 1, L - 2),
-                new Location [] {});
+                new Location [] {}, true);
+        
+        //vert wall
+        buildWall(
+                LocationFactory.createLocation(W - 7, L-4),
+                LocationFactory.createLocation(W - 7, L - 1),
+                new Location [] {  }, false);
+        //hor
+        buildWall(
+                LocationFactory.createLocation(0, L-4),
+                LocationFactory.createLocation(W - 7, L - 4),
+                new Location [] {  },false);
     }
 
     private void buildCornerTiles(int W, int L)  {
@@ -165,7 +178,7 @@ class InMemoryFloorBuilder implements FloorBuilder {
         }
     }
 
-    private void buildWall(Location from, Location to, Location [] doors) {
+    private void buildWall(Location from, Location to, Location [] doors, boolean val) {
         //validate inputs - line has to be horizontal of vertical.
         int fromX = from.getX();
         int fromY = from.getY();
@@ -199,27 +212,43 @@ class InMemoryFloorBuilder implements FloorBuilder {
             Tile t2 = null;
             for(int i = x1; i <= x2; i++) {
             	//made a change to make the horizontal wall outer
-                l1 = LocationFactory.createLocation(i, y  );
-                l2 = LocationFactory.createLocation(i, y + 1 );
+            	if(val) {
+                    l1 = LocationFactory.createLocation(i, y );
+                    l2 = LocationFactory.createLocation(i, y + 1 );
+            	}
+            	else {
+                    l1 = LocationFactory.createLocation(i, y -1 );
+                    l2 = LocationFactory.createLocation(i, y  );
+            	}
+
                 t1 = TileFactory.createTile(l1);
                 t2 = TileFactory.createTile(l2);
                 t1.setSouthOpen(false);
                 t2.setNorthOpen(false);
             }
         } else if(fromX == toX) {
+
             int y1 = Utilities.min(fromY, toY);
             int y2 = Utilities.max(fromY, toY);
             int x = fromX;
             if(x == 0) {
                 throw new RobotException("Outer wall already constructed.");
             }
+ 
             Location l1 = null;
             Location l2 = null;
             Tile t1 = null;
             Tile t2 = null;
             for(int i = y1; i <= y2; i++) {
-                l1 = LocationFactory.createLocation(x -1, i);
-                l2 = LocationFactory.createLocation(x, i);
+            	if (val) {
+            		 l1 = LocationFactory.createLocation(x -1, i);
+                     l2 = LocationFactory.createLocation(x, i);
+            	}
+            	else {
+            		 l1 = LocationFactory.createLocation(x, i);
+                     l2 = LocationFactory.createLocation(x+1, i);
+            	}
+
                 t1 = TileFactory.createTile(l1);
                 t2 = TileFactory.createTile(l2);
                 t1.setEastOpen(false);

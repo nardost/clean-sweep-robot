@@ -231,8 +231,10 @@ public class RobotCleanSweep implements Robot {
     	// TO DELETE --------------------------------------------ONLY FOR TESTING
         final int w = SensorSimulator.getInstance().getFloorDimension()[0];
         final int l = SensorSimulator.getInstance().getFloorDimension()[1];
-    	path.VertWall(w-3, 0, l-3);
-    	path.HorWall(w-3, w-1, l-2);
+    	path.VertWall(w-3, 0, l-3,true);
+    	path.VertWall(w-7, l-4, l-1,false);
+    	path.HorWall(w-3, w-1, l-2,true);
+    	path.HorWall(0, w-7, l-4,false);
     	path.door(w-3, l-2);
     	path.print();
     	
@@ -282,9 +284,10 @@ public class RobotCleanSweep implements Robot {
         } else {
             System.out.println("TURN ME ON!!!");
         }
-        //----------------
+        //---------------- TO DELETE--------
        path.end();
-       path.HorWall(w-3, w-1, l-2);
+       path.HorWall(w-3, w-1, l-2,true);
+       path.HorWall(0, w-7, l-4,false);
        path.print();
        //---------------------------
     }

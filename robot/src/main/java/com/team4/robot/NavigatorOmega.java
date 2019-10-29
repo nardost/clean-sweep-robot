@@ -60,6 +60,17 @@ public class NavigatorOmega implements Navigator {
         		return SOUTH;
         	}
         }
+//        if(dirList.contains(EAST) && (RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x+1,y)))) {
+//
+//        	if(!RobotCleanSweep.getInstance().visitedAll()) {
+//        		return EAST;
+//        	}
+//        }
+//        if(dirList.contains(NORTH) && (RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x,y-1)))) {
+//        	if(!RobotCleanSweep.getInstance().visitedAll()) {
+//        		return NORTH;
+//        	}
+//        }
 
         
         return null;
