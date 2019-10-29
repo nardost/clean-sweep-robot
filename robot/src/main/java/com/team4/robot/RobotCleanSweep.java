@@ -5,7 +5,9 @@ import com.team4.sensor.SensorSimulator;
 import com.team4.sensor.FloorDao;
 import static com.team4.commons.State.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class RobotCleanSweep implements Robot {
 
@@ -19,17 +21,17 @@ public class RobotCleanSweep implements Robot {
     private PowerManager powerManager;
     
     //Robot's memory of visited cells
-    private HashMap<String, Location> visited;
+    private HashMap<String, Location> visited = new HashMap<>();
     //unvisited cells
-    private HashMap<String, Location> unvisited;
-    
+    private HashMap<String, Location> unvisited = new HashMap<>();
+    //graph built as robot progresses
+    private HashMap<Location, List<Location>> graph = new HashMap<>();
     //Path class for printing
     private HashMap<Location, DirtUnits> doneTiles = new HashMap<>();
 
     private static RobotCleanSweep robotCleanSweep = null;
     
     //options pursued?
-  
     
     // will delete, just for printing the grid to help programmer
     PrintPath path = new PrintPath(SensorSimulator.getInstance().getFloorDimension()[0],SensorSimulator.getInstance().getFloorDimension()[1]);
@@ -41,9 +43,6 @@ public class RobotCleanSweep implements Robot {
         String locationTuple = ConfigManager.getConfiguration("initLocation");
         int x = Utilities.xFromTupleString(locationTuple);
         int y = Utilities.yFromTupleString(locationTuple);
-        this.visited = new HashMap<>();
-        //unvisited cells
-        this.unvisited = new HashMap<>();
         setLocation(LocationFactory.createLocation(x, y));
         setNavigator(NavigatorFactory.createNavigator());
         setPowerManager(new PowerUnit());
@@ -155,6 +154,17 @@ public class RobotCleanSweep implements Robot {
     	return this.visited;
     }
 
+    HashMap<Location, List<Location>> getGraph() {
+        return graph;
+    }
+
+    void setGraph(HashMap<Location, List<Location>> graph) {
+        if(graph == null) {
+            throw new RobotException("Null graph not allowed.");
+        }
+        this.graph = graph;
+    }
+
     @Override
     public void turnOn() {
         setState(STANDBY);
@@ -241,8 +251,9 @@ public class RobotCleanSweep implements Robot {
             setState(WORKING);
             System.out.println("begin working...\n");
             FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
-           
+            //At this point, robot has info about its four neighbor cells.
             createLocations(floorDao.openPassages);
+            buildGraph(getLocation(), floorDao.openPassages);
             if(mode == Mode.VERBOSE) {
                 System.out.println("            DIRECTION  LOCATION       DIRT  FLOOR TYPE\t             OPEN DIRECTIONS\tCHARGING STATIONS NEARBY");
                 System.out.println("            ---------  --------  ---------  ----------\t----------------------------\t--------------------------------------------------------------------------------------------------------");
@@ -297,51 +308,57 @@ public class RobotCleanSweep implements Robot {
     void createLocations(Direction [] directions) {
         int currentX = RobotCleanSweep.getInstance().getLocation().getX();
         int currentY = RobotCleanSweep.getInstance().getLocation().getY();
-       
-        //System.out.println();
-        
         Location location = null;
-        for(int i = 0; i<directions.length; i++) {
-        	
-        	try {
+        for(int i = 0; i < directions.length; i++) {
             switch(directions[i]) {
-
                case NORTH:
-
                   location = LocationFactory.createLocation(currentX, currentY - 1);
                   break;
-                   
- 
-
                case SOUTH:
- 
-                   
                    location = LocationFactory.createLocation(currentX, currentY + 1);
-                   
                    break;
-                  
-
                case WEST:
-            	   
-
                  location =  LocationFactory.createLocation(currentX - 1, currentY);
                   break;
-                  
-
                case EAST:
-
                   location = LocationFactory.createLocation(currentX + 1, currentY);
                  break;
-                  
-            }
+                default:
+                    throw new RobotException("Impossible direction. Only N, S, E, W directions are available.");
+                    // Don't catch this exception!
+                    // If you reach this block, the programmer has made a serious mistake
+                    // and needs to fix it. So throw it instead of catching it.
         	}
-        	catch (RobotException e) {
-        	}
-        	
             putUnvisited(location);
-        	
         }
-    	
+    }
+
+    /**
+     * The robot builds a graph of locations it has been to
+     * and locations it knows it can go to.
+     * @param location
+     * @param directions
+     */
+    private void buildGraph(Location location, Direction [] directions) {
+        int x = location.getX();
+        int y = location.getY();
+        List<Location> neighbors = new ArrayList<>();
+        for(Direction direction : directions) {
+            neighbors.add(getNeighbor(location, direction));
+        }
+        getGraph().put(location, neighbors);
+    }
+
+    private Location getNeighbor(Location location, Direction direction) {
+        int x = location.getX();
+        int y = location.getY();
+        switch (direction) {
+            case NORTH: return LocationFactory.createLocation(x, y - 1);
+            case SOUTH: return LocationFactory.createLocation(x, y + 1);
+            case EAST: return LocationFactory.createLocation(x + 1, y);
+            case WEST: return LocationFactory.createLocation(x - 1, y);
+            default: throw new RobotException("Impossible direction. Only N, S, E, W directions are available.");
+        }
     }
 
     boolean move(Direction direction) {
@@ -418,8 +435,8 @@ public class RobotCleanSweep implements Robot {
         sb.append(Utilities.padSpacesToFront(floorDao.floorType.toString(), 10));
         sb.append('\t');
         sb.append( Utilities.padSpacesToFront(Utilities.arrayToString(floorDao.openPassages), 28) );
-       // sb.append("\t");
-        //sb.append(Utilities.arrayToString(floorDao.chargingStations));
+        sb.append("\t");
+        sb.append(Utilities.arrayToString(floorDao.chargingStations));
         LogManager.print(sb.toString() , getZeroTime());
     }
 
