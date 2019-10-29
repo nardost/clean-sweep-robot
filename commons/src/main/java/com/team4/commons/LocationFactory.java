@@ -8,15 +8,17 @@ import java.util.HashMap;
 public class LocationFactory {
 
     private static HashMap<String, Location> existingLocations = new HashMap<>();
-
+    
     private LocationFactory() {
     }
 
     private static HashMap<String, Location> getExistingLocations() {
         return existingLocations;
     }
+    
 
     public static Location createLocation(int x, int y) {
+    	
         if(x < 0 || y < 0) {
             throw new RobotException("Negative coordinates not allowed in location creation.");
         }

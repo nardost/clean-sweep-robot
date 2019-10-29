@@ -11,7 +11,7 @@
     <property name="timeToCharge" value="5" />
 
     <!-- Sensor Simulator Configuration Parameters -->
-    <property name="floorWidth" value="6" />
-    <property name="floorLength" value="5" />
+    <property name="floorWidth" value="9" />
+    <property name="floorLength" value="9" />
     <property name="floorBuilderType" value="inMemory" />
 </configuration>

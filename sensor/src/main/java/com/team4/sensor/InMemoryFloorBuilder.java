@@ -35,7 +35,7 @@ class InMemoryFloorBuilder implements FloorBuilder {
         buildWall(
                 LocationFactory.createLocation(W - 3, 0),
                 LocationFactory.createLocation(W - 3, L - 3),
-                new Location [] { LocationFactory.createLocation(W - 3, L - 3) });
+                new Location [] { LocationFactory.createLocation(W - 3, L - 2) }); //changed from L-3
         buildWall(
                 LocationFactory.createLocation(W - 3, L - 2),
                 LocationFactory.createLocation(W - 1, L - 2),
@@ -172,6 +172,15 @@ class InMemoryFloorBuilder implements FloorBuilder {
 
         int toX = to.getX();
         int toY = to.getY();
+        
+        // code for door
+        for(int i = 0; i < doors.length;i++) {
+        	Location door  = doors[i];
+        	Location outDoor = LocationFactory.createLocation(door.getX()-1, door.getY());
+        	
+        	Tile outDoorTile = TileFactory.createTile(outDoor);
+        	outDoorTile.setEastOpen(true);
+        }
 
         if((fromX == toX && fromY == toY) || (fromX != toX && fromY != toY)) {
             throw new RobotException("Wall inputs not valid.");
@@ -189,8 +198,9 @@ class InMemoryFloorBuilder implements FloorBuilder {
             Tile t1 = null;
             Tile t2 = null;
             for(int i = x1; i <= x2; i++) {
-                l1 = LocationFactory.createLocation(i, y - 1);
-                l2 = LocationFactory.createLocation(i, y);
+            	//made a change to make the horizontal wall outer
+                l1 = LocationFactory.createLocation(i, y  );
+                l2 = LocationFactory.createLocation(i, y + 1 );
                 t1 = TileFactory.createTile(l1);
                 t2 = TileFactory.createTile(l2);
                 t1.setSouthOpen(false);
