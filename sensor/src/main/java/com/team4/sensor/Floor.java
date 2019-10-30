@@ -13,6 +13,8 @@ class Floor {
 
     private static Floor theFloor = null;
     private Floor() {
+        // pass a reference of the tiles hash map to the floor builder.
+        // the floor builder uses that reference and builds tiles into it.
         FloorBuilderFactory.createFloorBuilder(getTiles()).buildFloor();
     }
 

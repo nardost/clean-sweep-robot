@@ -75,6 +75,7 @@ public class SensorSimulator implements Sensor {
         if(location == null) {
             throw new RobotException("Null location is not allowed");
         }
+        TileFactory.createTile(location).setClean(true);
         getDoneTiles().add(location);
     }
 

@@ -267,8 +267,7 @@ public class RobotCleanSweep implements Robot {
             	
                 try {
                     //add delay to simulate Robot staying in a tile while working.
-                   // Thread.sleep(timeInTile * 1000L);
-                	Thread.sleep(0);
+                    Thread.sleep(timeInTile * 1000L);
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
@@ -284,7 +283,10 @@ public class RobotCleanSweep implements Robot {
                     if(mode == Mode.VERBOSE) {
                         logTileInfo(floorDao, direction);
                     }
-                    //do some work and mark tile as done
+                    // do some work and mark tile as done.
+                    // after robot passes on a tile, tile is guaranteed to be cleaned.
+                    // either it was clean and robot never had to vacuum it, or it was
+                    // dirty and robot vacuums it. So tile is always marked done.
                     SensorSimulator.getInstance().setTileDone(getLocation());
                 }
                 else {
@@ -325,7 +327,7 @@ public class RobotCleanSweep implements Robot {
                   break;
                case EAST:
                   location = LocationFactory.createLocation(currentX + 1, currentY);
-                 break;
+                  break;
                 default:
                     throw new RobotException("Impossible direction. Only N, S, E, W directions are available.");
                     // Don't catch this exception!
@@ -413,13 +415,6 @@ public class RobotCleanSweep implements Robot {
               return true;
         }
         return false;
-    }
-
-    private void markTileDone(Location location) {
-        if(location == null) {
-            throw new RobotException("Null location is not allowed.");
-        }
-        SensorSimulator.getInstance().setTileDone(location);
     }
 
     void recharge() {
