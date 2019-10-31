@@ -61,7 +61,7 @@ class InMemoryFloorBuilder implements FloorBuilder {
         l = LocationFactory.createLocation(0,0);
         t = TileFactory.createTile(l);
         t.setFloorType(BARE);
-        t.setClean(true);
+        t.setClean(false);
         t.setWestOpen(false);
         t.setNorthOpen(false);
         t.setSouthOpen(true);
@@ -70,7 +70,7 @@ class InMemoryFloorBuilder implements FloorBuilder {
         l = LocationFactory.createLocation(W - 1,0);
         t = TileFactory.createTile(l);
         t.setFloorType(BARE);
-        t.setClean(true);
+        t.setClean(false);
         t.setWestOpen(true);
         t.setNorthOpen(false);
         t.setSouthOpen(true);
@@ -79,7 +79,7 @@ class InMemoryFloorBuilder implements FloorBuilder {
         l = LocationFactory.createLocation(0,L - 1);
         t = TileFactory.createTile(l);
         t.setFloorType(BARE);
-        t.setClean(true);
+        t.setClean(false);
         t.setWestOpen(false);
         t.setNorthOpen(true);
         t.setSouthOpen(false);
@@ -88,7 +88,7 @@ class InMemoryFloorBuilder implements FloorBuilder {
         l = LocationFactory.createLocation(W - 1,L - 1);
         t = TileFactory.createTile(l);
         t.setFloorType(BARE);
-        t.setClean(true);
+        t.setClean(false);
         t.setWestOpen(true);
         t.setNorthOpen(true);
         t.setSouthOpen(false);
@@ -103,7 +103,7 @@ class InMemoryFloorBuilder implements FloorBuilder {
             l = LocationFactory.createLocation(i,0);
             t = TileFactory.createTile(l);
             t.setFloorType(BARE);
-            t.setClean(true);
+            t.setClean(false);
             t.setWestOpen(true);
             t.setNorthOpen(false);
             t.setSouthOpen(true);
@@ -119,7 +119,7 @@ class InMemoryFloorBuilder implements FloorBuilder {
             l = LocationFactory.createLocation(i,L - 1);
             t = TileFactory.createTile(l);
             t.setFloorType(BARE);
-            t.setClean(true);
+            t.setClean(false);
             t.setWestOpen(true);
             t.setNorthOpen(true);
             t.setSouthOpen(false);
@@ -135,7 +135,7 @@ class InMemoryFloorBuilder implements FloorBuilder {
             l = LocationFactory.createLocation(0, j);
             t = TileFactory.createTile(l);
             t.setFloorType(BARE);
-            t.setClean(true);
+            t.setClean(false);
             t.setWestOpen(false);
             t.setNorthOpen(true);
             t.setSouthOpen(true);
@@ -151,7 +151,7 @@ class InMemoryFloorBuilder implements FloorBuilder {
             l = LocationFactory.createLocation(W - 1, j);
             t = TileFactory.createTile(l);
             t.setFloorType(BARE);
-            t.setClean(true);
+            t.setClean(false);
             t.setWestOpen(true);
             t.setNorthOpen(true);
             t.setSouthOpen(true);
@@ -168,7 +168,7 @@ class InMemoryFloorBuilder implements FloorBuilder {
                 l = LocationFactory.createLocation(i, j);
                 t = TileFactory.createTile(l);
                 t.setFloorType(BARE);
-                t.setClean(true);
+                t.setClean(false);
                 t.setWestOpen(true);
                 t.setNorthOpen(true);
                 t.setSouthOpen(true);

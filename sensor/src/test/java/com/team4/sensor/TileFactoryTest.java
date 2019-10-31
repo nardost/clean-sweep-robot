@@ -3,6 +3,7 @@ package com.team4.sensor;
 import com.team4.commons.Location;
 import com.team4.commons.LocationFactory;
 import com.team4.commons.RobotException;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
