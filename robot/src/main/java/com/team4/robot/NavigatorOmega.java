@@ -7,8 +7,11 @@ import static com.team4.commons.Direction.WEST;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EmptyStackException;
+import java.util.Stack;
 
 import com.team4.commons.Direction;
+import com.team4.commons.Location;
 import com.team4.commons.LocationFactory;
 
 public class NavigatorOmega implements Navigator {
@@ -50,29 +53,21 @@ public class NavigatorOmega implements Navigator {
         	if (!(RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x-1,y)))) {
         		return WEST;
         	}
-        	if((RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x-1,y))) && !RobotCleanSweep.getInstance().visitedAll()) {
-        		return WEST;
-        	}
-        	
-        }
-        if(dirList.contains(SOUTH) && (RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x,y+1)))) {
-        	if(!RobotCleanSweep.getInstance().visitedAll()) {
-        		return SOUTH;
-        	}
-        }
-//        if(dirList.contains(EAST) && (RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x+1,y)))) {
-//
-//        	if(!RobotCleanSweep.getInstance().visitedAll()) {
-//        		return EAST;
-//        	}
-//        }
-//        if(dirList.contains(NORTH) && (RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x,y-1)))) {
-//        	if(!RobotCleanSweep.getInstance().visitedAll()) {
-//        		return NORTH;
-//        	}
-//        }
 
+        }
         
+        if(!RobotCleanSweep.getInstance().visitedAll()) {
+       
+        	Location current = RobotCleanSweep.getInstance().getLocation();
+        	Location goal = RobotCleanSweep.getInstance().lastUnvisited();
+        	
+        	AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),current, goal);
+        	Direction direction = null;
+
+        	direction = aStar.search().pop();
+
+        	return direction;
+        }
         return null;
 	}
 
