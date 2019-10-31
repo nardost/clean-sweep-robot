@@ -60,7 +60,8 @@ public class GetLocationInfoCorrectDirectionsOfPassageTest {
                 //{ LocationFactory.createLocation(2, 7), new Direction[] {NORTH, SOUTH, EAST, WEST} }
         }).collect(Collectors.toList());
     }
-    @Test @Ignore
+    @Test
+    @Ignore
     public void getLocationInfo_returns_correct_direction_of_open_passages_for_a_given_location() {
         FloorDao dao = SensorSimulator.getInstance().getLocationInfo(location);
         assertArrayEquals(passages, dao.openPassages);

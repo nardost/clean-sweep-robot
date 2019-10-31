@@ -278,16 +278,15 @@ public class RobotCleanSweep implements Robot {
                 Direction direction = getNavigator().traverseFloor(floorDao.openPassages);
                
                 if(direction != null) {
-                	
-                    move(direction);
-                    if(mode == Mode.VERBOSE) {
-                        logTileInfo(floorDao, direction);
-                    }
                     // do some work and mark tile as done.
                     // after robot passes on a tile, tile is guaranteed to be cleaned.
                     // either it was clean and robot never had to vacuum it, or it was
                     // dirty and robot vacuums it. So tile is always marked done.
                     SensorSimulator.getInstance().setTileDone(getLocation());
+                    if(mode == Mode.VERBOSE) {
+                        logTileInfo(floorDao, direction);
+                    }
+                    move(direction);
                 }
                 else {
                     setState(STANDBY);
