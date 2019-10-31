@@ -324,6 +324,8 @@ public class RobotCleanSweep implements Robot {
        System.out.println();
 
        //---------------------------
+       
+       //AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(), goal);
     }
     
 

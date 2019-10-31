@@ -28,7 +28,6 @@ public class NavigatorOmega implements Navigator {
         
         
         ArrayList<Direction> dirList = new ArrayList<>(Arrays.asList(directions));
-        //System.out.println(dirList.toString());
         if(dirList.contains(SOUTH) && !(RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x,y+1)))) {
         	if(!(dirList.contains(WEST))){
         		return SOUTH;
@@ -56,6 +55,7 @@ public class NavigatorOmega implements Navigator {
 
         }
         
+        //A* to go to last unvisited cell
         if(!RobotCleanSweep.getInstance().visitedAll()) {
        
         	Location current = RobotCleanSweep.getInstance().getLocation();

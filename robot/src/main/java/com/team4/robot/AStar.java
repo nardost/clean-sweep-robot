@@ -90,6 +90,7 @@ public class AStar {
 					 childNode.setDirection();
 					 pQueue.add(childNode);
 					 
+					 
 				 }
 				 
 			 }
