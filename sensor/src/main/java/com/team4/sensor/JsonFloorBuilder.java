@@ -77,10 +77,8 @@ class JsonFloorBuilder implements FloorBuilder {
         for(FloorPlan.Area area : getFloorPlan().getAreas()) {
             setFloorType(area);
         }
-
         Location location = LocationFactory.createLocation(0,9);
         Tile tile = getTiles().get(location);
-        System.out.println("(" + location.getX() + ", " + location.getY() + ") -> " + "Charging Station " + tile.isChargingStation() + "{ EAST " + tile.isEastOpen() + ", WEST " + tile.isWestOpen() + ", NORTH " + tile.isNorthOpen() + ", SOUTH " + tile.isSouthOpen() + " }");
     }
 
     private void buildTiles(int w, int l) {
@@ -123,7 +121,6 @@ class JsonFloorBuilder implements FloorBuilder {
                     Location location = LocationFactory.createLocation(x, i);
                     Tile tile = TileFactory.createTile(location);
                     blockPassage(tile, directionToBlock);
-                    System.out.println("OV(" +location.getX() + ", " + location.getY() + ") ->" + "{ EAST " + tile.isEastOpen() + ", WEST " + tile.isWestOpen() + ", NORTH " + tile.isNorthOpen() + ", SOUTH " + tile.isSouthOpen() + " }");
                 }
             } else {
                 //inner walls
@@ -152,7 +149,6 @@ class JsonFloorBuilder implements FloorBuilder {
                     Location location = LocationFactory.createLocation(i, y);
                     Tile tile = TileFactory.createTile(location);
                     blockPassage(tile, directionToBlock);
-                    System.out.println("OH(" +location.getX() + ", " + location.getY() + ") ->" + "{ EAST " + tile.isEastOpen() + ", WEST " + tile.isWestOpen() + ", NORTH " + tile.isNorthOpen() + ", SOUTH " + tile.isSouthOpen() + " }");
                 }
             } else {
                 // inner walls

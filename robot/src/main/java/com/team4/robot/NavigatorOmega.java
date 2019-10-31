@@ -54,7 +54,7 @@ public class NavigatorOmega implements Navigator {
         	}
 
         }
-        
+
         //A* to go to last unvisited cell
         if(!RobotCleanSweep.getInstance().visitedAll()) {
        

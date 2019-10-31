@@ -14,5 +14,5 @@
     <property name="floorWidth" value="9" />
     <property name="floorLength" value="9" />
     <property name="floorBuilderType" value="json" />
-    <property name="floorPlan" value="floor-plan-0.json" />
+    <property name="floorPlan" value="floor-plan-1.json" />
 </configuration>
