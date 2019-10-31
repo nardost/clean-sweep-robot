@@ -292,6 +292,7 @@ public class RobotCleanSweep implements Robot {
                 Direction direction = getNavigator().traverseFloor(floorDao.openPassages);
                
                 if(direction != null) {
+
                     // do some work and mark tile as done.
                     // after robot passes on a tile, tile is guaranteed to be cleaned.
                     // either it was clean and robot never had to vacuum it, or it was
@@ -303,31 +304,14 @@ public class RobotCleanSweep implements Robot {
                     }
                     move(direction);
                 }
-                
                 else {
-                	
 
-                	
                     setState(STANDBY);
                 }
-                
             }
         } else {
             System.out.println("TURN ME ON!!!");
         }
-        //---------------- TO DELETE--------
-
-       //path.end();
-       //path.HorWall(w-3, w-1, l-2,true);
-       //path.HorWall(0, w-7, l-4,false);
-       //path.print();
-
-       //goTo(RobotCleanSweep.getInstance().getLocation(),LocationFactory.createLocation(0, 0));
-       System.out.println();
-
-       //---------------------------
-       
-       //AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(), goal);
     }
     
 
@@ -389,29 +373,17 @@ public class RobotCleanSweep implements Robot {
         }
     }
 
-    void moveTo(Location location) {
-    	RobotCleanSweep.getInstance().setLocation(location);
-    }
     void move(Direction direction) {
-
         int currentX = RobotCleanSweep.getInstance().getLocation().getX();
         int currentY = RobotCleanSweep.getInstance().getLocation().getY();
         switch(direction) {
-
            case NORTH:
-
-               
                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY - 1));
                //path.add("  ↑  ", currentY-1,currentX );
                break;
-
            case SOUTH:
-
-               
                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY + 1));
-               //path.add("  ↓  ", currentY + 1,currentX );
                break;
-
            case WEST:
 
               RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX - 1, currentY));
