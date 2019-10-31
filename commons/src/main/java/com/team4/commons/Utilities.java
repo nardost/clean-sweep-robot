@@ -62,7 +62,9 @@ public class Utilities {
             sb.append(element.toString());
             sb.append(", ");
         }
-        sb.replace(sb.length() - 2, sb.length(), "");
+        if(sb.length() > 2) {
+            sb.replace(sb.length() - 2, sb.length(), "");
+        }
         sb.append(" }");
         return sb.toString();
     }

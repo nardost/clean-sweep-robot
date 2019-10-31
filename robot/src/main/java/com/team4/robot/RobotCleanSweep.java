@@ -34,7 +34,7 @@ public class RobotCleanSweep implements Robot {
     //options pursued?
     
     // will delete, just for printing the grid to help programmer
-    PrintPath path = new PrintPath(SensorSimulator.getInstance().getFloorDimension()[0],SensorSimulator.getInstance().getFloorDimension()[1]);
+    //PrintPath path = new PrintPath(SensorSimulator.getInstance().getFloorDimension()[0],SensorSimulator.getInstance().getFloorDimension()[1]);
     
     private RobotCleanSweep() {
 
@@ -241,12 +241,12 @@ public class RobotCleanSweep implements Robot {
     	// TO DELETE --------------------------------------------ONLY FOR TESTING
         final int w = SensorSimulator.getInstance().getFloorDimension()[0];
         final int l = SensorSimulator.getInstance().getFloorDimension()[1];
-    	path.VertWall(w-3, 0, l-3,true);
-    	path.VertWall(w-7, l-4, l-1,false);
-    	path.HorWall(w-3, w-1, l-2,true);
-    	path.HorWall(0, w-7, l-4,false);
-    	path.door(w-3, l-2);
-    	path.print();
+    	//path.VertWall(w-3, 0, l-3,true);
+    	//path.VertWall(w-7, l-4, l-1,false);
+    	//path.HorWall(w-3, w-1, l-2,true);
+    	//path.HorWall(0, w-7, l-4,false);
+    	//path.door(w-3, l-2);
+    	//path.print();
     	
     	// -----------------------------------------------------------------------
         if (getState() != OFF) {
@@ -298,10 +298,10 @@ public class RobotCleanSweep implements Robot {
             System.out.println("TURN ME ON!!!");
         }
         //---------------- TO DELETE--------
-       path.end();
-       path.HorWall(w-3, w-1, l-2,true);
-       path.HorWall(0, w-7, l-4,false);
-       path.print();
+       //path.end();
+       //path.HorWall(w-3, w-1, l-2,true);
+       //path.HorWall(0, w-7, l-4,false);
+       //path.print();
        //---------------------------
     }
     
@@ -366,55 +366,24 @@ public class RobotCleanSweep implements Robot {
         }
     }
 
-    boolean move(Direction direction) {
-    	
-        final int FLOOR_WIDTH = SensorSimulator.getInstance().getFloorDimension()[0];
-        final int FLOOR_LENGTH = SensorSimulator.getInstance().getFloorDimension()[1];
+    void move(Direction direction) {
 
         int currentX = RobotCleanSweep.getInstance().getLocation().getX();
         int currentY = RobotCleanSweep.getInstance().getLocation().getY();
-
         switch(direction) {
-
-           case NORTH:
-               if(currentY == 0) {
-                   System.out.println("WALL!");
-                   return false;
-               }
-               
-               RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY - 1));
-               path.add("  ↑  ", currentY-1,currentX );
-               return true;
-
-           case SOUTH:
-               if(currentY == FLOOR_LENGTH - 1) {
-                   System.out.println("WALL!");
-                   return false;
-               }
-               
-               RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY + 1));
-               path.add("  ↓  ", currentY + 1,currentX );
-               return true;
-
-           case WEST:
-              if(currentX == 0) {
-                  System.out.println("WALL!");
-                  return false;
-              }
-              RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX - 1, currentY));
-              path.add("  ←  ", currentY,currentX - 1 );
-              return true;
-
-           case EAST:
-              if(currentX == FLOOR_WIDTH - 1) {
-                  System.out.println("WALL!");
-                  return false;
-              }
-              RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX + 1, currentY));
-              path.add("  →  ", currentY ,currentX+1 );
-              return true;
+            case NORTH:
+                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY - 1));
+                break;
+            case SOUTH:
+                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY + 1));
+                break;
+            case WEST:
+                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX - 1, currentY));
+                break;
+            case EAST:
+                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX + 1, currentY));
+                break;
         }
-        return false;
     }
 
     void recharge() {

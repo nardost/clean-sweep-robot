@@ -4,7 +4,6 @@ import com.team4.commons.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Set;
 
 import static com.team4.commons.Direction.*;
 
@@ -65,7 +64,7 @@ public class SensorSimulator implements Sensor {
             directions[index++] = WEST;
         }
         dao.openPassages = Arrays.copyOf(directions, index);
-        dao.chargingStations = getNeighborsWithinChargingStationDetectionRadius(tile.getLocation());
+        dao.chargingStations = getChargingStations(tile.getLocation());//getNeighborsWithinChargingStationDetectionRadius(tile.getLocation());
         dao.isClean = tile.isClean();
         return dao;
     }
@@ -106,6 +105,19 @@ public class SensorSimulator implements Sensor {
             default:
                 return 12;
         }
+    }
+
+    private Location [] getChargingStations(Location location) {
+        Location [] neighbors = getNeighborsWithinChargingStationDetectionRadius(location);
+        final int NUMBER_OF_NEIGHBORS_WITHIN_RADIUS = getNumberOfNeighborsWithinRadius(2);
+        Location [] chargingStations = new Location[NUMBER_OF_NEIGHBORS_WITHIN_RADIUS];
+        int index = 0;
+        for(Location l : neighbors) {
+            if(TileFactory.createTile(l).isChargingStation()) {
+                chargingStations[index++] = l;
+            }
+        }
+        return Arrays.copyOf(chargingStations, index);
     }
 
     private Location [] getNeighborsWithinChargingStationDetectionRadius(Location location) {
