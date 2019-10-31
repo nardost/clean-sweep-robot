@@ -304,10 +304,7 @@ public class RobotCleanSweep implements Robot {
        //---------------------------
     }
     
-    void goTo(Location from,Location to) {
-    	BestPath fromTo = new BestPath(RobotCleanSweep.getInstance().getVisited(),RobotCleanSweep.getInstance().getLocation(),LocationFactory.createLocation(0, 0));
-    	
-    }
+
     
     void createLocations(Direction [] directions) {
         int currentX = RobotCleanSweep.getInstance().getLocation().getX();
