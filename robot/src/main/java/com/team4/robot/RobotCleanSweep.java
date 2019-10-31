@@ -37,6 +37,7 @@ public class RobotCleanSweep implements Robot {
         setLocation(LocationFactory.createLocation(x, y));
         setNavigator(NavigatorFactory.createNavigator());
         setPowerManager(new PowerUnit());
+        setVacuumCleaner(new DirtManager());
     }
 
     /**
@@ -117,6 +118,17 @@ public class RobotCleanSweep implements Robot {
             throw new RobotException("Null power manager is not allowed.");
         }
         this.powerManager = powerManager;
+    }
+    
+    VacuumCleaner getVacuumCleaner() {
+    	return vacuumCleaner;
+    }
+    
+    private void setVacuumCleaner(VacuumCleaner vacuumCleaner) {
+    	if (vacuumCleaner == null) {
+    		throw new RobotException("Null vacuum cleaner is not allowed.");
+    	}
+    	this.vacuumCleaner = vacuumCleaner;
     }
 
     @Override
@@ -217,7 +229,7 @@ public class RobotCleanSweep implements Robot {
                         logTileInfo(floorDao, direction);
                     }
                     //do some work and mark tile as done
-                    SensorSimulator.getInstance().setTileDone(getLocation());
+                    getVacuumCleaner().clean();
                 }
                 else {
                     setState(STANDBY);

@@ -84,7 +84,7 @@ public class SensorSimulator implements Sensor {
      * @return boolean
      */
     public boolean isFloorDone() {
-        if(getDoneTiles().size() == getDoneTiles().size()) {
+        if(getDoneTiles().size() == getFloor().getTiles().size()) {
             return true;
         }
         return false;
