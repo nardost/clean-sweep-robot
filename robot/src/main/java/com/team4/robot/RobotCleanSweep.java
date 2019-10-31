@@ -419,18 +419,9 @@ public class RobotCleanSweep implements Robot {
               break;
 
            case EAST:
-
               RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX + 1, currentY));
               //path.add("  →  ", currentY ,currentX+1 );
               break;
-        }
-
-        
-    }
-
-    private void markTileDone(Location location) {
-        if(location == null) {
-            throw new RobotException("Null location is not allowed.");
         }
     }
 
@@ -451,7 +442,7 @@ public class RobotCleanSweep implements Robot {
         sb.append('\t');
         sb.append( Utilities.padSpacesToFront(Utilities.arrayToString(floorDao.openPassages), 28) );
         sb.append("\t");
-        //sb.append(Utilities.arrayToString(floorDao.chargingStations));
+        sb.append(Utilities.arrayToString(floorDao.chargingStations));
         LogManager.print(sb.toString() , getZeroTime());
     }
 
