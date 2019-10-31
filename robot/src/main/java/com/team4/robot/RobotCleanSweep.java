@@ -442,25 +442,7 @@ public class RobotCleanSweep implements Robot {
         
     }
 
-    private void markTileDone(Location location) {
-        if(location == null) {
-            throw new RobotException("Null location is not allowed.");
 
-            case NORTH:
-                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY - 1));
-                break;
-            case SOUTH:
-                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY + 1));
-                break;
-            case WEST:
-                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX - 1, currentY));
-                break;
-            case EAST:
-                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX + 1, currentY));
-                break;
-
-        }
-    }
 
     void recharge() {
         getPowerManager().recharge();
