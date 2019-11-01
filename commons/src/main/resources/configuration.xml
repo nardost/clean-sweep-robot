@@ -5,13 +5,14 @@
     <property name="maxBatteryLevel" value="250" />
     <property name="dirtCapacity" value="50" />
     <property name="chargingStationDetectionRadius" value="2" />
-    <property name="navigator" value="beta" />
+    <property name="navigator" value="omega" />
     <property name="scheduledWait" value="5" />
     <property name="timeInTile" value="1" />
-    <property name="timeToCharge" value="5" />
+    <property name="timeToCharge" value="1" />
 
     <!-- Sensor Simulator Configuration Parameters -->
-    <property name="floorWidth" value="6" />
-    <property name="floorLength" value="5" />
-    <property name="floorBuilderType" value="inMemory" />
+    <property name="floorWidth" value="9" />
+    <property name="floorLength" value="9" />
+    <property name="floorBuilderType" value="json" />
+    <property name="floorPlan" value="floor-plan-1.json" />
 </configuration>

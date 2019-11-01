@@ -14,8 +14,9 @@ public class NavigatorFactory {
             case "alpha":
                 return new NavigatorAlpha();
             case "beta":
+            case "omega":
             default:
-                return new NavigatorBeta();
+                return new NavigatorOmega();
         }
     }
 
