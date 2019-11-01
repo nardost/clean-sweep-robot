@@ -352,8 +352,8 @@ public class RobotCleanSweep implements Robot {
             //##  it does not print the last location										   ##	
             //##  so, below is a print of the last location									   ##
            //####################################################################################
+            logTileInfo(floorDao, null);
            
-            System.out.println(RobotCleanSweep.getInstance().getLocation());
         }
         
         else {
