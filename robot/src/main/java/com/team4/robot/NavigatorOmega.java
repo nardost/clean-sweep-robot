@@ -25,16 +25,26 @@ public class NavigatorOmega implements Navigator {
         //SOUTH --> EAST --> NORTH --> WEST
         //only if-statements because it is in order of priority
         //if one if-statement doesn't return, then we will check the next
-        
+       // System.out.println();
+       // System.out.println("************************************************************************");
+       // System.out.println("for checking only");
+        //System.out.println("Current Location:" + RobotCleanSweep.getInstance().getLocation() + " Directions open at this location: " +  Arrays.toString(directions));
+
         
         ArrayList<Direction> dirList = new ArrayList<>(Arrays.asList(directions));
         if(dirList.contains(SOUTH) && !(RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x,y+1)))) {
         	if(!(dirList.contains(WEST))){
         		return SOUTH;
         	}
-        	if((dirList.contains(WEST)) && (RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x-1,y)))) {
-        		return SOUTH;
+        	if((dirList.contains(WEST))) {
+        		if((RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x-1,y)))) {
+        			return SOUTH;
+        		}
+        		if(dirList.contains(EAST)) {
+        			return WEST;
+        		}
         	}	
+        	
         }
         
         
@@ -68,6 +78,8 @@ public class NavigatorOmega implements Navigator {
 
         	return direction;
         }
+        
+
         return null;
 	}
 

@@ -301,6 +301,9 @@ public class RobotCleanSweep implements Robot {
                 buildGraph(getLocation(), floorDao.openPassages);
 
                 Direction direction = getNavigator().traverseFloor(floorDao.openPassages);
+                //System.out.println("Current Location: " + RobotCleanSweep.getInstance().getLocation() + " CHOSEN DIRECTION: " + direction);
+                //System.out.println("************************************************************************");
+                //System.out.println();
 
                 if(direction != null) {
                     if(mode == Mode.VERBOSE) {
@@ -310,6 +313,7 @@ public class RobotCleanSweep implements Robot {
 
                     //SensorSimulator.getInstance().setTileDone(getLocation());
                     move(direction);
+                    
                     getVacuumCleaner().clean();
                     
                     
@@ -347,14 +351,6 @@ public class RobotCleanSweep implements Robot {
             //##  some issues with console output											   ##
             //##  it does not print the last location										   ##	
             //##  so, below is a print of the last location									   ##
-            //##  (2)																		   ##
-            //##  CHECK how certain passages are behaving in JSON.							   ##
-            //##  for example (1), (4,4) seems to be blocked if you are at (4,3)			   ##
-            //##  is this because a wall extends on cell too much? check please				   ##
-            //##  for example (2), similar to previous case.. from (4,6) you cannot			   ##
-            //##  go to (4,7). Notice that in both cases they are on a cell next to passage	   ##
-            //##  check your code or JSON.													   ##
-            //##  these are the only issues. Should be an easy fix.							   ##
            //####################################################################################
            
             System.out.println(RobotCleanSweep.getInstance().getLocation());
