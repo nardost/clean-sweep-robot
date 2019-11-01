@@ -36,11 +36,13 @@ public class NavigatorOmega implements Navigator {
         	if(!(dirList.contains(WEST))){
         		return SOUTH;
         	}
-        	if((dirList.contains(WEST))) {
+        	else {
+        		//if west visited
         		if((RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x-1,y)))) {
         			return SOUTH;
         		}
-        		if(dirList.contains(EAST)) {
+        		//west open and not visited
+        		if(dirList.contains(EAST) && !(RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x+1,y)))) {
         			return WEST;
         		}
         	}	
