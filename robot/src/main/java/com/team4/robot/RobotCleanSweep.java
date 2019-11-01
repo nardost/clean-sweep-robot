@@ -8,6 +8,7 @@ import static com.team4.commons.State.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Stack;
 
 public class RobotCleanSweep implements Robot {
@@ -169,7 +170,9 @@ public class RobotCleanSweep implements Robot {
 
     
     VacuumCleaner getVacuumCleaner() {
+    	
     	return vacuumCleaner;
+    	
     }
     
     private void setVacuumCleaner(VacuumCleaner vacuumCleaner) {
@@ -177,6 +180,7 @@ public class RobotCleanSweep implements Robot {
     		throw new RobotException("Null vacuum cleaner is not allowed.");
     	}
     	this.vacuumCleaner = vacuumCleaner;
+    }
 
     HashMap<String, Location>  getVisited(){
         return this.visited;
@@ -273,8 +277,9 @@ public class RobotCleanSweep implements Robot {
             System.out.println("begin working...\n");
             FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
             //At this point, robot has info about its four neighbor cells.
-            createLocations(floorDao.openPassages);
-            buildGraph(getLocation(), floorDao.openPassages);
+           // createLocations(floorDao.openPassages);
+           // buildGraph(getLocation(), floorDao.openPassages);
+            getVacuumCleaner().clean();
             if(mode == Mode.VERBOSE) {
                 System.out.println("            DIRECTION  LOCATION       DIRT  FLOOR TYPE\t             OPEN DIRECTIONS\tCHARGING STATIONS NEARBY");
                 System.out.println("            ---------  --------  ---------  ----------\t----------------------------\t--------------------------------------------------------------------------------------------------------");
@@ -286,7 +291,7 @@ public class RobotCleanSweep implements Robot {
 
                 try {
                     //add delay to simulate Robot staying in a tile while working.
-                    Thread.sleep(timeInTile * 1000L);
+                    Thread.sleep(timeInTile * 1L);
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
@@ -303,16 +308,59 @@ public class RobotCleanSweep implements Robot {
                     }
                     //do some work and mark tile as done
 
-                    getVacuumCleaner().clean();
-
-                    SensorSimulator.getInstance().setTileDone(getLocation());
+                    //SensorSimulator.getInstance().setTileDone(getLocation());
                     move(direction);
+                    getVacuumCleaner().clean();
+                    
+                    
                 }
+
                 else {
                     setState(STANDBY);
+                    
+                }
+                
+                while(getState()==FULL_TANK) {
+                	System.out.println();
+                	System.out.println("--------------------------------------------------------");
+                	System.out.println();
+                	System.out.println("DIRT TANK FULL!!!");
+                	System.out.println("Please Empty:");
+                	System.out.println("1. Empty");
+
+                	
+                	Scanner scanner  = new Scanner(System.in);
+                	int input = scanner.nextInt();
+                	System.out.println();
+                	System.out.println("--------------------------------------------------------");
+                	if(input==1) {
+                		getVacuumCleaner().emptyTank();
+                		setState(WORKING);
+                		getVacuumCleaner().clean();
+                		System.out.println();
+                	}
                 }
             }
-        } else {
+            //###################################################################################
+            //##  FOR NARDOS																   ##	
+            //##  (1)																		   ##
+            //##  some issues with console output											   ##
+            //##  it does not print the last location										   ##	
+            //##  so, below is a print of the last location									   ##
+            //##  (2)																		   ##
+            //##  CHECK how certain passages are behaving in JSON.							   ##
+            //##  for example (1), (4,4) seems to be blocked if you are at (4,3)			   ##
+            //##  is this because a wall extends on cell too much? check please				   ##
+            //##  for example (2), similar to previous case.. from (4,6) you cannot			   ##
+            //##  go to (4,7). Notice that in both cases they are on a cell next to passage	   ##
+            //##  check your code or JSON.													   ##
+            //##  these are the only issues. Should be an easy fix.							   ##
+           //####################################################################################
+           
+            System.out.println(RobotCleanSweep.getInstance().getLocation());
+        }
+        
+        else {
             System.out.println("TURN ME ON!!!");
         }
     }
