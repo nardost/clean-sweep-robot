@@ -288,7 +288,7 @@ public class RobotCleanSweep implements Robot {
 
                 try {
                     //add delay to simulate Robot staying in a tile while working.
-                    Thread.sleep(timeInTile * 1000L);
+                    Thread.sleep(timeInTile * 1L);
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
@@ -296,18 +296,34 @@ public class RobotCleanSweep implements Robot {
                 floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
                 createLocations(floorDao.openPassages);
                 buildGraph(getLocation(), floorDao.openPassages);
+                FloorType floor = floorDao.floorType;
 
                 Direction direction = getNavigator().traverseFloor(floorDao.openPassages);
                 if(direction != null) {
                     if(mode == Mode.VERBOSE) {
                         logTileInfo(floorDao, direction);
                     }
-                    move(direction);
+                    
+                    int cost = move(direction, floor.getValue());
                     getVacuumCleaner().clean();
-                }
+                    getPowerManager().updateBatteryLevel(cost);
+                    if(getPowerManager().getBatteryLevel() <= 0) {
+                    	setState(LOW_BATTERY);
+                    }
+
+}
+                
 
                 else {
                     setState(STANDBY);
+                }
+                
+                if(getState()==LOW_BATTERY) {
+
+                	floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+                	move(backToCharge(),floorDao.floorType.getValue());
+                	logTileInfo(floorDao, direction);
+                	
                 }
                 
                 if(getState()==FULL_TANK) {
@@ -327,6 +343,7 @@ public class RobotCleanSweep implements Robot {
                 }
             }
             logTileInfo(floorDao, null);
+            System.out.println("Battery Level: " + getPowerManager().getBatteryLevel());
         } else {
             System.out.println();
             System.out.println("TURNED OFF");
@@ -390,10 +407,13 @@ public class RobotCleanSweep implements Robot {
         }
     }
 
-    void move(Direction direction) {
+    int move(Direction direction, int floorVal) {
         int currentX = RobotCleanSweep.getInstance().getLocation().getX();
         int currentY = RobotCleanSweep.getInstance().getLocation().getY();
-
+        int cost = floorVal;
+        if(direction==null) {
+        	return floorVal;
+        }
         switch(direction) {
 
             case NORTH:
@@ -411,11 +431,61 @@ public class RobotCleanSweep implements Robot {
             case EAST:
                 RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX + 1, currentY));
                 break;
+            
+            	
         }
+        FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+        cost += floorDao.floorType.getValue();
+        cost = cost/2;
+
+        getPowerManager().updateBatteryLevel(cost);
+        if(getPowerManager().getBatteryLevel() <= 0) {
+        	setState(LOW_BATTERY);
+        	System.out.println();
+        	System.out.println("----------------------------------------------------------------");
+        	System.out.println("BATTERY LOW!!!");
+        	System.out.println("GOING BACKK TO CHARGING STATION");
+        	System.out.println("Battery Level: " + getPowerManager().getBatteryLevel());
+        	System.out.println("-----------------------------------------------------------------");
+        	System.out.println();
+        	
+        }
+        if(getState()==LOW_BATTERY) {
+        	
+        	move(backToCharge(),floorDao.floorType.getValue());
+        	
+        }
+        
+        return cost;
+        
     }
 
     void recharge() {
         getPowerManager().recharge();
+    }
+    
+    Direction backToCharge() {
+    	if(RobotCleanSweep.getInstance().getLocation().equals( LocationFactory.createLocation(0, 9))){
+        	System.out.println("BATTERY LOW!!!");
+        	System.out.println("AT CHARGING STATION");
+        	recharge();
+           // logTileInfo(floorDao, null);
+            System.out.println(getPowerManager().getBatteryLevel());
+        	setState(WORKING);
+        	return null;
+    	}
+    	else {
+
+        	AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),LocationFactory.createLocation(0, 9) ,2);
+        	Direction direction = null;
+
+        	direction = aStar.search().pop();
+        	FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+        	
+        	logTileInfo(floorDao, direction);
+        	return direction;
+    	}
+
     }
 
     private void logTileInfo(FloorDao floorDao, Direction direction) {

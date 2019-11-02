@@ -15,11 +15,13 @@ class AStar {
 	 private HashMap<Location, List<Location>> graph = new HashMap<>();
 	 private Node initial;
 	 private Location goal;
+	 private int chooseComp;
 	 
-	 public AStar(HashMap<Location, List<Location>> graph, Location location, Location goal) {
+	 public AStar(HashMap<Location, List<Location>> graph, Location location, Location goal, int comp) {
 		 this.graph = graph;
 		 this.initial = new Node(location);
 		 this.goal = goal;
+		 this.chooseComp = comp;
 	 }
 	 
 	  class fComparator implements Comparator<Node> {
@@ -28,6 +30,15 @@ class AStar {
 			a.setF( h.manhattan(a) + a.getCost());
 			b.setF((b.getCost() + h.manhattan(b)));
 			return (a.getF()  - b.getF());
+		 }
+	 }
+	  
+	  class gComparator implements Comparator<Node> {
+	 	//Heuristics h = new Heuristics(getGoal());
+	 	public int compare(Node a, Node b) {
+	 		 
+
+			return (a.getFloorCost()  - b.getFloorCost());
 		 }
 	 }
 	 
@@ -46,8 +57,18 @@ class AStar {
 	 }
 	 
 	 Stack<Direction> search() {
+		 PriorityQueue<Node> pQueue;
+		 if(chooseComp == 1) {
+			  pQueue = new PriorityQueue<Node>(new fComparator());
+		 }
+		 else if( chooseComp == 2) {
+			  pQueue = new PriorityQueue<Node>(new gComparator());
+		 }
+		 else {
+			  pQueue = null;
+			
+		 }
 		 
-		 PriorityQueue<Node> pQueue = new PriorityQueue<Node>(new fComparator());
 		 ArrayList<Location> expanded = new ArrayList<Location>();
 		 Node node = initial;
 		 pQueue.add(node);
@@ -75,6 +96,10 @@ class AStar {
 						 childNode.setParent(node);
 						 childNode.setCost(node.getCost()+1);
 						 childNode.setDirection();
+						int parentCost = childNode.getParent().getFloor().getValue();
+						int myCost = childNode.getFloor().getValue();
+						int cost = (parentCost + myCost)/2;
+						childNode.setFloorCost(cost);
 						 pQueue.add(childNode);
 					 }
 				 }

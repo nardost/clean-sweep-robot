@@ -1,6 +1,8 @@
 package com.team4.robot;
 
 import com.team4.commons.Location;
+import com.team4.sensor.FloorDao;
+import com.team4.sensor.SensorSimulator;
 import com.team4.commons.*;
 
 
@@ -12,6 +14,8 @@ class Node {
 	private int maxCost;
 	private Direction directionFromParent;
 	private int f;
+	private int floorCost;
+	private FloorType floor;
 	
 	public Node(Location location) {
 		setLocation(location);
@@ -20,6 +24,9 @@ class Node {
 		setCost(0);
 		setMaxCost(0);
 		setF(0);
+		setFloorCost(0);
+		FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(location);
+		setFloor(floorDao.floorType);
 	}
 
 	public Location getLocation() {
@@ -116,6 +123,22 @@ class Node {
 	public int hashCode() {			
 
 		return this.getLocation().hashCode();
+	}
+
+	public int getFloorCost() {
+		return floorCost;
+	}
+
+	public void setFloorCost(int floorCost) {
+		this.floorCost = floorCost;
+	}
+
+	public FloorType getFloor() {
+		return floor;
+	}
+
+	public void setFloor(FloorType floor) {
+		this.floor = floor;
 	}
 	
 	
