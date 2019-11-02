@@ -8,7 +8,6 @@ import static com.team4.commons.State.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Stack;
 
 public class RobotCleanSweep implements Robot {
@@ -277,8 +276,6 @@ public class RobotCleanSweep implements Robot {
             System.out.println("begin working...\n");
             FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
             //At this point, robot has info about its four neighbor cells.
-           // createLocations(floorDao.openPassages);
-           // buildGraph(getLocation(), floorDao.openPassages);
             getVacuumCleaner().clean();
             if(mode == Mode.VERBOSE) {
                 System.out.println("            DIRECTION  LOCATION       DIRT  FLOOR TYPE\t             OPEN DIRECTIONS\tCHARGING STATIONS NEARBY");
@@ -291,7 +288,7 @@ public class RobotCleanSweep implements Robot {
 
                 try {
                     //add delay to simulate Robot staying in a tile while working.
-                    Thread.sleep(timeInTile * 1L);
+                    Thread.sleep(timeInTile * 1000L);
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
@@ -301,60 +298,39 @@ public class RobotCleanSweep implements Robot {
                 buildGraph(getLocation(), floorDao.openPassages);
 
                 Direction direction = getNavigator().traverseFloor(floorDao.openPassages);
-                //System.out.println("Current Location: " + RobotCleanSweep.getInstance().getLocation() + " CHOSEN DIRECTION: " + direction);
-                //System.out.println("************************************************************************");
-                //System.out.println();
-
                 if(direction != null) {
                     if(mode == Mode.VERBOSE) {
                         logTileInfo(floorDao, direction);
                     }
-                    //do some work and mark tile as done
-
-                    //SensorSimulator.getInstance().setTileDone(getLocation());
                     move(direction);
-                    
                     getVacuumCleaner().clean();
-                    
-                    
                 }
 
                 else {
                     setState(STANDBY);
-                    
                 }
                 
                 if(getState()==FULL_TANK) {
                 	System.out.println();
-                	System.out.println("--------------------------------------------------------");
+                	System.out.println("DIRT TANK FULL...");
                 	System.out.println();
-                	System.out.println("DIRT TANK FULL!!!");
-                	System.out.println("Please Empty:");
-         
-                	System.out.println();
-                	System.out.println("--------------------------------------------------------");
-                	
-                		getVacuumCleaner().emptyTank();
-                		System.out.println("EMPTY NOW!");
-                		setState(WORKING);
-                		getVacuumCleaner().clean();
-                		System.out.println();
-                	
+                	try {
+                	    Thread.sleep(5000L);
+                    } catch (InterruptedException ie) {
+                	    ie.printStackTrace();
+                    }
+                    getVacuumCleaner().emptyTank();
+                    System.out.println("...DIRT TANK EMPTY");
+                    setState(WORKING);
+                    getVacuumCleaner().clean();
+                    System.out.println();
                 }
             }
-            //###################################################################################
-            //##  FOR NARDOS																   ##	
-            //##  (1)																		   ##
-            //##  some issues with console output											   ##
-            //##  it does not print the last location										   ##	
-            //##  so, below is a print of the last location									   ##
-           //####################################################################################
             logTileInfo(floorDao, null);
-           
-        }
-        
-        else {
-            System.out.println("TURN ME ON!!!");
+        } else {
+            System.out.println();
+            System.out.println("TURNED OFF");
+            System.out.println();
         }
     }
 

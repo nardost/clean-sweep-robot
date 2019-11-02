@@ -2,7 +2,7 @@ package com.team4.robot;
 
 import java.util.Arrays;
 
-public class PrintPath {
+class PrintPath {
 	
 	String [][] grid;
 	int lastX;

@@ -1,12 +1,11 @@
 package com.team4.robot;
 
-import com.team4.commons.Direction.*;
 import com.team4.commons.Location;
 import com.team4.commons.*;
 
 
 
-public class Node {
+class Node {
 	private Location location;
 	private Node parent;
 	private int cost;

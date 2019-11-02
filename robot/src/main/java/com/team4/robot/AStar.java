@@ -10,32 +10,24 @@ import java.util.Stack;
 import com.team4.commons.Direction;
 import com.team4.commons.Location;
 
-public class AStar {
+class AStar {
 	
 	 private HashMap<Location, List<Location>> graph = new HashMap<>();
-	 Node initial;
-	 Location goal;
-	
-	 
+	 private Node initial;
+	 private Location goal;
 	 
 	 public AStar(HashMap<Location, List<Location>> graph, Location location, Location goal) {
-		 
 		 this.graph = graph;
 		 this.initial = new Node(location);
-
 		 this.goal = goal;
-		
 	 }
 	 
-	  class fComparator implements Comparator<Node>{
-		 
-		  Heuristics h = new Heuristics(getGoal());
-		 public int compare(Node a, Node b) {
+	  class fComparator implements Comparator<Node> {
+	 	Heuristics h = new Heuristics(getGoal());
+	 	public int compare(Node a, Node b) {
 			a.setF( h.manhattan(a) + a.getCost());
 			b.setF((b.getCost() + h.manhattan(b)));
 			return (a.getF()  - b.getF());
-			
-			 
 		 }
 	 }
 	 
@@ -47,7 +39,6 @@ public class AStar {
 			 node1 = node1.getParent();
 		 }
 		 return directions;
-		 
 	 }
 	 
 	 Location getGoal() {
@@ -78,31 +69,18 @@ public class AStar {
 			 //System.out.println(" Parent: " + node.getLocation());
 			// System.out.print("--> My Children: " );
 			 if(children != null) {
-				 
-			 
-			 for(Location child : children) {
-				 //System.out.println("Child: " + child);
-				
-				 if(!expanded.contains(child)) {
-					 Node childNode = new Node(child);
-					 childNode.setParent(node);
-					 childNode.setCost(node.getCost()+1);
-					 childNode.setDirection();
-					 pQueue.add(childNode);
-					 
-					 
+				 for(Location child : children) {
+					 if(!expanded.contains(child)) {
+						 Node childNode = new Node(child);
+						 childNode.setParent(node);
+						 childNode.setCost(node.getCost()+1);
+						 childNode.setDirection();
+						 pQueue.add(childNode);
+					 }
 				 }
-				 
 			 }
-			 }
-			 
-			 
-			 
-			 
-			 
 		 }
 		return null;
-		 
 	 }
 
 	public HashMap<Location, List<Location>> getGraph() {
@@ -112,8 +90,4 @@ public class AStar {
 	public void setGraph(HashMap<Location, List<Location>> graph) {
 		this.graph = graph;
 	}
-	 
-
-	 
-
 }

@@ -2,7 +2,7 @@ package com.team4.robot;
 
 import com.team4.commons.ConfigManager;
 
-public class PowerUnit implements PowerManager {
+class PowerUnit implements PowerManager {
 
     private int batteryLevel;
 

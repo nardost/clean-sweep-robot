@@ -3,7 +3,7 @@ package com.team4.robot;
 import com.team4.commons.*;
 import com.team4.sensor.*;
 
-public class DirtManager implements VacuumCleaner {
+class DirtManager implements VacuumCleaner {
 	
 	private final int MAX_DIRT = Integer.parseInt(ConfigManager.getConfiguration("dirtCapacity"));
 	

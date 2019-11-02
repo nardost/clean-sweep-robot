@@ -2,7 +2,7 @@ package com.team4.robot;
 
 import com.team4.commons.Location;
 
-public class Heuristics {
+class Heuristics {
 	
 	private Location goal;
 	public Heuristics(Location goal) {

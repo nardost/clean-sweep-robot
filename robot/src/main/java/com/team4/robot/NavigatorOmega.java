@@ -7,30 +7,19 @@ import static com.team4.commons.Direction.WEST;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EmptyStackException;
-import java.util.Stack;
 
 import com.team4.commons.Direction;
 import com.team4.commons.Location;
 import com.team4.commons.LocationFactory;
 
-public class NavigatorOmega implements Navigator {
+class NavigatorOmega implements Navigator {
 	
 	@Override
 	public Direction traverseFloor(Direction [] directions) {
 
         int x = RobotCleanSweep.getInstance().getLocation().getX();
         int y = RobotCleanSweep.getInstance().getLocation().getY();
-        
-        //SOUTH --> EAST --> NORTH --> WEST
-        //only if-statements because it is in order of priority
-        //if one if-statement doesn't return, then we will check the next
-       // System.out.println();
-       // System.out.println("************************************************************************");
-       // System.out.println("for checking only");
-        //System.out.println("Current Location:" + RobotCleanSweep.getInstance().getLocation() + " Directions open at this location: " +  Arrays.toString(directions));
 
-        
         ArrayList<Direction> dirList = new ArrayList<>(Arrays.asList(directions));
         if(dirList.contains(SOUTH) && !(RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x,y+1)))) {
         	
