@@ -3,6 +3,7 @@ package com.team4.robot;
 import com.team4.commons.*;
 import com.team4.sensor.SensorSimulator;
 import com.team4.sensor.FloorDao;
+
 import static com.team4.commons.State.*;
 
 import java.util.ArrayList;
@@ -25,18 +26,13 @@ public class RobotCleanSweep implements Robot {
     //Robot's memory of visited cells
     private HashMap<String, Location> visited = new HashMap<>();
     //unvisited cells
-    private Stack<Location> unvisited = new Stack<Location>();
+    private Stack<Location> unvisited = new Stack<>();
     //graph built as robot progresses
     private HashMap<Location, List<Location>> graph = new HashMap<>();
     //Path class for printing
     private HashMap<Location, DirtUnits> doneTiles = new HashMap<>();
 
     private static RobotCleanSweep robotCleanSweep = null;
-
-    //options pursued?
-
-    // will delete, just for printing the grid to help programmer
-    PrintPath path = new PrintPath(SensorSimulator.getInstance().getFloorDimension()[0],SensorSimulator.getInstance().getFloorDimension()[1]);
 
     private RobotCleanSweep() {
 
@@ -66,6 +62,179 @@ public class RobotCleanSweep implements Robot {
         }
         return robotCleanSweep;
     }
+    
+    @Override
+    public void turnOn() {
+        Utilities.printLogo();
+        setState(STANDBY);
+        //Robot waits for cleaning schedule.
+        int scheduledWait = Integer.parseInt(ConfigManager.getConfiguration("scheduledWait"));
+        Utilities.doLoopedTimeDelay("...WAITING FOR SCHEDULED CLEANING TIME...", scheduledWait, getZeroTime());
+
+        //Robot begins work.
+        Mode mode = Mode.VERBOSE;
+        Long timeInTile = Long.parseLong(ConfigManager.getConfiguration("timeInTile"));
+        work(mode, timeInTile);
+    }
+
+    @Override
+    public void turnOff() throws  RobotException {
+        setState(OFF);
+        System.out.println();
+        LogManager.print("...TURNED OFF...", getZeroTime());
+        System.out.println();
+    }
+
+    private void work(Mode mode, long timeInTile) {
+        /** //check if there is enough battery to make it to the nearest charging station
+         *  //if(there is enough battery to make it to the nearest charging station) {
+         *  //    continue working... ?
+         *  //} else {
+         *  //    set state low battery... etc..
+         *  //}
+         *  while(mode is STANDBY && there are tiles not yet visited) {
+         *      if(dirt tank is full) {
+         *          save current tile as the last tile not done
+         *          change mode to FULL_TANK
+         *          wait until owner empties tank (infinite loop?)
+         *          if(tank emptied) {
+         *              change mode to STANDBY
+         *          }
+         *      } else {
+         *          if(there is undone tile saved) {
+         *              get saved undone tile and make it my next tile
+         *          } else {
+         *              decide where to go next <- the traversal algorithm picks which Tile is next. (navigator)
+         *          }
+         *          go to next tile (move)
+         *          ask sensor simulator information about current tile and save info
+         *          if(tile is not clean) {
+         *              check if there is enough battery to clean tile
+         *              if(there is not enough battery) {
+         *                  save current tile as the last tile not done
+         *                  change mode to CHARGING
+         *                  go to nearest charging station
+         *                  charge to 100%
+         *                  go back to last tile
+         *              } else {
+         *                  clean tile
+         *              }
+         *          }
+         *          report battery usage to power manager
+         *          save tile to done list
+         *      }
+         *  }
+         */
+
+        // -----------------------------------------------------------------------
+        if (getState() != OFF) {
+
+            setState(WORKING);
+
+            Utilities.printFormattedHeader(mode);
+
+            while(getState() == WORKING) {
+
+                Utilities.doTimeDelay(timeInTile);
+
+                FloorDao floorDaoBefore = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+                createLocations(floorDaoBefore.openPassages);
+                buildGraph(getLocation(), floorDaoBefore.openPassages);
+
+                Direction direction = getNavigator().traverseFloor(floorDaoBefore.openPassages);
+                if(direction != null) {
+                    getVacuumCleaner().clean();
+                    FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+                    logTileInfo(floorDaoBefore, floorDaoAfter, direction, mode);
+                    move(direction);
+                } else {
+                    setState(STANDBY);
+                }
+            }
+        }
+    }
+
+    private void move(Direction direction) {
+        int currentX = RobotCleanSweep.getInstance().getLocation().getX();
+        int currentY = RobotCleanSweep.getInstance().getLocation().getY();
+
+        switch(direction) {
+
+            case NORTH:
+                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY - 1));
+                break;
+
+            case SOUTH:
+                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY + 1));
+                break;
+
+            case WEST:
+                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX - 1, currentY));
+                break;
+
+            case EAST:
+                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX + 1, currentY));
+                break;
+        }
+    }
+
+    void createLocations(Direction [] directions) {
+        int currentX = RobotCleanSweep.getInstance().getLocation().getX();
+        int currentY = RobotCleanSweep.getInstance().getLocation().getY();
+        Location location = null;
+        for(int i = 0; i < directions.length; i++) {
+            switch(directions[i]) {
+                case NORTH:
+                    location = LocationFactory.createLocation(currentX, currentY - 1);
+                    break;
+                case SOUTH:
+                    location = LocationFactory.createLocation(currentX, currentY + 1);
+                    break;
+                case WEST:
+                    location =  LocationFactory.createLocation(currentX - 1, currentY);
+                    break;
+                case EAST:
+                    location = LocationFactory.createLocation(currentX + 1, currentY);
+                    break;
+                default:
+                    throw new RobotException("Impossible direction. Only N, S, E, W directions are available.");
+            }
+            putUnvisited(location);
+        }
+    }
+
+    /**
+     * The robot builds a graph of locations it has been to
+     * and locations it knows it can go to.
+     * @param location
+     * @param directions
+     */
+    private void buildGraph(Location location, Direction [] directions) {
+        int x = location.getX();
+        int y = location.getY();
+        List<Location> neighbors = new ArrayList<>();
+        for(Direction direction : directions) {
+            neighbors.add(getNeighbor(location, direction));
+        }
+        getGraph().put(location, neighbors);
+    }
+
+    private Location getNeighbor(Location location, Direction direction) {
+        int x = location.getX();
+        int y = location.getY();
+        switch (direction) {
+            case NORTH: return LocationFactory.createLocation(x, y - 1);
+            case SOUTH: return LocationFactory.createLocation(x, y + 1);
+            case EAST: return LocationFactory.createLocation(x + 1, y);
+            case WEST: return LocationFactory.createLocation(x - 1, y);
+            default: throw new RobotException("Impossible direction. Only N, S, E, W directions are available.");
+        }
+    }
+
+    void recharge() {
+        getPowerManager().recharge();
+    }
+
 
     long getZeroTime() {
         return zeroTime;
@@ -193,208 +362,6 @@ public class RobotCleanSweep implements Robot {
         this.graph = graph;
     }
 
-    @Override
-    public void turnOn() {
-        printLogo();
-        setState(STANDBY);
-        //Robot waits for cleaning schedule.
-        try {
-            int scheduledWait = Integer.parseInt(ConfigManager.getConfiguration("scheduledWait"));
-            for(int i = 1; i <= scheduledWait; i++) {
-                LogManager.print("...WAITING FOR SCHEDULED CLEANING TIME...", getZeroTime());
-                Thread.sleep(1000L);
-            }
-            System.out.println();
-        } catch (InterruptedException ie) {
-            ie.printStackTrace();
-        }
-        //Robot begins work.
-        Mode mode = Mode.VERBOSE;
-        Long timeInTile = Long.parseLong(ConfigManager.getConfiguration("timeInTile"));
-        work(mode, timeInTile);
-    }
-
-    @Override
-    public void turnOff() throws  RobotException {
-        setState(OFF);
-        System.out.println();
-        System.out.println("...TURNED OFF...");
-        System.out.println();
-    }
-
-    private enum Mode { SILENT, VERBOSE };
-
-    private void work(Mode mode, long timeInTile) {
-        /** //check if there is enough battery to make it to the nearest charging station
-         *  //if(there is enough battery to make it to the nearest charging station) {
-         *  //    continue working... ?
-         *  //} else {
-         *  //    set state low battery... etc..
-         *  //}
-         *  while(mode is STANDBY && there are tiles not yet visited) {
-         *      if(dirt tank is full) {
-         *          save current tile as the last tile not done
-         *          change mode to FULL_TANK
-         *          wait until owner empties tank (infinite loop?)
-         *          if(tank emptied) {
-         *              change mode to STANDBY
-         *          }
-         *      } else {
-         *          if(there is undone tile saved) {
-         *              get saved undone tile and make it my next tile
-         *          } else {
-         *              decide where to go next <- the traversal algorithm picks which Tile is next. (navigator)
-         *          }
-         *          go to next tile (move)
-         *          ask sensor simulator information about current tile and save info
-         *          if(tile is not clean) {
-         *              check if there is enough battery to clean tile
-         *              if(there is not enough battery) {
-         *                  save current tile as the last tile not done
-         *                  change mode to CHARGING
-         *                  go to nearest charging station
-         *                  charge to 100%
-         *                  go back to last tile
-         *              } else {
-         *                  clean tile
-         *              }
-         *          }
-         *          report battery usage to power manager
-         *          save tile to done list
-         *      }
-         *  }
-         */
-
-        // -----------------------------------------------------------------------
-        if (getState() != OFF) {
-
-            setState(WORKING);
-
-            printFormattedHeader(mode);
-
-            while(getState() == WORKING) {
-
-                try {
-                    //add delay to simulate Robot staying in a tile while working.
-                    Thread.sleep(timeInTile * 1000L);
-                } catch (InterruptedException ie) {
-                    ie.printStackTrace();
-                }
-
-                FloorDao floorDaoBefore = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
-                createLocations(floorDaoBefore.openPassages);
-                buildGraph(getLocation(), floorDaoBefore.openPassages);
-
-                Direction direction = getNavigator().traverseFloor(floorDaoBefore.openPassages);
-                if(direction != null) {
-                    getVacuumCleaner().clean();
-                    FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
-                    logTileInfo(floorDaoBefore, floorDaoAfter, direction, mode);
-                    move(direction);
-                } else {
-                    setState(STANDBY);
-                }
-            }
-        }
-    }
-
-    void createLocations(Direction [] directions) {
-        int currentX = RobotCleanSweep.getInstance().getLocation().getX();
-        int currentY = RobotCleanSweep.getInstance().getLocation().getY();
-        Location location = null;
-        for(int i = 0; i < directions.length; i++) {
-            switch(directions[i]) {
-                case NORTH:
-                    location = LocationFactory.createLocation(currentX, currentY - 1);
-                    break;
-                case SOUTH:
-                    location = LocationFactory.createLocation(currentX, currentY + 1);
-                    break;
-                case WEST:
-                    location =  LocationFactory.createLocation(currentX - 1, currentY);
-                    break;
-                case EAST:
-                    location = LocationFactory.createLocation(currentX + 1, currentY);
-                    break;
-                default:
-                    throw new RobotException("Impossible direction. Only N, S, E, W directions are available.");
-            }
-            putUnvisited(location);
-        }
-    }
-
-    /**
-     * The robot builds a graph of locations it has been to
-     * and locations it knows it can go to.
-     * @param location
-     * @param directions
-     */
-    private void buildGraph(Location location, Direction [] directions) {
-        int x = location.getX();
-        int y = location.getY();
-        List<Location> neighbors = new ArrayList<>();
-        for(Direction direction : directions) {
-            neighbors.add(getNeighbor(location, direction));
-        }
-        getGraph().put(location, neighbors);
-    }
-
-    private Location getNeighbor(Location location, Direction direction) {
-        int x = location.getX();
-        int y = location.getY();
-        switch (direction) {
-            case NORTH: return LocationFactory.createLocation(x, y - 1);
-            case SOUTH: return LocationFactory.createLocation(x, y + 1);
-            case EAST: return LocationFactory.createLocation(x + 1, y);
-            case WEST: return LocationFactory.createLocation(x - 1, y);
-            default: throw new RobotException("Impossible direction. Only N, S, E, W directions are available.");
-        }
-    }
-
-    void move(Direction direction) {
-        int currentX = RobotCleanSweep.getInstance().getLocation().getX();
-        int currentY = RobotCleanSweep.getInstance().getLocation().getY();
-
-        switch(direction) {
-
-            case NORTH:
-                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY - 1));
-                break;
-
-            case SOUTH:
-                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY + 1));
-                break;
-
-            case WEST:
-                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX - 1, currentY));
-                break;
-
-            case EAST:
-                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX + 1, currentY));
-                break;
-        }
-    }
-
-    void recharge() {
-        getPowerManager().recharge();
-    }
-
-    private void printFormattedHeader(Mode mode) {
-        if(mode == Mode.VERBOSE) {
-            System.out.println("----------  ---------  --------  ---------  ---------  ----------\t----------------------------\t------------------------");
-            System.out.println("     CLOCK  DIRECTION  LOCATION     BEFORE      AFTER  FLOOR TYPE\t             OPEN DIRECTIONS\tCHARGING STATIONS NEARBY");
-            System.out.println("----------  ---------  --------  ---------  ---------  ----------\t----------------------------\t------------------------");
-        }
-    }
-
-    private void printLogo() {
-        System.out.println();
-        System.out.println("+=======================================================+");
-        System.out.println("|                     CLEAN SWEEP ROBOT                 |");
-        System.out.println("+=======================================================+");
-        System.out.println();
-    }
-
     private void logTileInfo(FloorDao floorDaoBefore, FloorDao floorDaoAfter, Direction direction, Mode mode) {
 
         if(mode == Mode.VERBOSE) {
@@ -415,7 +382,6 @@ public class RobotCleanSweep implements Robot {
             LogManager.print(sb.toString(), getZeroTime());
         }
     }
-
     /**
      * For testing purposes.
      */

@@ -36,22 +36,14 @@ class DirtManager implements VacuumCleaner {
 
 	private void waitUntilTankEmpty() {
 		//press any key to continue is better.
-		try {
-			System.out.println();
-			for(int i = 1; i <= 5; i++){
-				LogManager.print("...DIRT TANK FULL... (awaiting human intervention)...", RobotCleanSweep.getInstance().getZeroTime());
-				Thread.sleep(1000L);
-			}
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
+		Utilities.doLoopedTimeDelay("...DIRT TANK FULL... (awaiting human intervention)...", 5, RobotCleanSweep.getInstance().getZeroTime());
 		emptyTank();
 	}
 
 	private void emptyTank() {
 		setDirtLevel(0);
 		System.out.println();
-		LogManager.print("Dirt tank emptied...", RobotCleanSweep.getInstance().getZeroTime());
+		LogManager.print("...DIRT TANK EMPTY... (human action completed)...", RobotCleanSweep.getInstance().getZeroTime());
 		System.out.println();
 		RobotCleanSweep.getInstance().setState(State.WORKING);
 	}
