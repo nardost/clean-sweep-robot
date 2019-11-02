@@ -49,9 +49,6 @@ public class RobotCleanSweep implements Robot {
         setNavigator(NavigatorFactory.createNavigator());
         setPowerManager(new PowerUnit());
         setVacuumCleaner(new DirtManager());
-
-
-
     }
 
     /**
@@ -90,6 +87,18 @@ public class RobotCleanSweep implements Robot {
             throw new RobotException("Null state is not allowed.");
         }
         this.state = state;
+        if(this.state == WORKING) {
+            System.out.println();
+            LogManager.print("...WORKING...", RobotCleanSweep.getInstance().getZeroTime());
+            System.out.println();
+            return;
+        }
+        if(this.state == STANDBY) {
+            System.out.println();
+            LogManager.print("...STANDBY...", RobotCleanSweep.getInstance().getZeroTime());
+            System.out.println();
+            return;
+        }
     }
 
     Location getLocation() {
@@ -113,8 +122,6 @@ public class RobotCleanSweep implements Robot {
         return this.visited.containsKey(key);
     }
 
-
-
     boolean putUnvisited(Location location) {
         int x = location.getX();
         int y = location.getY();
@@ -127,16 +134,9 @@ public class RobotCleanSweep implements Robot {
             if(!this.unvisited.contains(location)) {
                 this.unvisited.push(location);
             }
-
             return false;
-
         }
-
-
     }
-
-
-
 
     boolean visitedAll() {
         return this.unvisited.isEmpty();
@@ -167,18 +167,15 @@ public class RobotCleanSweep implements Robot {
         this.powerManager = powerManager;
     }
 
-    
     VacuumCleaner getVacuumCleaner() {
-    	
-    	return vacuumCleaner;
-    	
+        return vacuumCleaner;
     }
-    
+
     private void setVacuumCleaner(VacuumCleaner vacuumCleaner) {
-    	if (vacuumCleaner == null) {
-    		throw new RobotException("Null vacuum cleaner is not allowed.");
-    	}
-    	this.vacuumCleaner = vacuumCleaner;
+        if (vacuumCleaner == null) {
+            throw new RobotException("Null vacuum cleaner is not allowed.");
+        }
+        this.vacuumCleaner = vacuumCleaner;
     }
 
     HashMap<String, Location>  getVisited(){
@@ -194,22 +191,17 @@ public class RobotCleanSweep implements Robot {
             throw new RobotException("Null graph not allowed.");
         }
         this.graph = graph;
-
     }
 
     @Override
     public void turnOn() {
+        printLogo();
         setState(STANDBY);
         //Robot waits for cleaning schedule.
-        System.out.println();
-        System.out.println("+=======================================================+");
-        System.out.println("|                     CLEAN SWEEP ROBOT                 |");
-        System.out.println("+=======================================================+");
-        System.out.println();
         try {
             int scheduledWait = Integer.parseInt(ConfigManager.getConfiguration("scheduledWait"));
             for(int i = 1; i <= scheduledWait; i++) {
-                LogManager.print("waiting for scheduled cleaning time...", getZeroTime());
+                LogManager.print("...WAITING FOR SCHEDULED CLEANING TIME...", getZeroTime());
                 Thread.sleep(1000L);
             }
             System.out.println();
@@ -225,6 +217,9 @@ public class RobotCleanSweep implements Robot {
     @Override
     public void turnOff() throws  RobotException {
         setState(OFF);
+        System.out.println();
+        System.out.println("...TURNED OFF...");
+        System.out.println();
     }
 
     private enum Mode { SILENT, VERBOSE };
@@ -272,18 +267,11 @@ public class RobotCleanSweep implements Robot {
 
         // -----------------------------------------------------------------------
         if (getState() != OFF) {
+
             setState(WORKING);
-            System.out.println("begin working...\n");
-            FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
-            //At this point, robot has info about its four neighbor cells.
-            getVacuumCleaner().clean();
-            if(mode == Mode.VERBOSE) {
-                System.out.println("            DIRECTION  LOCATION       DIRT  FLOOR TYPE\t             OPEN DIRECTIONS\tCHARGING STATIONS NEARBY");
-                System.out.println("            ---------  --------  ---------  ----------\t----------------------------\t--------------------------------------------------------------------------------------------------------");
-            }
-            if(mode == Mode.VERBOSE) {
-                logTileInfo(floorDao, null);
-            }
+
+            printFormattedHeader(mode);
+
             while(getState() == WORKING) {
 
                 try {
@@ -293,44 +281,20 @@ public class RobotCleanSweep implements Robot {
                     ie.printStackTrace();
                 }
 
-                floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
-                createLocations(floorDao.openPassages);
-                buildGraph(getLocation(), floorDao.openPassages);
+                FloorDao floorDaoBefore = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+                createLocations(floorDaoBefore.openPassages);
+                buildGraph(getLocation(), floorDaoBefore.openPassages);
 
-                Direction direction = getNavigator().traverseFloor(floorDao.openPassages);
+                Direction direction = getNavigator().traverseFloor(floorDaoBefore.openPassages);
                 if(direction != null) {
-                    if(mode == Mode.VERBOSE) {
-                        logTileInfo(floorDao, direction);
-                    }
-                    move(direction);
                     getVacuumCleaner().clean();
-                }
-
-                else {
+                    FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+                    logTileInfo(floorDaoBefore, floorDaoAfter, direction, mode);
+                    move(direction);
+                } else {
                     setState(STANDBY);
                 }
-                
-                if(getState()==FULL_TANK) {
-                	System.out.println();
-                	System.out.println("DIRT TANK FULL...");
-                	System.out.println();
-                	try {
-                	    Thread.sleep(5000L);
-                    } catch (InterruptedException ie) {
-                	    ie.printStackTrace();
-                    }
-                    getVacuumCleaner().emptyTank();
-                    System.out.println("...DIRT TANK EMPTY");
-                    setState(WORKING);
-                    getVacuumCleaner().clean();
-                    System.out.println();
-                }
             }
-            logTileInfo(floorDao, null);
-        } else {
-            System.out.println();
-            System.out.println("TURNED OFF");
-            System.out.println();
         }
     }
 
@@ -354,9 +318,6 @@ public class RobotCleanSweep implements Robot {
                     break;
                 default:
                     throw new RobotException("Impossible direction. Only N, S, E, W directions are available.");
-                    // Don't catch this exception!
-                    // If you reach this block, the programmer has made a serious mistake
-                    // and needs to fix it. So throw it instead of catching it.
             }
             putUnvisited(location);
         }
@@ -418,21 +379,41 @@ public class RobotCleanSweep implements Robot {
         getPowerManager().recharge();
     }
 
-    private void logTileInfo(FloorDao floorDao, Direction direction) {
+    private void printFormattedHeader(Mode mode) {
+        if(mode == Mode.VERBOSE) {
+            System.out.println("----------  ---------  --------  ---------  ---------  ----------\t----------------------------\t------------------------");
+            System.out.println("     CLOCK  DIRECTION  LOCATION     BEFORE      AFTER  FLOOR TYPE\t             OPEN DIRECTIONS\tCHARGING STATIONS NEARBY");
+            System.out.println("----------  ---------  --------  ---------  ---------  ----------\t----------------------------\t------------------------");
+        }
+    }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(Utilities.padSpacesToFront( (direction == null) ? "" : direction.toString(), 9));
-        sb.append("  ");
-        sb.append(Utilities.padSpacesToFront("(" + RobotCleanSweep.getInstance().getLocation().getX() + ", " + RobotCleanSweep.getInstance().getLocation().getY() + ")", 8));
-        sb.append("  ");
-        sb.append( Utilities.padSpacesToFront((floorDao.isClean) ? "CLEAN" : "NOT CLEAN", 9));
-        sb.append("  ");
-        sb.append(Utilities.padSpacesToFront(floorDao.floorType.toString(), 10));
-        sb.append('\t');
-        sb.append( Utilities.padSpacesToFront(Utilities.arrayToString(floorDao.openPassages), 28) );
-        sb.append("\t");
-        sb.append(Utilities.arrayToString(floorDao.chargingStations));
-        LogManager.print(sb.toString() , getZeroTime());
+    private void printLogo() {
+        System.out.println();
+        System.out.println("+=======================================================+");
+        System.out.println("|                     CLEAN SWEEP ROBOT                 |");
+        System.out.println("+=======================================================+");
+        System.out.println();
+    }
+
+    private void logTileInfo(FloorDao floorDaoBefore, FloorDao floorDaoAfter, Direction direction, Mode mode) {
+
+        if(mode == Mode.VERBOSE) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(Utilities.padSpacesToFront((direction == null) ? "" : direction.toString(), 9));
+            sb.append("  ");
+            sb.append(Utilities.padSpacesToFront("(" + RobotCleanSweep.getInstance().getLocation().getX() + ", " + RobotCleanSweep.getInstance().getLocation().getY() + ")", 8));
+            sb.append("  ");
+            sb.append(Utilities.padSpacesToFront((floorDaoBefore.isClean) ? "CLEAN" : "NOT CLEAN", 9));
+            sb.append("  ");
+            sb.append(Utilities.padSpacesToFront((floorDaoAfter.isClean) ? "CLEAN" : "NOT CLEAN", 9));
+            sb.append("  ");
+            sb.append(Utilities.padSpacesToFront(floorDaoBefore.floorType.toString(), 10));
+            sb.append('\t');
+            sb.append(Utilities.padSpacesToFront(Utilities.arrayToString(floorDaoBefore.openPassages), 28));
+            sb.append("\t");
+            sb.append(Utilities.arrayToString(floorDaoBefore.chargingStations));
+            LogManager.print(sb.toString(), getZeroTime());
+        }
     }
 
     /**
