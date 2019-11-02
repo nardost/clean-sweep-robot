@@ -88,4 +88,40 @@ public class Utilities {
     public static int min(int a, int b) {
         return (a > b) ? b : a;
     }
+
+    public static void printFormattedHeader(Mode mode) {
+        if(mode == Mode.VERBOSE) {
+            System.out.println("----------  ---------  --------  ---------  ---------  ----------\t----------------------------\t------------------------");
+            System.out.println("     CLOCK  DIRECTION  LOCATION     BEFORE      AFTER  FLOOR TYPE\t             OPEN DIRECTIONS\tCHARGING STATIONS NEARBY");
+            System.out.println("----------  ---------  --------  ---------  ---------  ----------\t----------------------------\t------------------------");
+        }
+    }
+
+    public static void doTimeDelay(long seconds) {
+        try {
+            Thread.sleep(seconds * 1000L);
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
+    }
+    public static void doLoopedTimeDelay(String msg, int numberOfLoops, long zeroTime) {
+        try {
+            System.out.println();
+            for(int i = 1; i <= numberOfLoops; i++){
+                LogManager.print(msg, zeroTime);
+                Thread.sleep(1000L);
+            }
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
+    }
+
+    public static void printLogo() {
+        System.out.println();
+        System.out.println("+=======================================================+");
+        System.out.println("|                     CLEAN SWEEP ROBOT                 |");
+        System.out.println("+=======================================================+");
+        System.out.println();
+    }
+
 }

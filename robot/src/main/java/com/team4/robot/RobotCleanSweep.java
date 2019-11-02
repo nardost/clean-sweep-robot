@@ -49,9 +49,6 @@ public class RobotCleanSweep implements Robot {
         setNavigator(NavigatorFactory.createNavigator());
         setPowerManager(new PowerUnit());
         setVacuumCleaner(new DirtManager());
-
-
-
     }
 
     /**
@@ -310,8 +307,7 @@ public class RobotCleanSweep implements Robot {
                     if(getPowerManager().getBatteryLevel() <= 0) {
                     	setState(LOW_BATTERY);
                     }
-
-}
+                    }
                 
 
                 else {
@@ -439,6 +435,7 @@ public class RobotCleanSweep implements Robot {
         cost = cost/2;
 
         getPowerManager().updateBatteryLevel(cost);
+
         if(getPowerManager().getBatteryLevel() <= 0) {
         	setState(LOW_BATTERY);
         	System.out.println();
