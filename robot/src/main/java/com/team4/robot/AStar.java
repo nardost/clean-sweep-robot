@@ -96,8 +96,8 @@ class AStar {
 						 childNode.setParent(node);
 						 childNode.setCost(node.getCost()+1);
 						 childNode.setDirection();
-						int parentCost = childNode.getParent().getFloor().getValue();
-						int myCost = childNode.getFloor().getValue();
+						int parentCost = childNode.getParent().getFloor().getCost();
+						int myCost = childNode.getFloor().getCost();
 						int cost = (parentCost + myCost)/2;
 						childNode.setFloorCost(cost);
 						 pQueue.add(childNode);

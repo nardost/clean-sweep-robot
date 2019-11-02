@@ -5,7 +5,7 @@ public enum FloorType {
     LOW_PILE,
     HIGH_PILE;
 
-	public int getValue(){
+	public int getCost(){
 		switch(this) {
 			case BARE: return 1;
 			case LOW_PILE: return 2;

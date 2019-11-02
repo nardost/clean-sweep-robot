@@ -33,11 +33,6 @@ public class RobotCleanSweep implements Robot {
 
     private static RobotCleanSweep robotCleanSweep = null;
 
-    //options pursued?
-
-    // will delete, just for printing the grid to help programmer
-    PrintPath path = new PrintPath(SensorSimulator.getInstance().getFloorDimension()[0],SensorSimulator.getInstance().getFloorDimension()[1]);
-
     private RobotCleanSweep() {
 
         setZeroTime(System.currentTimeMillis());
@@ -144,7 +139,7 @@ public class RobotCleanSweep implements Robot {
                 FloorDao floorDaoBefore = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
                 createLocations(floorDaoBefore.openPassages);
                 buildGraph(getLocation(), floorDaoBefore.openPassages);
-                double cost = floorDaoBefore.floorType.getValue();
+                double cost = floorDaoBefore.floorType.getCost();
 
                 Direction direction = getNavigator().traverseFloor(floorDaoBefore.openPassages);
 
@@ -156,11 +151,9 @@ public class RobotCleanSweep implements Robot {
                     FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
                     logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, direction, mode);
                     move(direction, cost);
-                    //getPowerManager().updateBatteryLevel(cost);
-
-                    //getVacuumCleaner().clean();
-
-                    if(getPowerManager().getBatteryLevel() <= 0) {
+                    if(getPowerManager().getBatteryLevel() < 67) {
+                        //this number is reached at by trial and error.
+                        //it is not just a random pick!
                         setState(LOW_BATTERY);
                     }
                 } else {
@@ -168,34 +161,12 @@ public class RobotCleanSweep implements Robot {
                 }
 
                 if(getState() == LOW_BATTERY) {
-
                     FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
-                    move(backToCharge(), floorDao.floorType.getValue());
-                    //logTileInfo(floorDaoBefore, floorDao, getPowerManager().getBatteryLevel(), direction, mode);
-
+                    move(backToCharge(), floorDao.floorType.getCost());
                 }
-                /*
-                if(getState()==FULL_TANK) {
-                	System.out.println();
-                	System.out.println("DIRT TANK FULL...");
-                	System.out.println();
-                	try {
-                	    Thread.sleep(5000L);
-                    } catch (InterruptedException ie) {
-                	    ie.printStackTrace();
-                    }
-                    getVacuumCleaner().emptyTank();
-                    System.out.println("...DIRT TANK EMPTY");
-                    setState(WORKING);
-                    getVacuumCleaner().clean();
-                    System.out.println();
-                }*/
             }
-            //logTileInfo(floorDao, null);
-            //System.out.println("Battery Level: " + getPowerManager().getBatteryLevel());
         }
     }
-
 
     private void move(Direction direction, double cost) {
         int currentX = RobotCleanSweep.getInstance().getLocation().getX();
@@ -203,7 +174,6 @@ public class RobotCleanSweep implements Robot {
         if(direction == null) {
             getPowerManager().updateBatteryLevel(cost);
             return;
-            //return floorVal;
         }
         switch(direction) {
 
@@ -225,15 +195,12 @@ public class RobotCleanSweep implements Robot {
         }
 
         FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
-        cost += floorDao.floorType.getValue();
+        cost += floorDao.floorType.getCost();
         cost = cost/2.0;
         getPowerManager().updateBatteryLevel(cost);
         if(getState() == LOW_BATTERY) {
-
-            move(backToCharge(),floorDao.floorType.getValue());
-
+            move(backToCharge(), floorDao.floorType.getCost());
         }
-        //return cost;
     }
 
     long getZeroTime() {

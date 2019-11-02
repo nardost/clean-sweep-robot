@@ -43,6 +43,10 @@ class PowerUnit implements PowerManager {
     }
 
     private void setBatteryLevel(double batteryLevel) {
+        final int maxBatteryLevel = Integer.parseInt(ConfigManager.getConfiguration("maxBatteryLevel"));
+        if(batteryLevel < 0 || batteryLevel > maxBatteryLevel) {
+            throw new RobotException("Invalid battery level.");
+        }
         this.batteryLevel = batteryLevel;
     }
 }
