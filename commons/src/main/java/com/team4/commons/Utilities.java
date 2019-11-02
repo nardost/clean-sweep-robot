@@ -91,9 +91,9 @@ public class Utilities {
 
     public static void printFormattedHeader(Mode mode) {
         if(mode == Mode.VERBOSE) {
-            System.out.println("----------  ---------  --------  ---------  ---------  ----------\t----------------------------\t------------------------");
-            System.out.println("     CLOCK  DIRECTION  LOCATION     BEFORE      AFTER  FLOOR TYPE\t             OPEN DIRECTIONS\tCHARGING STATIONS NEARBY");
-            System.out.println("----------  ---------  --------  ---------  ---------  ----------\t----------------------------\t------------------------");
+            System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------------------------\t------------------------");
+            System.out.println("     CLOCK  DIRECTION  LOCATION     BEFORE      AFTER  FLOOR TYPE  BATTERY BEFORE  BATTERY AFTER               OPEN DIRECTIONS\tCHARGING STATIONS NEARBY");
+            System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------------------------\t------------------------");
         }
     }
 
