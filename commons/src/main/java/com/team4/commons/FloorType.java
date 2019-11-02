@@ -1,16 +1,16 @@
 package com.team4.commons;
 
 public enum FloorType {
-    BARE(1),
-    LOW_PILE(2),
-    HIGH_PILE(3);
-	
-	private final int val;
-	
-	FloorType(int val){
-		this.val = val;
-	}
+    BARE,
+    LOW_PILE,
+    HIGH_PILE;
+
 	public int getValue(){
-		return val;
+		switch(this) {
+			case BARE: return 1;
+			case LOW_PILE: return 2;
+			case HIGH_PILE: return 3;
+			default: throw new RobotException("Invalid floor type state");
+		}
 	}
 }
