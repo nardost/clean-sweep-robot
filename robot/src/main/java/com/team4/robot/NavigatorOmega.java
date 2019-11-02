@@ -33,6 +33,7 @@ public class NavigatorOmega implements Navigator {
         
         ArrayList<Direction> dirList = new ArrayList<>(Arrays.asList(directions));
         if(dirList.contains(SOUTH) && !(RobotCleanSweep.getInstance().visitedLocation(LocationFactory.createLocation(x,y+1)))) {
+        	
         	if(!(dirList.contains(WEST))){
         		return SOUTH;
         	}

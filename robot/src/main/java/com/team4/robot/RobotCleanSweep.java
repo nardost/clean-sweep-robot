@@ -324,25 +324,22 @@ public class RobotCleanSweep implements Robot {
                     
                 }
                 
-                while(getState()==FULL_TANK) {
+                if(getState()==FULL_TANK) {
                 	System.out.println();
                 	System.out.println("--------------------------------------------------------");
                 	System.out.println();
                 	System.out.println("DIRT TANK FULL!!!");
                 	System.out.println("Please Empty:");
-                	System.out.println("1. Empty");
-
-                	
-                	Scanner scanner  = new Scanner(System.in);
-                	int input = scanner.nextInt();
+         
                 	System.out.println();
                 	System.out.println("--------------------------------------------------------");
-                	if(input==1) {
+                	
                 		getVacuumCleaner().emptyTank();
+                		System.out.println("EMPTY NOW!");
                 		setState(WORKING);
                 		getVacuumCleaner().clean();
                 		System.out.println();
-                	}
+                	
                 }
             }
             //###################################################################################
