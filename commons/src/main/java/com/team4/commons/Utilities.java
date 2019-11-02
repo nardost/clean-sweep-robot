@@ -104,10 +104,10 @@ public class Utilities {
             ie.printStackTrace();
         }
     }
-    public static void doLoopedTimeDelay(String msg, int n, long zeroTime) {
+    public static void doLoopedTimeDelay(String msg, int numberOfLoops, long zeroTime) {
         try {
             System.out.println();
-            for(int i = 1; i <= 5; i++){
+            for(int i = 1; i <= numberOfLoops; i++){
                 LogManager.print(msg, zeroTime);
                 Thread.sleep(1000L);
             }
