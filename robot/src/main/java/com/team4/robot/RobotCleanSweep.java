@@ -62,7 +62,7 @@ public class RobotCleanSweep implements Robot {
         }
         return robotCleanSweep;
     }
-    
+
     @Override
     public void turnOn() {
         Utilities.printLogo();
