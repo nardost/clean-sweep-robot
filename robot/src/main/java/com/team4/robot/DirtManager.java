@@ -14,9 +14,10 @@ class DirtManager implements VacuumCleaner {
 	}
 
 	@Override
-	public void clean() {
+	public void clean(double cost) {
 		SensorSimulator.getInstance().setTileDone(RobotCleanSweep.getInstance().getLocation());
 		setDirtLevel(getDirtLevel() + 1);
+		RobotCleanSweep.getInstance().getPowerManager().updateBatteryLevel(cost);
 	}
 
 	private int getDirtLevel() {
@@ -36,7 +37,10 @@ class DirtManager implements VacuumCleaner {
 
 	private void waitUntilTankEmpty() {
 		//press any key to continue is better.
-		Utilities.doLoopedTimeDelay("...DIRT TANK FULL... (awaiting human intervention)...", 5, RobotCleanSweep.getInstance().getZeroTime());
+		System.out.println();
+		LogManager.print("...DIRT TANK FULL... (awaiting human intervention)...", RobotCleanSweep.getInstance().getZeroTime());
+		System.out.println();
+		Utilities.doTimeDelay(3);
 		emptyTank();
 	}
 

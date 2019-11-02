@@ -1,6 +1,7 @@
 package com.team4.sensor;
 
 import com.team4.commons.Direction;
+
 import com.team4.commons.FloorType;
 import com.team4.commons.Location;
 

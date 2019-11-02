@@ -1,5 +1,5 @@
 package com.team4.robot;
 
 interface VacuumCleaner {
-	void clean();
+	void clean(double cost);
 }

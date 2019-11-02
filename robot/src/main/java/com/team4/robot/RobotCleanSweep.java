@@ -3,7 +3,6 @@ package com.team4.robot;
 import com.team4.commons.*;
 import com.team4.sensor.SensorSimulator;
 import com.team4.sensor.FloorDao;
-
 import static com.team4.commons.State.*;
 
 import java.util.ArrayList;
@@ -26,13 +25,18 @@ public class RobotCleanSweep implements Robot {
     //Robot's memory of visited cells
     private HashMap<String, Location> visited = new HashMap<>();
     //unvisited cells
-    private Stack<Location> unvisited = new Stack<>();
+    private Stack<Location> unvisited = new Stack<Location>();
     //graph built as robot progresses
     private HashMap<Location, List<Location>> graph = new HashMap<>();
     //Path class for printing
     private HashMap<Location, DirtUnits> doneTiles = new HashMap<>();
 
     private static RobotCleanSweep robotCleanSweep = null;
+
+    //options pursued?
+
+    // will delete, just for printing the grid to help programmer
+    PrintPath path = new PrintPath(SensorSimulator.getInstance().getFloorDimension()[0],SensorSimulator.getInstance().getFloorDimension()[1]);
 
     private RobotCleanSweep() {
 
@@ -140,24 +144,67 @@ public class RobotCleanSweep implements Robot {
                 FloorDao floorDaoBefore = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
                 createLocations(floorDaoBefore.openPassages);
                 buildGraph(getLocation(), floorDaoBefore.openPassages);
+                double cost = floorDaoBefore.floorType.getValue();
 
                 Direction direction = getNavigator().traverseFloor(floorDaoBefore.openPassages);
+
                 if(direction != null) {
-                    getVacuumCleaner().clean();
+                    double batteryLevelBefore = getPowerManager().getBatteryLevel();
+                    getVacuumCleaner().clean(cost);
+
+                    double batteryLevelAfter = getPowerManager().getBatteryLevel();
                     FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
-                    logTileInfo(floorDaoBefore, floorDaoAfter, direction, mode);
-                    move(direction);
+                    logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, direction, mode);
+                    move(direction, cost);
+                    //getPowerManager().updateBatteryLevel(cost);
+
+                    //getVacuumCleaner().clean();
+
+                    if(getPowerManager().getBatteryLevel() <= 0) {
+                        setState(LOW_BATTERY);
+                    }
                 } else {
                     setState(STANDBY);
                 }
+
+                if(getState() == LOW_BATTERY) {
+
+                    FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+                    move(backToCharge(), floorDao.floorType.getValue());
+                    //logTileInfo(floorDaoBefore, floorDao, getPowerManager().getBatteryLevel(), direction, mode);
+
+                }
+                /*
+                if(getState()==FULL_TANK) {
+                	System.out.println();
+                	System.out.println("DIRT TANK FULL...");
+                	System.out.println();
+                	try {
+                	    Thread.sleep(5000L);
+                    } catch (InterruptedException ie) {
+                	    ie.printStackTrace();
+                    }
+                    getVacuumCleaner().emptyTank();
+                    System.out.println("...DIRT TANK EMPTY");
+                    setState(WORKING);
+                    getVacuumCleaner().clean();
+                    System.out.println();
+                }*/
             }
+            //logTileInfo(floorDao, null);
+            //System.out.println("Battery Level: " + getPowerManager().getBatteryLevel());
         }
     }
 
-    private void move(Direction direction) {
+
+    private void move(Direction direction, double cost) {
         int currentX = RobotCleanSweep.getInstance().getLocation().getX();
         int currentY = RobotCleanSweep.getInstance().getLocation().getY();
-
+        if(direction == null) {
+            getPowerManager().updateBatteryLevel(cost);
+            return;
+            //return floorVal;
+        }
         switch(direction) {
 
             case NORTH:
@@ -176,65 +223,18 @@ public class RobotCleanSweep implements Robot {
                 RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX + 1, currentY));
                 break;
         }
-    }
 
-    void createLocations(Direction [] directions) {
-        int currentX = RobotCleanSweep.getInstance().getLocation().getX();
-        int currentY = RobotCleanSweep.getInstance().getLocation().getY();
-        Location location = null;
-        for(int i = 0; i < directions.length; i++) {
-            switch(directions[i]) {
-                case NORTH:
-                    location = LocationFactory.createLocation(currentX, currentY - 1);
-                    break;
-                case SOUTH:
-                    location = LocationFactory.createLocation(currentX, currentY + 1);
-                    break;
-                case WEST:
-                    location =  LocationFactory.createLocation(currentX - 1, currentY);
-                    break;
-                case EAST:
-                    location = LocationFactory.createLocation(currentX + 1, currentY);
-                    break;
-                default:
-                    throw new RobotException("Impossible direction. Only N, S, E, W directions are available.");
-            }
-            putUnvisited(location);
+        FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+        cost += floorDao.floorType.getValue();
+        cost = cost/2.0;
+        getPowerManager().updateBatteryLevel(cost);
+        if(getState() == LOW_BATTERY) {
+
+            move(backToCharge(),floorDao.floorType.getValue());
+
         }
+        //return cost;
     }
-
-    /**
-     * The robot builds a graph of locations it has been to
-     * and locations it knows it can go to.
-     * @param location
-     * @param directions
-     */
-    private void buildGraph(Location location, Direction [] directions) {
-        int x = location.getX();
-        int y = location.getY();
-        List<Location> neighbors = new ArrayList<>();
-        for(Direction direction : directions) {
-            neighbors.add(getNeighbor(location, direction));
-        }
-        getGraph().put(location, neighbors);
-    }
-
-    private Location getNeighbor(Location location, Direction direction) {
-        int x = location.getX();
-        int y = location.getY();
-        switch (direction) {
-            case NORTH: return LocationFactory.createLocation(x, y - 1);
-            case SOUTH: return LocationFactory.createLocation(x, y + 1);
-            case EAST: return LocationFactory.createLocation(x + 1, y);
-            case WEST: return LocationFactory.createLocation(x - 1, y);
-            default: throw new RobotException("Impossible direction. Only N, S, E, W directions are available.");
-        }
-    }
-
-    void recharge() {
-        getPowerManager().recharge();
-    }
-
 
     long getZeroTime() {
         return zeroTime;
@@ -256,18 +256,6 @@ public class RobotCleanSweep implements Robot {
             throw new RobotException("Null state is not allowed.");
         }
         this.state = state;
-        if(this.state == WORKING) {
-            System.out.println();
-            LogManager.print("...WORKING...", RobotCleanSweep.getInstance().getZeroTime());
-            System.out.println();
-            return;
-        }
-        if(this.state == STANDBY) {
-            System.out.println();
-            LogManager.print("...STANDBY...", RobotCleanSweep.getInstance().getZeroTime());
-            System.out.println();
-            return;
-        }
     }
 
     Location getLocation() {
@@ -336,8 +324,11 @@ public class RobotCleanSweep implements Robot {
         this.powerManager = powerManager;
     }
 
+
     VacuumCleaner getVacuumCleaner() {
+
         return vacuumCleaner;
+
     }
 
     private void setVacuumCleaner(VacuumCleaner vacuumCleaner) {
@@ -360,9 +351,73 @@ public class RobotCleanSweep implements Robot {
             throw new RobotException("Null graph not allowed.");
         }
         this.graph = graph;
+
     }
 
-    private void logTileInfo(FloorDao floorDaoBefore, FloorDao floorDaoAfter, Direction direction, Mode mode) {
+    void createLocations(Direction [] directions) {
+        int currentX = RobotCleanSweep.getInstance().getLocation().getX();
+        int currentY = RobotCleanSweep.getInstance().getLocation().getY();
+        Location location = null;
+        for(int i = 0; i < directions.length; i++) {
+            switch(directions[i]) {
+                case NORTH:
+                    location = LocationFactory.createLocation(currentX, currentY - 1);
+                    break;
+                case SOUTH:
+                    location = LocationFactory.createLocation(currentX, currentY + 1);
+                    break;
+                case WEST:
+                    location =  LocationFactory.createLocation(currentX - 1, currentY);
+                    break;
+                case EAST:
+                    location = LocationFactory.createLocation(currentX + 1, currentY);
+                    break;
+                default:
+                    throw new RobotException("Impossible direction. Only N, S, E, W directions are available.");
+            }
+            putUnvisited(location);
+        }
+    }
+
+    /**
+     * The robot builds a graph of locations it has been to
+     * and locations it knows it can go to.
+     * @param location
+     * @param directions
+     */
+    private void buildGraph(Location location, Direction [] directions) {
+        int x = location.getX();
+        int y = location.getY();
+        List<Location> neighbors = new ArrayList<>();
+        for(Direction direction : directions) {
+            neighbors.add(getNeighbor(location, direction));
+        }
+        getGraph().put(location, neighbors);
+    }
+
+    private Location getNeighbor(Location location, Direction direction) {
+        int x = location.getX();
+        int y = location.getY();
+        switch (direction) {
+            case NORTH: return LocationFactory.createLocation(x, y - 1);
+            case SOUTH: return LocationFactory.createLocation(x, y + 1);
+            case EAST: return LocationFactory.createLocation(x + 1, y);
+            case WEST: return LocationFactory.createLocation(x - 1, y);
+            default: throw new RobotException("Impossible direction. Only N, S, E, W directions are available.");
+        }
+    }
+
+    Direction backToCharge() {
+        if(RobotCleanSweep.getInstance().getLocation().equals( LocationFactory.createLocation(0, 9))){
+            getPowerManager().recharge();
+            setState(WORKING);
+            return null;
+        }
+        AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),LocationFactory.createLocation(0, 9) ,2);
+        return aStar.search().pop();
+    }
+
+    private void logTileInfo(FloorDao floorDaoBefore, FloorDao floorDaoAfter, double batteryLevelBefore, double batteryLevelAfter, Direction direction, Mode mode) {
 
         if(mode == Mode.VERBOSE) {
             StringBuilder sb = new StringBuilder();
@@ -375,13 +430,18 @@ public class RobotCleanSweep implements Robot {
             sb.append(Utilities.padSpacesToFront((floorDaoAfter.isClean) ? "CLEAN" : "NOT CLEAN", 9));
             sb.append("  ");
             sb.append(Utilities.padSpacesToFront(floorDaoBefore.floorType.toString(), 10));
-            sb.append('\t');
+            sb.append("  ");
+            sb.append(Utilities.padSpacesToFront(Double.toString(batteryLevelBefore), 14));
+            sb.append("  ");
+            sb.append(Utilities.padSpacesToFront(Double.toString(batteryLevelAfter), 13));
+            sb.append("  ");
             sb.append(Utilities.padSpacesToFront(Utilities.arrayToString(floorDaoBefore.openPassages), 28));
             sb.append("\t");
             sb.append(Utilities.arrayToString(floorDaoBefore.chargingStations));
             LogManager.print(sb.toString(), getZeroTime());
         }
     }
+
     /**
      * For testing purposes.
      */
