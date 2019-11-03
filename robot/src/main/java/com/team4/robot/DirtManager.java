@@ -16,7 +16,7 @@ class DirtManager implements VacuumCleaner {
 	@Override
 	public void clean(double cost) {
 		SensorSimulator.getInstance().setTileDone(RobotCleanSweep.getInstance().getLocation());
-		setDirtLevel(getDirtLevel() + 1);
+		setDirtLevel(getDirtLevel() + (int) cost);
 		RobotCleanSweep.getInstance().getPowerManager().updateBatteryLevel(cost);
 	}
 
