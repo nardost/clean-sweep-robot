@@ -19,9 +19,10 @@ public class MaxDirtLevelTest {
     @Test
     public void dirt_manager_makes_sure_tank_is_emptied_and_robot_gets_back_to_WORKING_state_after_tank_fills_up() {
         RobotCleanSweep robot = RobotCleanSweep.getInstance();
+        robot.setState(WORKING);
         int dirtCapacity = Integer.parseInt(ConfigManager.getConfiguration("dirtCapacity"));
-        for(int i = 0; i <= dirtCapacity / 2; i++) {
-            this.dirtManager.clean(2.0);
+        for(int i = 0; i < dirtCapacity; i++) {
+            this.dirtManager.clean(3.0);
         }
         assertEquals(WORKING, robot.getState());
     }
