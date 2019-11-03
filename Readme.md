@@ -1,4 +1,5 @@
 # Clean Sweep Robotic Vacuum Cleaner & Sensor Simulator
+## Travis-CI Build Status: [![Build Status](https://travis-ci.org/nardost/clean-sweep-robot.svg?branch=master)](https://travis-ci.org/nardost/clean-sweep-robot)
 ## Agile Software Development Term Project
 ### Team Members
 1. John Diatte
