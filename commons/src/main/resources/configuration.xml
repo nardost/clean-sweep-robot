@@ -6,7 +6,7 @@
     <property name="dirtCapacity" value="50" />
     <property name="chargingStationDetectionRadius" value="2" />
     <property name="navigator" value="omega" />
-    <property name="scheduledWait" value="5" />
+    <property name="scheduledWait" value="2" />
     <property name="timeInTile" value="1" />
     <property name="timeToCharge" value="1" />
 
