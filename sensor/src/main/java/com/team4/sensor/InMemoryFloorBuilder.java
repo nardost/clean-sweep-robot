@@ -24,8 +24,10 @@ class InMemoryFloorBuilder implements FloorBuilder {
 
     @Override
     public void buildFloor() {
-        final int W = Integer.parseInt(ConfigManager.getConfiguration("floorWidth"));
-        final int L = Integer.parseInt(ConfigManager.getConfiguration("floorLength"));
+        Floor.WIDTH = Integer.parseInt(ConfigManager.getConfiguration("floorWidth"));
+        Floor.LENGTH = Integer.parseInt(ConfigManager.getConfiguration("floorLength"));
+        final int W = Floor.WIDTH;
+        final int L = Floor.LENGTH;
         buildCornerTiles(W, L);
         buildNorthWall(W, L);
         buildSouthWall(W, L);

@@ -91,7 +91,7 @@ public class SensorSimulator implements Sensor {
     }
 
     public static int [] getFloorDimension() {
-        return new int[] { getFloor().WIDTH, getFloor().LENGTH };
+        return new int[] { Floor.WIDTH, Floor.LENGTH };
     }
 
     private int getNumberOfNeighborsWithinRadius(int radius) {
@@ -110,8 +110,11 @@ public class SensorSimulator implements Sensor {
     private Location [] getChargingStations(Location location) {
         Location [] neighbors = getNeighborsWithinChargingStationDetectionRadius(location);
         final int NUMBER_OF_NEIGHBORS_WITHIN_RADIUS = getNumberOfNeighborsWithinRadius(2);
-        Location [] chargingStations = new Location[NUMBER_OF_NEIGHBORS_WITHIN_RADIUS];
+        Location [] chargingStations = new Location[NUMBER_OF_NEIGHBORS_WITHIN_RADIUS + 1];
         int index = 0;
+        if(TileFactory.createTile(location).isChargingStation()) {
+            chargingStations[index++] = location;
+        }
         for(Location l : neighbors) {
             if(TileFactory.createTile(l).isChargingStation()) {
                 chargingStations[index++] = l;
@@ -131,8 +134,8 @@ public class SensorSimulator implements Sensor {
         }
     }
     private Location [] neighborsWithinRadiusOf1(Location location) {
-        final int WIDTH = Integer.parseInt(ConfigManager.getConfiguration("floorWidth"));
-        final int LENGTH = Integer.parseInt(ConfigManager.getConfiguration("floorLength"));
+        final int WIDTH = Floor.WIDTH;
+        final int LENGTH = Floor.LENGTH;
         final int NUMBER_OF_NEIGHBORS_WITHIN_RADIUS = getNumberOfNeighborsWithinRadius(1);
         Location [] neighbors = new Location[NUMBER_OF_NEIGHBORS_WITHIN_RADIUS];
         int index = 0;
@@ -157,8 +160,8 @@ public class SensorSimulator implements Sensor {
     private Location [] neighborsWithinRadiusOf2(Location location) {
         int x = location.getX();
         int y = location.getY();
-        final int WIDTH = Integer.parseInt(ConfigManager.getConfiguration("floorWidth"));
-        final int LENGTH = Integer.parseInt(ConfigManager.getConfiguration("floorLength"));
+        final int WIDTH = Floor.WIDTH;
+        final int LENGTH = Floor.LENGTH;
         final int NUMBER_OF_NEIGHBORS_WITHIN_RADIUS = getNumberOfNeighborsWithinRadius(2);
         Location [] neighbors = new Location[NUMBER_OF_NEIGHBORS_WITHIN_RADIUS];
         int index = 0;

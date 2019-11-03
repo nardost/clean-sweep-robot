@@ -45,15 +45,14 @@ class JsonFloorBuilder implements FloorBuilder {
             throw new RobotException("Null floor plan encountered.");
         }
         this.floorPlan = floorPlan;
+        Floor.WIDTH = floorPlan.getSouthEastCornerCoordinates().getX();
+        Floor.LENGTH = floorPlan.getSouthEastCornerCoordinates().getY();
     }
 
     @Override
     public void buildFloor() {
-        // get dimensions
-        // build w x l tiles
-        final int WIDTH = getFloorPlan().getSouthEastCornerCoordinates().getX();
-        final int LENGTH = getFloorPlan().getSouthEastCornerCoordinates().getY();
-        buildTiles(WIDTH, LENGTH);
+        // build WIDTH x LENGTH tiles
+        buildTiles(Floor.WIDTH, Floor.LENGTH);
 
         // build walls
         for(FloorPlan.Obstacle obstacle : getFloorPlan().getObstacles()) {
@@ -113,7 +112,7 @@ class JsonFloorBuilder implements FloorBuilder {
             int x1 = from.getX();
             int y1 = Utilities.min(from.getY(), to.getY());
             int y2 = Utilities.max(from.getY(), to.getY());
-            if(x1 == 0 || x1 == getFloorPlan().getSouthEastCornerCoordinates().getX()) {
+            if(x1 == 0 || x1 == Floor.WIDTH) {
                 //outer walls
                 Direction directionToBlock = (x1 == 0) ? WEST : EAST;
                 int x = (x1 == 0) ? x1 : x1 - 1;
@@ -141,7 +140,7 @@ class JsonFloorBuilder implements FloorBuilder {
             int x1 = Utilities.min(from.getX(), to.getX());
             int x2 = Utilities.max(from.getX(), to.getX());
             int y1 = from.getY();
-            if(y1 == 0 || y1 == getFloorPlan().getSouthEastCornerCoordinates().getY()) {
+            if(y1 == 0 || y1 == Floor.LENGTH) {
                 // outer walls
                 Direction directionToBlock = (y1 == 0) ? NORTH : SOUTH;
                 int y = (y1 == 0) ? y1 : y1 - 1;

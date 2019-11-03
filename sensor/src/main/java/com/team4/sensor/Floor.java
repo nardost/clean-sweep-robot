@@ -1,6 +1,5 @@
 package com.team4.sensor;
 
-import com.team4.commons.ConfigManager;
 import com.team4.commons.Location;
 import java.util.HashMap;
 
@@ -8,8 +7,8 @@ class Floor {
 
     private HashMap<Location, Tile> tiles = new HashMap<>();
 
-    static final int WIDTH = Integer.parseInt(ConfigManager.getConfiguration("floorWidth"));
-    static final int LENGTH = Integer.parseInt(ConfigManager.getConfiguration("floorLength"));
+    static int WIDTH;
+    static int LENGTH;
 
     private static Floor theFloor = null;
     private Floor() {
