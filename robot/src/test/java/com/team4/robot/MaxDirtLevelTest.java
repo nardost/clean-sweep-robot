@@ -1,7 +1,6 @@
 package com.team4.robot;
 
 import com.team4.commons.ConfigManager;
-import com.team4.commons.RobotException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,14 +14,6 @@ public class MaxDirtLevelTest {
     @Before
     public void init() {
         this.dirtManager = new DirtManager();
-    }
-
-    @Test(expected = RobotException.class)
-    public void dirt_manager_throws_exception_on_dirt_level_exceeding_dirtCapacity() {
-        int dirtCapacity = Integer.parseInt(ConfigManager.getConfiguration("dirtCapacity"));
-        for(int i = 0; i <= dirtCapacity / 2; i++) {
-            this.dirtManager.clean(3.0);
-        }
     }
 
     @Test

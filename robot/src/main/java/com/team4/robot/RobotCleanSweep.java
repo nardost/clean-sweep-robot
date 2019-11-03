@@ -151,11 +151,6 @@ public class RobotCleanSweep implements Robot {
                     FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
                     logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, direction, mode);
                     move(direction, cost);
-                    if(getPowerManager().getBatteryLevel() < 67) {
-                        //this number is reached at by trial and error.
-                        //it is not just a random pick!
-                        setState(LOW_BATTERY);
-                    }
                 } else {
                     setState(STANDBY);
                 }
