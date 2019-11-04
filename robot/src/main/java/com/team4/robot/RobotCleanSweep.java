@@ -159,6 +159,7 @@ public class RobotCleanSweep implements Robot {
 
                 if(getState() == LOW_BATTERY) {
                     FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+                    buildGraph(getLocation(), floorDao.openPassages);
                     move(backToCharge(), floorDao.floorType.getCost());
                 }
             }
@@ -196,6 +197,8 @@ public class RobotCleanSweep implements Robot {
         cost = cost/2.0;
         getPowerManager().updateBatteryLevel(cost);
         if(getState() == LOW_BATTERY) {
+        	//System.out.println("Location in Move() : " + getLocation());
+        	buildGraph(getLocation(), floorDao.openPassages);
             move(backToCharge(), floorDao.floorType.getCost());
         }
     }
@@ -378,10 +381,13 @@ public class RobotCleanSweep implements Robot {
 
     Direction backToCharge() {
         if(RobotCleanSweep.getInstance().getLocation().equals( LocationFactory.createLocation(0, 9))){
+        	System.out.println("Battery Level at Charging Location: " + getPowerManager().getBatteryLevel());
             getPowerManager().recharge();
             setState(WORKING);
             return null;
         }
+       // System.out.println("Location in backToCharge() : " + getLocation());
+        //System.out.println("Graph for this location, any children? " + getGraph().containsKey(getLocation()));
         AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),LocationFactory.createLocation(0, 9) ,2);
         return aStar.search().pop();
     }
