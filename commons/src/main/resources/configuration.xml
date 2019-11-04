@@ -2,7 +2,7 @@
 <configuration>
     <!-- Robot Configuration Parameters -->
     <property name="initLocation" value="(0, 9)" />
-    <property name="maxBatteryLevel" value="2500" ></property>
+    <property name="maxBatteryLevel" value="250" ></property>
     <property name="dirtCapacity" value="50" />
     <property name="chargingStationDetectionRadius" value="2" />
     <property name="navigator" value="omega" />

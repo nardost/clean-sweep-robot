@@ -1,6 +1,7 @@
 package com.team4.robot;
 
 import com.team4.commons.ConfigManager;
+import com.team4.commons.Location;
 import com.team4.commons.LogManager;
 import com.team4.commons.RobotException;
 import com.team4.commons.Utilities;
@@ -10,6 +11,7 @@ import static com.team4.commons.State.LOW_BATTERY;
 class PowerUnit implements PowerManager {
 
     private double batteryLevel;
+
 
     PowerUnit() {
         int maxBatteryLevel = Integer.parseInt(ConfigManager.getConfiguration("maxBatteryLevel"));
@@ -36,8 +38,10 @@ class PowerUnit implements PowerManager {
         }
         setBatteryLevel(getBatteryLevel() - units);
 
-        double batteryNeededToReachToKnownChargingStation = 67;
+        double batteryNeededToReachToKnownChargingStation = 40;
+        if(getBatteryLevel()<=batteryNeededToReachToKnownChargingStation )
         if(getBatteryLevel() <= batteryNeededToReachToKnownChargingStation) {
+        	
             LogManager.print("...GOING BACK TO CHARGING STATION...", RobotCleanSweep.getInstance().getZeroTime());
             RobotCleanSweep.getInstance().setState(LOW_BATTERY);
         }
