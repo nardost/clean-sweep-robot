@@ -77,7 +77,7 @@ public class RobotCleanSweep implements Robot {
         setState(STANDBY);
         //Robot waits for cleaning schedule.
         int scheduledWait = Integer.parseInt(ConfigManager.getConfiguration("scheduledWait"));
-        Utilities.doLoopedTimeDelay("...WAITING FOR SCHEDULED CLEANING TIME...", scheduledWait, getZeroTime());
+        Utilities.doLoopedTimeDelay("...WAITING FOR SCHEDULED CLEANING TIME AT LOCATION " + getLocation(), scheduledWait, getZeroTime());
 
         //Robot begins work.
         WorkingMode mode = WorkingMode.DEPLOYED;
@@ -88,9 +88,7 @@ public class RobotCleanSweep implements Robot {
     @Override
     public void turnOff() throws  RobotException {
         setState(OFF);
-        System.out.println();
         LogManager.print("...TURNED OFF...", getZeroTime());
-        System.out.println();
     }
 
     private void work(WorkingMode mode, long timeInTile) {
@@ -154,7 +152,6 @@ public class RobotCleanSweep implements Robot {
 
                 if(direction != null) {
                     double batteryLevelBefore = getPowerManager().getBatteryLevel();
-                    int dirtLevelBefore = getVacuumCleaner().getDirtLevel();
                     if(!floorDaoBefore.isClean) {
                         getVacuumCleaner().clean(cost);
                     }
@@ -165,7 +162,6 @@ public class RobotCleanSweep implements Robot {
                     move(direction, cost);
                 } else {
                     double batteryLevelBefore = getPowerManager().getBatteryLevel();
-                    int dirtLevelBefore = getVacuumCleaner().getDirtLevel();
                     if(!floorDaoBefore.isClean) {
                         getVacuumCleaner().clean(cost);
                     }
@@ -179,11 +175,8 @@ public class RobotCleanSweep implements Robot {
                 if(getState() == LOW_BATTERY) {
                     FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
                     buildGraph(getLocation(), floorDao.openPassages);
-                    //System.out.println("Location LOW BATTERY: " + getLocation());
                     RobotCleanSweep.getInstance().getLastLocationList().add(RobotCleanSweep.getInstance().getLocation());
                     move(backToCharge(), floorDao.floorType.getCost());
-                    FloorDao floorDao2 = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
-                    
                 }
                 
                 if(getState()== MOVING_BACK) {
@@ -194,26 +187,11 @@ public class RobotCleanSweep implements Robot {
                 }
             }
         }
-        int i = 0;
-        for(int x = 0; x <10;x++) {
-          for(int j=0; j<10; j++) {
-             Location location =  LocationFactory.createLocation(x, j);
-          FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(location);
-          if(!floorDao.isClean) {
-        	  System.out.println("location: " + location + " Check: " + floorDao.isClean + "  " +  i );
-              
-          }
-        
-          i++;
-          }
-        }
-        
     }
 
     private void move(Direction direction, double cost) {
         int currentX = RobotCleanSweep.getInstance().getLocation().getX();
         int currentY = RobotCleanSweep.getInstance().getLocation().getY();
-
 
         if(direction == null) {
             getPowerManager().updateBatteryLevel(cost);
@@ -247,13 +225,9 @@ public class RobotCleanSweep implements Robot {
         
         if(getState() == LOW_BATTERY) {
         	RobotCleanSweep.getInstance().getLastLocationList().add(RobotCleanSweep.getInstance().getLocation());
-        	//System.out.println("Location LOW BATTERY: " + getLocation());
-        	//buildGraph(getLocation(), floorDao.openPassages);
-            move(backToCharge(), floorDao.floorType.getCost());
+        	move(backToCharge(), floorDao.floorType.getCost());
         }
         if(getState()==MOVING_BACK) {
-        	//RobotCleanSweep.getInstance().getLastLocationList().add(RobotCleanSweep.getInstance().getLocation());
-        	//buildGraph(getLocation(), floorDao.openPassages);
         	move(movingBack(), floorDao.floorType.getCost());
         }
     }
@@ -279,9 +253,9 @@ public class RobotCleanSweep implements Robot {
         }
         this.state = state;
         if(getState() == STANDBY) {
-            System.out.println();
+            System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
             LogManager.print("PERCENTAGE OF DONE TILES = " + SensorSimulator.getInstance().getDonePercentage() + "%", getZeroTime());
-            System.out.println();
+            System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
         }
     }
     Location getLastLocation() {
@@ -367,11 +341,8 @@ public class RobotCleanSweep implements Robot {
         this.powerManager = powerManager;
     }
 
-
     VacuumCleaner getVacuumCleaner() {
-
         return vacuumCleaner;
-
     }
 
     private void setVacuumCleaner(VacuumCleaner vacuumCleaner) {
@@ -456,29 +427,15 @@ public class RobotCleanSweep implements Robot {
 
     Direction backToCharge() {
         if(RobotCleanSweep.getInstance().getLocation().equals( LocationFactory.createLocation(0, 9))){
-        	System.out.println();
-        	System.out.println("********************************************************************************");
-        	System.out.println();
-        	System.out.println("AT CHARGNING STATION (0, 9)");
-        	System.out.println("Battery Level at Charging Location: " + getPowerManager().getBatteryLevel());
+        	LogManager.print("...AT CHARGING STATION " + getLocation().toString() + " WITH BATTERY LEVEL "+ getPowerManager().getBatteryLevel(), getZeroTime());
             getPowerManager().recharge();
-            System.out.println("Now Recharged: " + getPowerManager().getBatteryLevel());
-            System.out.println();
-            System.out.println("********************************************************************************");
-            System.out.println();
+            LogManager.print("...BATTERY RECHARGED. NEW BATTERY LEVEL: " + getPowerManager().getBatteryLevel(), getZeroTime());
             getLocBeforeCharge();
             setState(MOVING_BACK);
-
-            
-            
             return null;
         }
-       // System.out.println("Location in backToCharge() : " + getLocation());
-        //System.out.println("Graph for this location, any children? " + getGraph().containsKey(getLocation()));
         AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),LocationFactory.createLocation(0, 9) ,2);
-        //System.out.println(aStar.getPathNode().getLocation() + "--> COST IS: " + aStar.getPathNode().getMaxFloorCost());
         Direction direction = aStar.search().pop();
-  
         return direction;
     }
     
@@ -487,19 +444,16 @@ public class RobotCleanSweep implements Robot {
     	getLastLocationList().clear();
     	return RobotCleanSweep.getInstance().getLastLocation();
     }
+
     Direction movingBack() {
     	
     	if(getLocation().equals(getLastLocation())) {
-    		System.out.println("...AT LAST LOCATION!...");
-    		System.out.println();
+            System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
     		setState(WORKING);
     		return null;
     	}
-    	//System.out.println(getLastLocation());
         AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),getLastLocation() ,2);
-        System.out.println();
-        System.out.println("CURRENT LOCATION: " + getLocation() + " BATTERY :" + getPowerManager().getBatteryLevel());
-        System.out.println("...GOING BACK TO LAST LOCATION TO CONTINUE WORKING...");
+    	LogManager.print("...GOING BACK TO LAST LOCATION. NOW AT " + getLocation().toString(), getZeroTime());
         return aStar.search().pop();
     }
 

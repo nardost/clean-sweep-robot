@@ -1,8 +1,6 @@
 package com.team4.robot;
 
 import com.team4.commons.ConfigManager;
-import com.team4.commons.Direction;
-import com.team4.commons.Location;
 import com.team4.commons.LocationFactory;
 import com.team4.commons.LogManager;
 import com.team4.commons.RobotException;
@@ -46,18 +44,12 @@ class PowerUnit implements PowerManager {
         
         double batteryNeededToReachToKnownChargingStation;
 
-        //additional 3.0 for saftey, just allowing robot one more move.
-        	aStar.search();
-        	batteryNeededToReachToKnownChargingStation  = aStar.getPathNode().getMaxFloorCost() + 3.0;
-      
+        //an allowance of 3.0 just in case robot needs to do one more move.
+        aStar.search();
+        batteryNeededToReachToKnownChargingStation  = aStar.getPathNode().getMaxFloorCost() + 3.0;
 
-        //double batteryNeededToReachToKnownChargingStation = 40;
-        if(getBatteryLevel()<=batteryNeededToReachToKnownChargingStation )
         if(getBatteryLevel() <= batteryNeededToReachToKnownChargingStation) {
-        	
-        	System.out.println();
-        	System.out.println("CURRENT LOCATION: " + RobotCleanSweep.getInstance().getLocation() + " BATTERY :" + RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel());
-            LogManager.print("...GOING BACK TO CHARGING STATION...", RobotCleanSweep.getInstance().getZeroTime());
+        	LogManager.print("...GOING BACK TO CHARGING STATION. NOW AT " + RobotCleanSweep.getInstance().getLocation(), RobotCleanSweep.getInstance().getZeroTime());
             RobotCleanSweep.getInstance().setState(LOW_BATTERY);
         }
     }
