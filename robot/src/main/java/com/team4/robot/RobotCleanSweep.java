@@ -156,6 +156,7 @@ public class RobotCleanSweep implements Robot {
                     logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, dirtLevelAfter, direction, mode);
                     move(direction, cost);
                 } else {
+                    //duplicate logic. find a way to refactor this.
                     double batteryLevelBefore = getPowerManager().getBatteryLevel();
                     int dirtLevelBefore = getVacuumCleaner().getDirtLevel();
                     if(!floorDaoBefore.isClean) {
