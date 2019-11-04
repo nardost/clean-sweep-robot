@@ -80,6 +80,7 @@ public class SensorSimulator implements Sensor {
 
     public double getDonePercentage() {
         double percentageOfDoneTiles = ((double) getDoneTiles().size() / (double) getFloor().getTiles().size()) * 100.0;
+        System.out.println(getDoneTiles().size());
         return percentageOfDoneTiles;
     }
 

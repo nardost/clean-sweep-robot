@@ -147,7 +147,9 @@ public class RobotCleanSweep implements Robot {
                 if(direction != null) {
                     double batteryLevelBefore = getPowerManager().getBatteryLevel();
                     int dirtLevelBefore = getVacuumCleaner().getDirtLevel();
-                    getVacuumCleaner().clean(cost);
+                    if(!floorDaoBefore.isClean) {
+                        getVacuumCleaner().clean(cost);
+                    }
                     int dirtLevelAfter = getVacuumCleaner().getDirtLevel();
                     double batteryLevelAfter = getPowerManager().getBatteryLevel();
                     FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
