@@ -5,5 +5,6 @@ public enum State {
     STANDBY,
     WORKING,
     LOW_BATTERY,
-    FULL_TANK
+    FULL_TANK,
+    MOVING_BACK
 }

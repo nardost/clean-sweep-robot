@@ -64,7 +64,7 @@ public class SensorSimulator implements Sensor {
             directions[index++] = WEST;
         }
         dao.openPassages = Arrays.copyOf(directions, index);
-        dao.chargingStations = getChargingStations(tile.getLocation());//getNeighborsWithinChargingStationDetectionRadius(tile.getLocation());
+        dao.chargingStations = getChargingStations(tile.getLocation());
         dao.isClean = tile.isClean();
         return dao;
     }
@@ -80,7 +80,6 @@ public class SensorSimulator implements Sensor {
 
     public double getDonePercentage() {
         double percentageOfDoneTiles = ((double) getDoneTiles().size() / (double) getFloor().getTiles().size()) * 100.0;
-        System.out.println(getDoneTiles().size());
         return percentageOfDoneTiles;
     }
 

@@ -16,12 +16,14 @@ class AStar {
 	 private Node initial;
 	 private Location goal;
 	 private int chooseComp;
+	 private Node pathNode;
 	 
 	 public AStar(HashMap<Location, List<Location>> graph, Location location, Location goal, int comp) {
 		 this.graph = graph;
 		 this.initial = new Node(location);
 		 this.goal = goal;
 		 this.chooseComp = comp;
+		 this.pathNode = null;
 	 }
 	 
 	  class fComparator implements Comparator<Node> {
@@ -33,19 +35,29 @@ class AStar {
 		 }
 	 }
 	  
+	  
 	  class gComparator implements Comparator<Node> {
 	 	//Heuristics h = new Heuristics(getGoal());
 	 	public int compare(Node a, Node b) {
 	 		 
-
-			return (a.getFloorCost()  - b.getFloorCost());
+	 		if( a.getMaxFloorCost() < b.getMaxFloorCost() )return -1;
+	 		if( a.getMaxFloorCost() > b.getMaxFloorCost() )return 1;
+			return 0;
 		 }
 	 }
 	 
+	 Node getPathNode(){
+		 return this.pathNode;
+	 }
+	 
+	 void setPathNode(Node node) {
+		 this.pathNode = node;
+	 }
 	 Stack<Direction> path(Node node){
 		 Node node1 = node;
 		 Stack<Direction> directions = new Stack<Direction>();
 		 while(node1.getParent()!=null) {
+			 //System.out.println(node1.getMaxFloorCost());
 			 directions.add(node1.getDirection());
 			 node1 = node1.getParent();
 		 }
@@ -69,42 +81,49 @@ class AStar {
 			
 		 }
 		 
+		 
 		 ArrayList<Location> expanded = new ArrayList<Location>();
 		 Node node = initial;
 		 pQueue.add(node);
 		 
 		 while(!pQueue.isEmpty()) {
 			 node =  pQueue.poll();
+			 
 			 pQueue.remove(node);
 			 expanded.add(node.getLocation());
 			 
 			 // if we are the goal location
 			 if(node.getLocation().equals(getGoal())) {
-
+				 setPathNode(node);
 				 path(node);
 				 return path(node);
 			 }
 			 
 			 //generate children
 			 List<Location> children = getGraph().get(node.getLocation());
-			 //System.out.println(" Parent: " + node.getLocation());
-			// System.out.print("--> My Children: " );
+
 			 if(children != null) {
+				 
 				 for(Location child : children) {
+					 //System.out.println("hello");
+					 
 					 if(!expanded.contains(child)) {
+						 
 						 Node childNode = new Node(child);
 						 childNode.setParent(node);
 						 childNode.setCost(node.getCost()+1);
 						 childNode.setDirection();
-						int parentCost = childNode.getParent().getFloor().getCost();
-						int myCost = childNode.getFloor().getCost();
-						int cost = (parentCost + myCost)/2;
+						double parentCost = childNode.getParent().getFloor().getCost();
+						double myCost = childNode.getFloor().getCost();
+						double cost = (parentCost + myCost)/2;
 						childNode.setFloorCost(cost);
+						childNode.setMaxFloorCost(childNode.getFloorCost() + childNode.getParent().getMaxFloorCost());
 						 pQueue.add(childNode);
 					 }
 				 }
 			 }
 		 }
+		 
 		return null;
 	 }
 

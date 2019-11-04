@@ -40,10 +40,8 @@ class DirtManager implements VacuumCleaner {
 
 	private void waitUntilTankEmpty() {
 		//press any key to continue is better.
-		System.out.println();
-		LogManager.print("...DIRT TANK FULL... (awaiting human intervention)...", RobotCleanSweep.getInstance().getZeroTime());
-		System.out.println();
-		Utilities.doTimeDelay(3);
+		System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
+		Utilities.doLoopedTimeDelay("...DIRT TANK FULL... (awaiting human intervention)...", 3, RobotCleanSweep.getInstance().getZeroTime());
 		emptyTank();
 	}
 
@@ -51,10 +49,8 @@ class DirtManager implements VacuumCleaner {
 		setDirtLevel(0);
 		FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
 		clean(floorDao.floorType.getCost());
-		System.out.println("------------------------------");
-		System.out.println();
 		LogManager.print("...DIRT TANK EMPTY... (human action completed)...", RobotCleanSweep.getInstance().getZeroTime());
-		System.out.println();
+		System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
 		RobotCleanSweep.getInstance().setState(State.WORKING);
 	}
 }

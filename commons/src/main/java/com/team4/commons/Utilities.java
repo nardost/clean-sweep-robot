@@ -106,7 +106,6 @@ public class Utilities {
     }
     public static void doLoopedTimeDelay(String msg, int numberOfLoops, long zeroTime) {
         try {
-            System.out.println();
             for(int i = 1; i <= numberOfLoops; i++){
                 LogManager.print(msg, zeroTime);
                 Thread.sleep(1000L);
@@ -118,9 +117,9 @@ public class Utilities {
 
     public static void printLogo() {
         System.out.println();
-        System.out.println("+=======================================================+");
-        System.out.println("|                     CLEAN SWEEP ROBOT                 |");
-        System.out.println("+=======================================================+");
+        System.out.println("                                                       +=======================================================+");
+        System.out.println("                                                       |                     CLEAN SWEEP ROBOT                 |");
+        System.out.println("                                                       +=======================================================+");
         System.out.println();
     }
 
