@@ -182,6 +182,8 @@ public class RobotCleanSweep implements Robot {
                     //System.out.println("Location LOW BATTERY: " + getLocation());
                     RobotCleanSweep.getInstance().getLastLocationList().add(RobotCleanSweep.getInstance().getLocation());
                     move(backToCharge(), floorDao.floorType.getCost());
+                    FloorDao floorDao2 = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+                    
                 }
                 
                 if(getState()== MOVING_BACK) {
@@ -240,16 +242,18 @@ public class RobotCleanSweep implements Robot {
         FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
         cost += floorDao.floorType.getCost();
         cost = cost/2.0;
+        buildGraph(getLocation(), floorDao.openPassages);
         getPowerManager().updateBatteryLevel(cost);
+        
         if(getState() == LOW_BATTERY) {
         	RobotCleanSweep.getInstance().getLastLocationList().add(RobotCleanSweep.getInstance().getLocation());
         	//System.out.println("Location LOW BATTERY: " + getLocation());
-        	buildGraph(getLocation(), floorDao.openPassages);
+        	//buildGraph(getLocation(), floorDao.openPassages);
             move(backToCharge(), floorDao.floorType.getCost());
         }
         if(getState()==MOVING_BACK) {
-        	RobotCleanSweep.getInstance().getLastLocationList().add(RobotCleanSweep.getInstance().getLocation());
-        	buildGraph(getLocation(), floorDao.openPassages);
+        	//RobotCleanSweep.getInstance().getLastLocationList().add(RobotCleanSweep.getInstance().getLocation());
+        	//buildGraph(getLocation(), floorDao.openPassages);
         	move(movingBack(), floorDao.floorType.getCost());
         }
     }
@@ -472,7 +476,10 @@ public class RobotCleanSweep implements Robot {
        // System.out.println("Location in backToCharge() : " + getLocation());
         //System.out.println("Graph for this location, any children? " + getGraph().containsKey(getLocation()));
         AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),LocationFactory.createLocation(0, 9) ,2);
-        return aStar.search().pop();
+        //System.out.println(aStar.getPathNode().getLocation() + "--> COST IS: " + aStar.getPathNode().getMaxFloorCost());
+        Direction direction = aStar.search().pop();
+  
+        return direction;
     }
     
     Location getLocBeforeCharge(){
@@ -490,7 +497,8 @@ public class RobotCleanSweep implements Robot {
     	}
     	//System.out.println(getLastLocation());
         AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),getLastLocation() ,2);
-        
+        System.out.println();
+        System.out.println("CURRENT LOCATION: " + getLocation() + " BATTERY :" + getPowerManager().getBatteryLevel());
         System.out.println("...GOING BACK TO LAST LOCATION TO CONTINUE WORKING...");
         return aStar.search().pop();
     }
