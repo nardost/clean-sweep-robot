@@ -36,8 +36,8 @@ class PowerUnit implements PowerManager {
         }
         setBatteryLevel(getBatteryLevel() - units);
 
-        double costToKnownChargingStation = 63.5;
-        if(getBatteryLevel() <= costToKnownChargingStation) {
+        double batteryNeededToReachToKnownChargingStation = 63.5;
+        if(getBatteryLevel() <= batteryNeededToReachToKnownChargingStation) {
             LogManager.print("...GOING BACK TO CHARGING STATION...", RobotCleanSweep.getInstance().getZeroTime());
             RobotCleanSweep.getInstance().setState(LOW_BATTERY);
         }

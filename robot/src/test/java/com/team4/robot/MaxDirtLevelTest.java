@@ -2,6 +2,7 @@ package com.team4.robot;
 
 import com.team4.commons.ConfigManager;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.team4.commons.State.WORKING;

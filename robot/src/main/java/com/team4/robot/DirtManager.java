@@ -15,7 +15,6 @@ class DirtManager implements VacuumCleaner {
 
 	@Override
 	public void clean(double cost) {
-		SensorSimulator.getInstance().setTileDone(RobotCleanSweep.getInstance().getLocation());
 		int newDirtLevel = getDirtLevel() + 1;
 		if(newDirtLevel > MAX_DIRT) {
 			RobotCleanSweep.getInstance().setState(State.FULL_TANK);
@@ -23,6 +22,7 @@ class DirtManager implements VacuumCleaner {
 		} else {
 			setDirtLevel(newDirtLevel);
 			RobotCleanSweep.getInstance().getPowerManager().updateBatteryLevel(cost);
+			SensorSimulator.getInstance().setTileDone(RobotCleanSweep.getInstance().getLocation());
 		}
 	}
 

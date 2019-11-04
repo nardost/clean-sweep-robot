@@ -1,6 +1,7 @@
 package com.team4.robot;
 
 import com.team4.commons.*;
+import com.team4.sensor.Sensor;
 import com.team4.sensor.SensorSimulator;
 import com.team4.sensor.FloorDao;
 import static com.team4.commons.State.*;
@@ -219,6 +220,11 @@ public class RobotCleanSweep implements Robot {
             throw new RobotException("Null state is not allowed.");
         }
         this.state = state;
+        if(getState() == STANDBY) {
+            System.out.println();
+            LogManager.print("PERCENTAGE OF DONE TILES = " + SensorSimulator.getInstance().getDonePercentage() + "%", getZeroTime());
+            System.out.println();
+        }
     }
 
     Location getLocation() {
