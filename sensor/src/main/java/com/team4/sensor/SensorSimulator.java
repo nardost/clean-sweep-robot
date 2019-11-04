@@ -78,12 +78,18 @@ public class SensorSimulator implements Sensor {
         getDoneTiles().add(location);
     }
 
+    public double getDonePercentage() {
+        double percentageOfDoneTiles = ((double) getDoneTiles().size() / (double) getFloor().getTiles().size()) * 100.0;
+        return percentageOfDoneTiles;
+    }
+
     /**
      * Right now, done means all tiles visited.
      *
      * @return boolean
      */
     public boolean isFloorDone() {
+        System.out.printf("Done tiles = %d & Total # = %d", getDoneTiles().size(), getFloor().getTiles().size());
         if(getDoneTiles().size() == getFloor().getTiles().size()) {
             return true;
         }

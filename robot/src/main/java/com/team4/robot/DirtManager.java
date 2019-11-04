@@ -15,24 +15,27 @@ class DirtManager implements VacuumCleaner {
 
 	@Override
 	public void clean(double cost) {
-		SensorSimulator.getInstance().setTileDone(RobotCleanSweep.getInstance().getLocation());
-		setDirtLevel(getDirtLevel() + 1);
-		RobotCleanSweep.getInstance().getPowerManager().updateBatteryLevel(cost);
+		int newDirtLevel = getDirtLevel() + 1;
+		if(newDirtLevel > MAX_DIRT) {
+			RobotCleanSweep.getInstance().setState(State.FULL_TANK);
+			waitUntilTankEmpty();
+		} else {
+			setDirtLevel(newDirtLevel);
+			RobotCleanSweep.getInstance().getPowerManager().updateBatteryLevel(cost);
+			SensorSimulator.getInstance().setTileDone(RobotCleanSweep.getInstance().getLocation());
+		}
 	}
 
-	private int getDirtLevel() {
+	@Override
+	public int getDirtLevel() {
 		return this.dirtLevel;
 	}
 
 	private void setDirtLevel(int dirt) {
-		if(dirt < 0 || dirt > MAX_DIRT) {
-			throw new RobotException("Invalid dirt level: " + MAX_DIRT);
+		if(dirt < 0) {
+			throw new RobotException("Invalid dirt level: " + dirt);
 		}
 		this.dirtLevel = dirt;
-		if(this.dirtLevel == MAX_DIRT) {
-			RobotCleanSweep.getInstance().setState(State.FULL_TANK);
-			waitUntilTankEmpty();
-		}
 	}
 
 	private void waitUntilTankEmpty() {

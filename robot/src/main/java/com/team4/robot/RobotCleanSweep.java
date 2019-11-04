@@ -1,6 +1,7 @@
 package com.team4.robot;
 
 import com.team4.commons.*;
+import com.team4.sensor.Sensor;
 import com.team4.sensor.SensorSimulator;
 import com.team4.sensor.FloorDao;
 import static com.team4.commons.State.*;
@@ -71,7 +72,7 @@ public class RobotCleanSweep implements Robot {
         Utilities.doLoopedTimeDelay("...WAITING FOR SCHEDULED CLEANING TIME...", scheduledWait, getZeroTime());
 
         //Robot begins work.
-        Mode mode = Mode.VERBOSE;
+        WorkingMode mode = WorkingMode.DEPLOYED;
         Long timeInTile = Long.parseLong(ConfigManager.getConfiguration("timeInTile"));
         work(mode, timeInTile);
     }
@@ -84,7 +85,7 @@ public class RobotCleanSweep implements Robot {
         System.out.println();
     }
 
-    private void work(Mode mode, long timeInTile) {
+    private void work(WorkingMode mode, long timeInTile) {
         /** //check if there is enough battery to make it to the nearest charging station
          *  //if(there is enough battery to make it to the nearest charging station) {
          *  //    continue working... ?
@@ -145,17 +146,13 @@ public class RobotCleanSweep implements Robot {
 
                 if(direction != null) {
                     double batteryLevelBefore = getPowerManager().getBatteryLevel();
+                    int dirtLevelBefore = getVacuumCleaner().getDirtLevel();
                     getVacuumCleaner().clean(cost);
-
+                    int dirtLevelAfter = getVacuumCleaner().getDirtLevel();
                     double batteryLevelAfter = getPowerManager().getBatteryLevel();
                     FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
-                    logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, direction, mode);
+                    logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, dirtLevelAfter, direction, mode);
                     move(direction, cost);
-                    if(getPowerManager().getBatteryLevel() < 67) {
-                        //this number is reached at by trial and error.
-                        //it is not just a random pick!
-                        setState(LOW_BATTERY);
-                    }
                 } else {
                     setState(STANDBY);
                 }
@@ -223,6 +220,11 @@ public class RobotCleanSweep implements Robot {
             throw new RobotException("Null state is not allowed.");
         }
         this.state = state;
+        if(getState() == STANDBY) {
+            System.out.println();
+            LogManager.print("PERCENTAGE OF DONE TILES = " + SensorSimulator.getInstance().getDonePercentage() + "%", getZeroTime());
+            System.out.println();
+        }
     }
 
     Location getLocation() {
@@ -384,9 +386,9 @@ public class RobotCleanSweep implements Robot {
         return aStar.search().pop();
     }
 
-    private void logTileInfo(FloorDao floorDaoBefore, FloorDao floorDaoAfter, double batteryLevelBefore, double batteryLevelAfter, Direction direction, Mode mode) {
+    private void logTileInfo(FloorDao floorDaoBefore, FloorDao floorDaoAfter, double batteryLevelBefore, double batteryLevelAfter, int dirtLevelAfter, Direction direction, WorkingMode mode) {
 
-        if(mode == Mode.VERBOSE) {
+        if(mode == WorkingMode.DEPLOYED) {
             StringBuilder sb = new StringBuilder();
             sb.append(Utilities.padSpacesToFront((direction == null) ? "" : direction.toString(), 9));
             sb.append("  ");
@@ -402,6 +404,8 @@ public class RobotCleanSweep implements Robot {
             sb.append("  ");
             sb.append(Utilities.padSpacesToFront(Double.toString(batteryLevelAfter), 13));
             sb.append("  ");
+            sb.append(Utilities.padSpacesToFront(Integer.toString(dirtLevelAfter), 10));
+            sb.append("  ");
             sb.append(Utilities.padSpacesToFront(Utilities.arrayToString(floorDaoBefore.openPassages), 28));
             sb.append("\t");
             sb.append(Utilities.arrayToString(floorDaoBefore.chargingStations));
@@ -413,6 +417,6 @@ public class RobotCleanSweep implements Robot {
      * For testing purposes.
      */
     void dryRun() {
-        work(Mode.SILENT, 0L);
+        work(WorkingMode.TESTING, 0L);
     }
 }
