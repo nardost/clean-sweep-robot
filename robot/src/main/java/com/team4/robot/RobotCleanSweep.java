@@ -166,6 +166,16 @@ public class RobotCleanSweep implements Robot {
                 }
             }
         }
+        int i = 0;
+      for(int x = 0; x <10;x++) {
+    	  for(int j=0; j<10; j++) {
+    		 Location location =  LocationFactory.createLocation(x, j);
+       	  FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(location);
+       	  System.out.println("location: " + location + " Check: " + floorDao.isClean + "  " +  i);
+       	  i++;
+    	  }
+
+      }
     }
 
     private void move(Direction direction, double cost) {
