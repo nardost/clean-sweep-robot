@@ -49,6 +49,9 @@ class DirtManager implements VacuumCleaner {
 
 	private void emptyTank() {
 		setDirtLevel(0);
+		FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+		clean(floorDao.floorType.getCost());
+		System.out.println("------------------------------");
 		System.out.println();
 		LogManager.print("...DIRT TANK EMPTY... (human action completed)...", RobotCleanSweep.getInstance().getZeroTime());
 		System.out.println();
