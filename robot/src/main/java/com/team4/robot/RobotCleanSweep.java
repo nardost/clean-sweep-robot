@@ -484,6 +484,7 @@ public class RobotCleanSweep implements Robot {
     	
     	if(getLocation().equals(getLastLocation())) {
     		System.out.println("...AT LAST LOCATION!...");
+    		System.out.println();
     		setState(WORKING);
     		return null;
     	}

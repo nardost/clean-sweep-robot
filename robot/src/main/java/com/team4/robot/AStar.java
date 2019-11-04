@@ -37,8 +37,9 @@ class AStar {
 	 	//Heuristics h = new Heuristics(getGoal());
 	 	public int compare(Node a, Node b) {
 	 		 
-
-			return (a.getFloorCost()  - b.getFloorCost());
+	 		if( a.getMaxFloorCost() < b.getMaxFloorCost() )return -1;
+	 		if( a.getMaxFloorCost() > b.getMaxFloorCost() )return 1;
+			return 0;
 		 }
 	 }
 	 
@@ -46,6 +47,7 @@ class AStar {
 		 Node node1 = node;
 		 Stack<Direction> directions = new Stack<Direction>();
 		 while(node1.getParent()!=null) {
+			 //System.out.println(node1.getMaxFloorCost());
 			 directions.add(node1.getDirection());
 			 node1 = node1.getParent();
 		 }
@@ -96,10 +98,11 @@ class AStar {
 						 childNode.setParent(node);
 						 childNode.setCost(node.getCost()+1);
 						 childNode.setDirection();
-						int parentCost = childNode.getParent().getFloor().getCost();
-						int myCost = childNode.getFloor().getCost();
-						int cost = (parentCost + myCost)/2;
+						double parentCost = childNode.getParent().getFloor().getCost();
+						double myCost = childNode.getFloor().getCost();
+						double cost = (parentCost + myCost)/2;
 						childNode.setFloorCost(cost);
+						childNode.setMaxFloorCost(childNode.getFloorCost() + childNode.getParent().getMaxFloorCost());
 						 pQueue.add(childNode);
 					 }
 				 }

@@ -14,7 +14,8 @@ class Node {
 	private int maxCost;
 	private Direction directionFromParent;
 	private int f;
-	private int floorCost;
+	private double floorCost;
+	private double maxFloorCost;
 	private FloorType floor;
 	
 	public Node(Location location) {
@@ -25,8 +26,10 @@ class Node {
 		setMaxCost(0);
 		setF(0);
 		setFloorCost(0);
+		setMaxFloorCost(0);
 		FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(location);
 		setFloor(floorDao.floorType);
+		
 	}
 
 	public Location getLocation() {
@@ -125,12 +128,20 @@ class Node {
 		return this.getLocation().hashCode();
 	}
 
-	public int getFloorCost() {
+	public double getFloorCost() {
 		return floorCost;
 	}
 
-	public void setFloorCost(int floorCost) {
+	public void setFloorCost(double floorCost) {
 		this.floorCost = floorCost;
+	}
+	
+	public double getMaxFloorCost() {
+		return maxFloorCost;
+	}
+
+	public void setMaxFloorCost(double floorCost) {
+		this.maxFloorCost = floorCost;
 	}
 
 	public FloorType getFloor() {
