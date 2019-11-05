@@ -459,7 +459,7 @@ public class RobotCleanSweep implements Robot {
     		return null;
     	}
         AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),getLastLocation() ,2);
-        setUnityString(getLocation().toString()+ "FROM CHARGING STATION TO LAST LOCATION");
+        setUnityString(" " + getLocation().toString());
     	LogManager.print("...GOING BACK TO LAST LOCATION. NOW AT " + getLocation().toString(), getZeroTime());
         return aStar.search().pop();
     }
@@ -471,11 +471,15 @@ public class RobotCleanSweep implements Robot {
         	
         	//for unity
         	
-            simple.append("  ");
+
             simple.append(Utilities.padSpacesToFront("(" + RobotCleanSweep.getInstance().getLocation().getX() + ", " + RobotCleanSweep.getInstance().getLocation().getY() + ")", 8));
-            simple.append("  ");
+            simple.append(" ");
+            simple.append(Utilities.padSpacesToFront((floorDaoBefore.isClean) ? "CLEAN     --> " : "NOT CLEAN --> ", 9));
+            simple.append(" ");
             simple.append(Utilities.padSpacesToFront((floorDaoAfter.isClean) ? "CLEAN" : "NOT CLEAN", 9));
-            simple.append("  ");
+
+        	
+           
         	setUnityString(simple.toString());
         	
         	//for console output
@@ -525,5 +529,6 @@ public class RobotCleanSweep implements Robot {
 	public void setUnityString(String unityString) {
 		
 		this.unityString += "\n" + unityString;
+	
 	}
 }
