@@ -37,7 +37,7 @@ public class RobotCleanSweep implements Robot {
     private Location lastLocation;
     private LinkedList<Location> lastLocationList = new LinkedList<>();
     
-    
+    private String unityString;
     
     private static RobotCleanSweep robotCleanSweep = null;
     
@@ -188,6 +188,11 @@ public class RobotCleanSweep implements Robot {
                 }
             }
         }
+        
+        // FOR RUIMING!!!
+        System.out.println();
+        System.out.println(getUnityString());
+        // YOUR STRING FOR UNITY!!!
     }
 
     private void move(Direction direction, double cost) {
@@ -454,6 +459,7 @@ public class RobotCleanSweep implements Robot {
     		return null;
     	}
         AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),getLastLocation() ,2);
+        setUnityString(getLocation().toString()+ "FROM CHARGING STATION TO LAST LOCATION");
     	LogManager.print("...GOING BACK TO LAST LOCATION. NOW AT " + getLocation().toString(), getZeroTime());
         return aStar.search().pop();
     }
@@ -461,6 +467,18 @@ public class RobotCleanSweep implements Robot {
     private void logTileInfo(FloorDao floorDaoBefore, FloorDao floorDaoAfter, double batteryLevelBefore, double batteryLevelAfter, int dirtLevelAfter, Direction direction, WorkingMode mode) {
 
         if(mode == WorkingMode.DEPLOYED) {
+        	StringBuilder simple = new StringBuilder();
+        	
+        	//for unity
+        	
+            simple.append("  ");
+            simple.append(Utilities.padSpacesToFront("(" + RobotCleanSweep.getInstance().getLocation().getX() + ", " + RobotCleanSweep.getInstance().getLocation().getY() + ")", 8));
+            simple.append("  ");
+            simple.append(Utilities.padSpacesToFront((floorDaoAfter.isClean) ? "CLEAN" : "NOT CLEAN", 9));
+            simple.append("  ");
+        	setUnityString(simple.toString());
+        	
+        	//for console output
             StringBuilder sb = new StringBuilder();
             sb.append(Utilities.padSpacesToFront((direction == null) ? "" : direction.toString(), 9));
             sb.append("  ");
@@ -498,5 +516,14 @@ public class RobotCleanSweep implements Robot {
 
 	public void setLastLocationList(LinkedList<Location> lastLocation) {
 		this.lastLocationList = lastLocation;
+	}
+
+	public String getUnityString() {
+		return unityString;
+	}
+
+	public void setUnityString(String unityString) {
+		
+		this.unityString += "\n" + unityString;
 	}
 }
