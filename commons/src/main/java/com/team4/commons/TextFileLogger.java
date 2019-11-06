@@ -11,10 +11,13 @@ public class TextFileLogger {
     private String logFile;
 
     public TextFileLogger(String logFile) {
-        this.logFile = logFile; //ConfigManager.getConfiguration("logFile");
+        this.logFile = logFile;
         try {
-            File file = new File(logFile);
-            file.createNewFile();
+            File logsDirectory = new File(System.getenv("UNITY_LOGS_HOME"));
+            File file = new File(logsDirectory.getAbsolutePath() + File.separator + logFile);
+            if(!file.exists()) {
+                file.createNewFile();
+            }
         } catch(IOException ioe) {
             throw new RobotException("I/O error while creating log file.");
         } catch(NullPointerException npe) {
@@ -24,8 +27,9 @@ public class TextFileLogger {
 
     public void log(String logMessage) {
         try {
-            Files.write(Paths.get(logFile), (logMessage + "\n").getBytes(), StandardOpenOption.APPEND);
+            Files.write(Paths.get(System.getenv("UNITY_LOGS_HOME") + File.separator + logFile), (logMessage + "\n").getBytes(), StandardOpenOption.APPEND);
         } catch(IOException ioe) {
+            System.out.println(logFile);
             throw new RobotException("ERROR: while writing to log file.");
         }
     }

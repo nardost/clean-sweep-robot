@@ -1,5 +1,6 @@
 package com.team4.commons;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class LogManager {
@@ -23,7 +24,7 @@ public class LogManager {
     public static void logForUnity(Location location) {
         StringBuilder sb = new StringBuilder(" ");
         sb.append(location.toString());
-        TextFileLogger textFileLogger = new TextFileLogger("log-for-unity.txt");
+        TextFileLogger textFileLogger = new TextFileLogger("unity.txt");
         textFileLogger.log(sb.toString());
     }
 
