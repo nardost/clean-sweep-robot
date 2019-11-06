@@ -17,5 +17,6 @@
     <property name="floorLength" value="10" />
 
     <!-- Unity -->
+    <property name="unityLogHome" value="UNITY_LOGS_HOME" />
     <property name="unityLogFile" value="unity-log-file.txt" />
 </configuration>

@@ -1,7 +1,6 @@
 package com.team4.robot;
 
 import com.team4.commons.*;
-import com.team4.sensor.Sensor;
 import com.team4.sensor.SensorSimulator;
 import com.team4.sensor.FloorDao;
 import static com.team4.commons.State.*;
@@ -10,12 +9,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Stack;
 
 public class RobotCleanSweep implements Robot {
 
     private static long zeroTime;
+    private static int numberOfRuns;
 
     private State state;
     private Location location;
@@ -43,8 +42,8 @@ public class RobotCleanSweep implements Robot {
     
 
     private RobotCleanSweep() {
-
         setZeroTime(System.currentTimeMillis());
+        numberOfRuns = 0;
         setState(OFF);
         String locationTuple = ConfigManager.getConfiguration("initLocation");
         int x = Utilities.xFromTupleString(locationTuple);
@@ -240,6 +239,14 @@ public class RobotCleanSweep implements Robot {
 
     long getZeroTime() {
         return zeroTime;
+    }
+
+    static int getNumberOfRuns() {
+        return numberOfRuns;
+    }
+
+    static void updateNumberOfRuns() {
+        RobotCleanSweep.numberOfRuns += 1;
     }
 
     private static void setZeroTime(long zeroTime) {

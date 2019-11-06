@@ -18,13 +18,13 @@ public class LogManager {
         simple.append(Utilities.padSpacesToFront((floorIsCleanBefore) ? "CLEAN     --> " : "NOT CLEAN --> ", 9));
         simple.append(" ");
         simple.append(Utilities.padSpacesToFront((floorIsCleanAfter) ? "CLEAN" : "NOT CLEAN", 9));
-        TextFileLogger textFileLogger = new TextFileLogger("unity.txt");
+        TextFileLogger textFileLogger = new TextFileLogger(ConfigManager.getConfiguration("unityLogFile"));
         textFileLogger.log(simple.toString());
     }
     public static void logForUnity(Location location) {
         StringBuilder sb = new StringBuilder(" ");
         sb.append(location.toString());
-        TextFileLogger textFileLogger = new TextFileLogger("unity.txt");
+        TextFileLogger textFileLogger = new TextFileLogger(ConfigManager.getConfiguration("unityLogFile"));
         textFileLogger.log(sb.toString());
     }
 

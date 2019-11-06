@@ -11,10 +11,11 @@ public class TextFileLogger {
     private String logFile;
 
     public TextFileLogger(String logFile) {
-        this.logFile = logFile;
         try {
-            File logsDirectory = new File(System.getenv("UNITY_LOGS_HOME"));
-            File file = new File(logsDirectory.getAbsolutePath() + File.separator + logFile);
+            String unityLogHome = ConfigManager.getConfiguration("unityLogHome");
+            File logsDirectory = new File(System.getenv(unityLogHome));
+            setLogFile(logsDirectory.getAbsolutePath() + File.separator + logFile);
+            File file = new File(getLogFile());
             if(!file.exists()) {
                 file.createNewFile();
             }
@@ -27,10 +28,20 @@ public class TextFileLogger {
 
     public void log(String logMessage) {
         try {
-            Files.write(Paths.get(System.getenv("UNITY_LOGS_HOME") + File.separator + logFile), (logMessage + "\n").getBytes(), StandardOpenOption.APPEND);
+            Files.write(Paths.get(getLogFile()), (logMessage + "\n").getBytes(), StandardOpenOption.APPEND);
         } catch(IOException ioe) {
-            System.out.println(logFile);
-            throw new RobotException("ERROR: while writing to log file.");
+            throw new RobotException("ERROR: while writing to log file " + getLogFile());
         }
+    }
+
+    String getLogFile() {
+        return logFile;
+    }
+
+    void setLogFile(String logFile) {
+        if(logFile == null) {
+            throw new RobotException("Null file name not allowed.");
+        }
+        this.logFile = logFile;
     }
 }
