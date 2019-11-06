@@ -36,8 +36,6 @@ public class RobotCleanSweep implements Robot {
     private Location lastLocation;
     private LinkedList<Location> lastLocationList = new LinkedList<>();
     
-    private String unityString;
-    
     private static RobotCleanSweep robotCleanSweep = null;
     
 
@@ -187,11 +185,6 @@ public class RobotCleanSweep implements Robot {
                 }
             }
         }
-        
-        // FOR RUIMING!!!
-        System.out.println();
-        System.out.println(getUnityString());
-        // YOUR STRING FOR UNITY!!!
     }
 
     private void move(Direction direction, double cost) {
@@ -321,14 +314,10 @@ public class RobotCleanSweep implements Robot {
     boolean visitedAll() {
         return this.unvisited.isEmpty();
     }
-
-    Navigator getNavigator() {
+        Navigator getNavigator() {
         return navigator;
-    }
-    Location lastUnvisited() {
-    	
-        
-    
+        }
+        Location lastUnvisited() {
         return this.unvisited.peek();
     }
     
@@ -396,11 +385,8 @@ public class RobotCleanSweep implements Robot {
                     break;
                 case WEST:
                     location =  LocationFactory.createLocation(currentX - 1, currentY);
-
-                    
                     break;
                 case EAST:
-     
                     location = LocationFactory.createLocation(currentX + 1, currentY);
                     break;
                 default:
@@ -466,7 +452,6 @@ public class RobotCleanSweep implements Robot {
     		return null;
     	}
         AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),getLastLocation() ,2);
-        setUnityString(" " + getLocation().toString());
     	LogManager.print("...GOING BACK TO LAST LOCATION. NOW AT " + getLocation().toString(), getZeroTime());
         return aStar.search().pop();
     }
@@ -475,19 +460,11 @@ public class RobotCleanSweep implements Robot {
 
         if(mode == WorkingMode.DEPLOYED) {
         	StringBuilder simple = new StringBuilder();
-        	
-        	//for unity
-        	
-
             simple.append(Utilities.padSpacesToFront("(" + RobotCleanSweep.getInstance().getLocation().getX() + ", " + RobotCleanSweep.getInstance().getLocation().getY() + ")", 8));
             simple.append(" ");
             simple.append(Utilities.padSpacesToFront((floorDaoBefore.isClean) ? "CLEAN     --> " : "NOT CLEAN --> ", 9));
             simple.append(" ");
             simple.append(Utilities.padSpacesToFront((floorDaoAfter.isClean) ? "CLEAN" : "NOT CLEAN", 9));
-
-        	
-           
-        	setUnityString(simple.toString());
             LogManager.logForUnity(getLocation(), floorDaoBefore.isClean, floorDaoAfter.isClean, getZeroTime());
         	
         	//for console output
@@ -528,15 +505,5 @@ public class RobotCleanSweep implements Robot {
 
 	public void setLastLocationList(LinkedList<Location> lastLocation) {
 		this.lastLocationList = lastLocation;
-	}
-
-	public String getUnityString() {
-		return unityString;
-	}
-
-	public void setUnityString(String unityString) {
-		
-		this.unityString += "\n" + unityString;
-	
 	}
 }
