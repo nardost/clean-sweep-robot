@@ -481,6 +481,7 @@ public class RobotCleanSweep implements Robot {
         	
            
         	setUnityString(simple.toString());
+            LogManager.logForUnity(getLocation(), floorDaoBefore.isClean, floorDaoAfter.isClean, getZeroTime());
         	
         	//for console output
             StringBuilder sb = new StringBuilder();

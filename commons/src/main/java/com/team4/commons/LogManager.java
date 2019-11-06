@@ -10,6 +10,23 @@ public class LogManager {
         System.out.println(sb.toString());
     }
 
+    public static void logForUnity(Location location, boolean floorIsCleanBefore, boolean floorIsCleanAfter, long zeroTime) {
+        StringBuilder simple = new StringBuilder();
+        simple.append(Utilities.padSpacesToFront(location.toString(), 8));
+        simple.append(" ");
+        simple.append(Utilities.padSpacesToFront((floorIsCleanBefore) ? "CLEAN     --> " : "NOT CLEAN --> ", 9));
+        simple.append(" ");
+        simple.append(Utilities.padSpacesToFront((floorIsCleanAfter) ? "CLEAN" : "NOT CLEAN", 9));
+        TextFileLogger textFileLogger = new TextFileLogger("unity.txt");
+        textFileLogger.log(simple.toString());
+    }
+    public static void logForUnity(Location location) {
+        StringBuilder sb = new StringBuilder(" ");
+        sb.append(location.toString());
+        TextFileLogger textFileLogger = new TextFileLogger("unity.txt");
+        textFileLogger.log(sb.toString());
+    }
+
     private static String formatElapsedTime(long milliTime, long zeroTime) {
         long elapsedTime = milliTime - zeroTime;
         long elapsedSeconds = TimeUnit.SECONDS.convert(elapsedTime, TimeUnit.MILLISECONDS);
