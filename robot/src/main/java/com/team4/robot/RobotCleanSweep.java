@@ -1,7 +1,6 @@
 package com.team4.robot;
 
 import com.team4.commons.*;
-import com.team4.sensor.Sensor;
 import com.team4.sensor.SensorSimulator;
 import com.team4.sensor.FloorDao;
 import static com.team4.commons.State.*;
@@ -10,12 +9,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Stack;
 
 public class RobotCleanSweep implements Robot {
 
     private static long zeroTime;
+    private static int numberOfRuns;
 
     private State state;
     private Location location;
@@ -37,14 +36,12 @@ public class RobotCleanSweep implements Robot {
     private Location lastLocation;
     private LinkedList<Location> lastLocationList = new LinkedList<>();
     
-    
-    
     private static RobotCleanSweep robotCleanSweep = null;
     
 
     private RobotCleanSweep() {
-
         setZeroTime(System.currentTimeMillis());
+        numberOfRuns = 0;
         setState(OFF);
         String locationTuple = ConfigManager.getConfiguration("initLocation");
         int x = Utilities.xFromTupleString(locationTuple);
@@ -237,6 +234,14 @@ public class RobotCleanSweep implements Robot {
         return zeroTime;
     }
 
+    static int getNumberOfRuns() {
+        return numberOfRuns;
+    }
+
+    static void updateNumberOfRuns() {
+        RobotCleanSweep.numberOfRuns += 1;
+    }
+
     private static void setZeroTime(long zeroTime) {
         if(zeroTime < 0) {
             throw new RobotException("Negative time millis is not allowed.");
@@ -309,14 +314,10 @@ public class RobotCleanSweep implements Robot {
     boolean visitedAll() {
         return this.unvisited.isEmpty();
     }
-
-    Navigator getNavigator() {
+        Navigator getNavigator() {
         return navigator;
-    }
-    Location lastUnvisited() {
-    	
-        
-    
+        }
+        Location lastUnvisited() {
         return this.unvisited.peek();
     }
     
@@ -384,11 +385,8 @@ public class RobotCleanSweep implements Robot {
                     break;
                 case WEST:
                     location =  LocationFactory.createLocation(currentX - 1, currentY);
-
-                    
                     break;
                 case EAST:
-     
                     location = LocationFactory.createLocation(currentX + 1, currentY);
                     break;
                 default:
@@ -461,6 +459,15 @@ public class RobotCleanSweep implements Robot {
     private void logTileInfo(FloorDao floorDaoBefore, FloorDao floorDaoAfter, double batteryLevelBefore, double batteryLevelAfter, int dirtLevelAfter, Direction direction, WorkingMode mode) {
 
         if(mode == WorkingMode.DEPLOYED) {
+        	StringBuilder simple = new StringBuilder();
+            simple.append(Utilities.padSpacesToFront("(" + RobotCleanSweep.getInstance().getLocation().getX() + ", " + RobotCleanSweep.getInstance().getLocation().getY() + ")", 8));
+            simple.append(" ");
+            simple.append(Utilities.padSpacesToFront((floorDaoBefore.isClean) ? "CLEAN     --> " : "NOT CLEAN --> ", 9));
+            simple.append(" ");
+            simple.append(Utilities.padSpacesToFront((floorDaoAfter.isClean) ? "CLEAN" : "NOT CLEAN", 9));
+            LogManager.logForUnity(getLocation(), floorDaoBefore.isClean, floorDaoAfter.isClean, getZeroTime());
+        	
+        	//for console output
             StringBuilder sb = new StringBuilder();
             sb.append(Utilities.padSpacesToFront((direction == null) ? "" : direction.toString(), 9));
             sb.append("  ");
