@@ -23,7 +23,7 @@ public class LogManager {
     public static void logForUnity(Location location) {
         StringBuilder sb = new StringBuilder(" ");
         sb.append(location.toString());
-        TextFileLogger textFileLogger = new TextFileLogger("unity.txt");
+        TextFileLogger textFileLogger = new TextFileLogger("log-for-unity.txt");
         textFileLogger.log(sb.toString());
     }
 
