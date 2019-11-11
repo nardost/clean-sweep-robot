@@ -168,6 +168,7 @@ public class RobotCleanSweep implements Robot {
                     FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
                     logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, dirtLevelAfter, direction, mode);
                     setState(STANDBY);
+                    updateNumberOfRuns();
                 }
 
                 if(getState() == LOW_BATTERY) {
@@ -465,7 +466,7 @@ public class RobotCleanSweep implements Robot {
             simple.append(Utilities.padSpacesToFront((floorDaoBefore.isClean) ? "CLEAN     --> " : "NOT CLEAN --> ", 9));
             simple.append(" ");
             simple.append(Utilities.padSpacesToFront((floorDaoAfter.isClean) ? "CLEAN" : "NOT CLEAN", 9));
-            LogManager.logForUnity(getLocation(), floorDaoBefore.isClean, floorDaoAfter.isClean, getZeroTime());
+            LogManager.logForUnity(getLocation(), floorDaoBefore.isClean, floorDaoAfter.isClean, getNumberOfRuns());
         	
         	//for console output
             StringBuilder sb = new StringBuilder();
