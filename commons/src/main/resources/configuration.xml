@@ -7,7 +7,7 @@
     <property name="chargingStationDetectionRadius" value="2" />
     <property name="navigator" value="omega" />
     <property name="scheduledWait" value="2" />
-    <property name="timeInTile" value="0" />
+    <property name="timeInTile" value="1" />
     <property name="timeToCharge" value="1" />
 
     <!-- Sensor Simulator Configuration Parameters -->
@@ -15,4 +15,8 @@
     <property name="floorPlan" value="floor-plan-1.json" />
     <property name="floorWidth" value="10" />
     <property name="floorLength" value="10" />
+
+    <!-- Unity -->
+    <property name="unityLogHome" value="UNITY_LOGS_HOME" />
+    <property name="unityLogFile" value="unity-log-file.txt" />
 </configuration>
