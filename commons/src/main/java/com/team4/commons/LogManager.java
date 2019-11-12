@@ -10,11 +10,12 @@ public class LogManager {
 
     public static void logForUnity(Location location, boolean floorIsCleanBefore, boolean floorIsCleanAfter, int numberOfRuns) {
         StringBuilder simple = new StringBuilder();
-        simple.append(Utilities.padSpacesToFront(location.toString(), 8));
+        String loc = location.toString().replace(", ", ",");
+        simple.append(Utilities.padSpacesToFront("pos" + loc.replace("(", "[").replace(")", "]"), 8));
         simple.append(" ");
-        simple.append(Utilities.padSpacesToFront((floorIsCleanBefore) ? "CLEAN     --> " : "NOT CLEAN --> ", 9));
-        simple.append(" ");
-        simple.append(Utilities.padSpacesToFront((floorIsCleanAfter) ? "CLEAN" : "NOT CLEAN", 9));
+        simple.append(Utilities.padSpacesToFront((floorIsCleanBefore) ? "act[ALREADY_CLEAN] " : "", 9));
+        
+        simple.append(Utilities.padSpacesToFront((floorIsCleanAfter && !floorIsCleanBefore) ? "act[CLEAN]" : "",9));
         TextFileLogger textFileLogger = new TextFileLogger(ConfigManager.getConfiguration("unityLogFile") + "-" + numberOfRuns + ".txt");
         textFileLogger.log(simple.toString());
     }
