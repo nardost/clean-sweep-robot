@@ -13,9 +13,9 @@ public class LogManager {
         String loc = location.toString().replace(", ", ",");
         simple.append(Utilities.padSpacesToFront("pos" + loc.replace("(", "[").replace(")", "]"), 8));
         simple.append(" ");
-        simple.append(Utilities.padSpacesToFront((floorIsCleanBefore) ? "act[ALREADY_CLEAN] " : "", 9));
+        simple.append(Utilities.padSpacesToFront((floorIsCleanBefore) ? "act[ALREADY_CLEAN] " : "", 0));
         
-        simple.append(Utilities.padSpacesToFront((floorIsCleanAfter && !floorIsCleanBefore) ? "act[CLEAN]" : "",9));
+        simple.append(Utilities.padSpacesToFront((floorIsCleanAfter && !floorIsCleanBefore) ? "act[CLEAN]" : "",0));
         TextFileLogger textFileLogger = new TextFileLogger(ConfigManager.getConfiguration("unityLogFile") + "-" + numberOfRuns + ".txt");
         textFileLogger.log(simple.toString());
     }
