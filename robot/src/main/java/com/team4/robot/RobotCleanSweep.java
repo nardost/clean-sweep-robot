@@ -445,8 +445,13 @@ public class RobotCleanSweep implements Robot {
     Direction backToCharge() {
         if(RobotCleanSweep.getInstance().getLocation().equals( RobotCleanSweep.getInstance().getCurrentChargingStation())){
         	LogManager.print("...AT CHARGING STATION " + getLocation().toString() + " WITH BATTERY LEVEL "+ getPowerManager().getBatteryLevel(), getZeroTime());
+        	String dirtLevel = Integer.toString(RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel());
+        	String batteryLevel = Double.toString(RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel());
+        	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "CHARGING",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
             getPowerManager().recharge();
+            batteryLevel = Double.toString(RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel());
             LogManager.print("...BATTERY RECHARGED. NEW BATTERY LEVEL: " + getPowerManager().getBatteryLevel(), getZeroTime());
+            LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "CHARGED",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
             getLocBeforeCharge();
             setState(MOVING_BACK);
             return null;
@@ -465,11 +470,17 @@ public class RobotCleanSweep implements Robot {
     Direction movingBack() {
     	
     	if(getLocation().equals(getLastLocation())) {
+        	String dirtLevel = Integer.toString(RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel());
+        	String batteryLevel = Double.toString(RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel());
+        	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "RESUME",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
             System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
     		setState(WORKING);
     		return null;
     	}
         AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),getLastLocation() ,2);
+    	String dirtLevel = Integer.toString(RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel());
+    	String batteryLevel = Double.toString(RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel());
+    	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "GO_LAST",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
     	LogManager.print("...GOING BACK TO LAST LOCATION. NOW AT " + getLocation().toString() + "  Battery Level: " + RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel(), getZeroTime());
         return aStar.search().pop();
     }
