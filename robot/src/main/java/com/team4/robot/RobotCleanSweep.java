@@ -483,7 +483,7 @@ public class RobotCleanSweep implements Robot {
             simple.append(Utilities.padSpacesToFront((floorDaoBefore.isClean) ? "act[ALREADY_CLEAN] " : "", 9));
             simple.append(" ");
             simple.append(Utilities.padSpacesToFront((floorDaoAfter.isClean && floorDaoBefore.isClean) ? "act[CLEAN]" : "", 9));
-            LogManager.logForUnity(getLocation(), floorDaoBefore.isClean, floorDaoAfter.isClean, getNumberOfRuns());
+            LogManager.logForUnity(getLocation(), floorDaoBefore.isClean, floorDaoAfter.isClean,Double.toString(batteryLevelAfter), Integer.toString(dirtLevelAfter), getNumberOfRuns());
         	
         	//for console output
             StringBuilder sb = new StringBuilder();
