@@ -70,7 +70,9 @@ class PowerUnit implements PowerManager {
        // batteryNeededToReachToKnownChargingStation  = aStar.getPathNode().getMaxFloorCost() + 3.0;
 
         if(getBatteryLevel() <= batteryNeededToReachToKnownChargingStation) {
-        	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), RobotCleanSweep.getNumberOfRuns());
+        	
+        	String dirtLevel = Integer.toString(RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel());
+        	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "GO_CHARGE", Double.toString(getBatteryLevel()), dirtLevel, RobotCleanSweep.getNumberOfRuns());
         	LogManager.print("...GOING BACK TO CHARGING STATION. NOW AT " + RobotCleanSweep.getInstance().getLocation() + "  Battery Level: " + getBatteryLevel(), RobotCleanSweep.getInstance().getZeroTime());
             RobotCleanSweep.getInstance().setState(LOW_BATTERY);
         }
