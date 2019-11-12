@@ -1,0 +1,45 @@
+      <form method="post" class="">
+        <div class=" col-10 mt-4 border border-warning">
+        <div class="form-check ">
+          <input type="checkbox" name="Animal" value="Dog"  >
+          <label class="form-check-label" for="Dog">
+            Dog
+          </label>
+        </div>
+        <div class="form-check ">
+          <input type="checkbox" name="Animal" value="Cat"  >
+          <label class="form-check-label" for="Cat">
+            Cat
+          </label>
+        </div>
+
+        <div class="form-check ">
+          <input type="checkbox" name="Animal" value="Fish"  >
+          <label class="form-check-label" for="Fish">
+            Fish
+          </label>
+        </div>
+
+        <div class="form-check ">
+          <input type="checkbox" name="Animal" value="Bird"  >
+          <label class="form-check-label" for="Bird">
+            Bird
+          </label>
+        </div>
+
+        <div class="form-check ">
+          <input type="checkbox" name="Animal" value="Reptile"  >
+          <label class="form-check-label" for="Reptile">
+            Reptile
+          </label>
+        </div>
+
+        <div class="form-check ">
+          <input type="checkbox" name="Animal" value="Small-Animal"  >
+          <label class="form-check-label" for="Small-Animal">
+            Small-Animal
+          </label>
+        </div>
+      <input type="submit">
+      </div>
+      </form>

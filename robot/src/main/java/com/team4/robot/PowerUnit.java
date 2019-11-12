@@ -1,6 +1,7 @@
 package com.team4.robot;
 
 import com.team4.commons.ConfigManager;
+import com.team4.commons.Location;
 import com.team4.commons.LocationFactory;
 import com.team4.commons.LogManager;
 import com.team4.commons.RobotException;
@@ -37,20 +38,36 @@ class PowerUnit implements PowerManager {
             throw new RobotException("Invalid power usage level.");
         }
         setBatteryLevel(getBatteryLevel() - units);
+        double batteryNeededToReachToKnownChargingStation = 200;
+        if(getBatteryLevel()<=200) {
+            for(Location chargingStation :RobotCleanSweep.getInstance().getChargingStations()) {
+            	AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),chargingStation ,2);
+            	aStar.search();
+            	double temp = aStar.getPathNode().getMaxFloorCost() + 3.0;
+            	if(temp<=batteryNeededToReachToKnownChargingStation) {
+            		batteryNeededToReachToKnownChargingStation = temp;
+            		RobotCleanSweep.getInstance().setCurrentChargingStation(chargingStation);
+            	}
+            	
+            }
+        	
+        }
+        
 
         //battery needed to reach Charging station
-        AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),LocationFactory.createLocation(0, 9) ,2);
+
+       // AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),LocationFactory.createLocation(0, 9) ,2);
         //searching path from current location to charging station
         
-        double batteryNeededToReachToKnownChargingStation;
+        
 
         //an allowance of 3.0 just in case robot needs to do one more move.
-        aStar.search();
-        batteryNeededToReachToKnownChargingStation  = aStar.getPathNode().getMaxFloorCost() + 3.0;
+        //aStar.search();
+       // batteryNeededToReachToKnownChargingStation  = aStar.getPathNode().getMaxFloorCost() + 3.0;
 
         if(getBatteryLevel() <= batteryNeededToReachToKnownChargingStation) {
         	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), RobotCleanSweep.getNumberOfRuns());
-        	LogManager.print("...GOING BACK TO CHARGING STATION. NOW AT " + RobotCleanSweep.getInstance().getLocation(), RobotCleanSweep.getInstance().getZeroTime());
+        	LogManager.print("...GOING BACK TO CHARGING STATION. NOW AT " + RobotCleanSweep.getInstance().getLocation() + "  Battery Level: " + getBatteryLevel(), RobotCleanSweep.getInstance().getZeroTime());
             RobotCleanSweep.getInstance().setState(LOW_BATTERY);
         }
     }
