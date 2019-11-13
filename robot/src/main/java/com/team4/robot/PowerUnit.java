@@ -2,7 +2,6 @@ package com.team4.robot;
 
 import com.team4.commons.ConfigManager;
 import com.team4.commons.Location;
-import com.team4.commons.LocationFactory;
 import com.team4.commons.LogManager;
 import com.team4.commons.RobotException;
 import com.team4.commons.Utilities;
@@ -48,26 +47,10 @@ class PowerUnit implements PowerManager {
                 		batteryNeededToReachToKnownChargingStation = temp;
                 		RobotCleanSweep.getInstance().setCurrentChargingStation(chargingStation);
                 	}
-            		
             	}
-            	
-
-            	
             }
         	
         }
-        
-
-        //battery needed to reach Charging station
-
-       // AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),LocationFactory.createLocation(0, 9) ,2);
-        //searching path from current location to charging station
-        
-        
-
-        //an allowance of 3.0 just in case robot needs to do one more move.
-        //aStar.search();
-       // batteryNeededToReachToKnownChargingStation  = aStar.getPathNode().getMaxFloorCost() + 3.0;
 
         if(getBatteryLevel() <= batteryNeededToReachToKnownChargingStation) {
         	
