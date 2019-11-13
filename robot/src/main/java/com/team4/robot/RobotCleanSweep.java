@@ -202,7 +202,6 @@ public class RobotCleanSweep implements Robot {
                 }
             }
         }
-       
     }
 
     private void move(Direction direction, double cost) {
@@ -211,9 +210,10 @@ public class RobotCleanSweep implements Robot {
 
         if(direction == null) {
             /**
-             * Do not consume power after recharging without moving any where.
+             * Do not consume power right after recharging or
+             * right beforewithout moving any where.
              */
-            if(getLocation() == getCurrentChargingStation()) {
+            if(getLocation() == getCurrentChargingStation() || getLocation() == getLastLocation()) {
                 cost = 0.0;
             }
             getPowerManager().updateBatteryLevel(cost);
@@ -397,7 +397,7 @@ public class RobotCleanSweep implements Robot {
         int currentX = RobotCleanSweep.getInstance().getLocation().getX();
         int currentY = RobotCleanSweep.getInstance().getLocation().getY();
 
-        Location location = null;
+        Location location;
         for(int i = 0; i < directions.length; i++) {
             switch(directions[i]) {
                 case NORTH:
@@ -479,8 +479,8 @@ public class RobotCleanSweep implements Robot {
     Direction movingBack() {
     	
     	if(getLocation() == getLastLocation()) {
-        	String dirtLevel = Integer.toString(RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel());
-        	String batteryLevel = Double.toString(RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel());
+        	String dirtLevel = Integer.toString(getVacuumCleaner().getDirtLevel());
+        	String batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
         	LogManager.logForUnity(getLocation(), "RESUME",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
             System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
     		setState(WORKING);
