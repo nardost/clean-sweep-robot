@@ -42,7 +42,10 @@ class DirtManager implements VacuumCleaner {
 		//press any key to continue is better.
     	String dirtLevel = Integer.toString(RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel());
     	String batteryLevel = Double.toString(RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel());
-    	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "DIRT_FULL",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
+    	for(int i =0; i<=4; i++) {
+    		LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "DIRT_FULL",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
+    	}
+    	
 		System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
 		Utilities.doLoopedTimeDelay("...DIRT TANK FULL... (awaiting human intervention)...", 3, RobotCleanSweep.getInstance().getZeroTime());
 		emptyTank();
