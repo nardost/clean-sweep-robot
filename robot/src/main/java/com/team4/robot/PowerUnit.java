@@ -49,7 +49,6 @@ class PowerUnit implements PowerManager {
                 	}
             	}
             }
-        	
         }
 
         if(getBatteryLevel() <= batteryNeededToReachToKnownChargingStation) {
