@@ -22,7 +22,7 @@ class DirtManager implements VacuumCleaner {
 		} else {
 			setDirtLevel(newDirtLevel);
 			RobotCleanSweep.getInstance().getPowerManager().updateBatteryLevel(cost);
-			SensorSimulator.getInstance().setTileDone(RobotCleanSweep.getInstance().getLocation());
+			SensorSimulator.getInstance().removeDirtFromLocation(RobotCleanSweep.getInstance().getLocation());
 		}
 	}
 

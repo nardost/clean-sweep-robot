@@ -80,6 +80,26 @@ public class SensorSimulator implements Sensor {
         }
     }
 
+    @Override
+    public void removeDirtFromLocation(Location location) {
+        if(location == null) {
+            throw new RobotException("Null location is not allowed");
+        }
+        int dirtUnits = TileFactory.createTile(location).getDirtUnits();
+        //if(dirtUnits < 1) {
+            //throw new RobotException("Robot was trying to vacuum a clean tile.");
+        //}
+        //dirtUnits--;
+        //TileFactory.createTile(location).setDirtUnits(dirtUnits);
+        if(dirtUnits == 0) {
+            TileFactory.createTile(location).setClean(true);
+            setTileDone(location);
+        } else {
+            TileFactory.createTile(location).setDirtUnits(dirtUnits - 1);
+            TileFactory.createTile(location).setClean(false);
+        }
+    }
+
     public double getDonePercentage() {
         double percentageOfDoneTiles = ((double) getDoneTiles().size() / (double) getFloor().getTiles().size()) * 100.0;
         return percentageOfDoneTiles;

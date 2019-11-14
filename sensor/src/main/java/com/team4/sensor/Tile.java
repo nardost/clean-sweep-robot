@@ -4,8 +4,6 @@ import com.team4.commons.FloorType;
 import com.team4.commons.Location;
 import com.team4.commons.RobotException;
 
-import static com.team4.commons.FloorType.*;
-
 class Tile {
     private Location location;
     private FloorType floorType;
@@ -15,6 +13,7 @@ class Tile {
     private boolean isEastOpen;
     private boolean isWestOpen;
     private boolean isClean;
+    private int dirtUnits;
 
     private Tile() {
     }
@@ -55,6 +54,10 @@ class Tile {
         return isClean;
     }
 
+    int getDirtUnits() {
+        return dirtUnits;
+    }
+
     void setFloorType(FloorType floorType) {
         if(floorType == null) {
             throw new RobotException("Null floor type not allowed in Tiles.");
@@ -84,5 +87,13 @@ class Tile {
 
     void setClean(boolean clean) {
         isClean = clean;
+    }
+
+    void setDirtUnits(int dirtUnits) {
+        if(dirtUnits == 0 || dirtUnits == 1 || dirtUnits == 2 || dirtUnits == 3) {
+            this.dirtUnits = dirtUnits;
+        } else {
+            throw new RobotException("Invalid dirt level " + dirtUnits);
+        }
     }
 }

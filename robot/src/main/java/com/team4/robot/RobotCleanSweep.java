@@ -1,6 +1,7 @@
 package com.team4.robot;
 
 import com.team4.commons.*;
+import com.team4.sensor.DirtUnits;
 import com.team4.sensor.SensorSimulator;
 import com.team4.sensor.FloorDao;
 import static com.team4.commons.State.*;
@@ -145,7 +146,7 @@ public class RobotCleanSweep implements Robot {
 
                 Utilities.doTimeDelay(timeInTile);
 
-                FloorDao floorDaoBefore = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+                FloorDao floorDaoBefore = SensorSimulator.getInstance().getLocationInfo(getLocation());
                 if(floorDaoBefore.chargingStations.length == 1) {
                 	
                 	RobotCleanSweep.getInstance().setCurrentChargingStation(floorDaoBefore.chargingStations[0]);
@@ -158,15 +159,15 @@ public class RobotCleanSweep implements Robot {
 
                 if(direction != null) {
                     double batteryLevelBefore = getPowerManager().getBatteryLevel();
-                    if(!floorDaoBefore.isClean) {
+                    while(!(SensorSimulator.getInstance().getLocationInfo(getLocation())).isClean) {
                         getVacuumCleaner().clean(cost);
                     }
                     int dirtLevelAfter = getVacuumCleaner().getDirtLevel();
                     double batteryLevelAfter = getPowerManager().getBatteryLevel();
-                    FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+                    FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(getLocation());
                     for(Location chargingStation: floorDaoAfter.chargingStations) {
-                    	if(!RobotCleanSweep.getInstance().getChargingStations().contains(chargingStation)) {
-                    		RobotCleanSweep.getInstance().getChargingStations().add(chargingStation);
+                    	if(!getChargingStations().contains(chargingStation)) {
+                    		getChargingStations().add(chargingStation);
                     	}
                     }
                     
@@ -176,7 +177,7 @@ public class RobotCleanSweep implements Robot {
                 } else {
                     //duplicate logic. find a way to refactor this.
                     double batteryLevelBefore = getPowerManager().getBatteryLevel();
-                    if(!floorDaoBefore.isClean) {
+                    while(!(SensorSimulator.getInstance().getLocationInfo(getLocation())).isClean) {
                         getVacuumCleaner().clean(cost);
                     }
                     int dirtLevelAfter = getVacuumCleaner().getDirtLevel();
