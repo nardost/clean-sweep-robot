@@ -159,7 +159,8 @@ public class RobotCleanSweep implements Robot {
 
                 if(direction != null) {
                     double batteryLevelBefore = getPowerManager().getBatteryLevel();
-                    while(!(SensorSimulator.getInstance().getLocationInfo(getLocation())).isClean) {
+                    while(!(SensorSimulator.getInstance().getLocationInfo(getLocation())).isClean && getState()!=LOW_BATTERY) {
+                    	//System.out.println("Cleaning!");
                         getVacuumCleaner().clean(cost);
                     }
                     int dirtLevelAfter = getVacuumCleaner().getDirtLevel();
@@ -177,7 +178,8 @@ public class RobotCleanSweep implements Robot {
                 } else {
                     //duplicate logic. find a way to refactor this.
                     double batteryLevelBefore = getPowerManager().getBatteryLevel();
-                    while(!(SensorSimulator.getInstance().getLocationInfo(getLocation())).isClean) {
+                    while(!(SensorSimulator.getInstance().getLocationInfo(getLocation())).isClean && getState()!=LOW_BATTERY) {
+                    	//System.out.println("Cleaning!");
                         getVacuumCleaner().clean(cost);
                     }
                     int dirtLevelAfter = getVacuumCleaner().getDirtLevel();
@@ -201,13 +203,29 @@ public class RobotCleanSweep implements Robot {
                 	buildGraph(getLocation(), floorDao.openPassages);
                 	move(movingBack(), floorDao.floorType.getCost());
                 }
+                
+                
             }
+
+            
+            
         }
     }
 
     private void move(Direction direction, double cost) {
         int currentX = RobotCleanSweep.getInstance().getLocation().getX();
         int currentY = RobotCleanSweep.getInstance().getLocation().getY();
+        FloorDao check = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+
+        if(!check.isClean) {
+        	
+        	
+        	RobotCleanSweep.getInstance().putDirty(RobotCleanSweep.getInstance().getLocation());
+
+        }
+
+    
+        
 
         if(direction == null) {
             /**
@@ -219,7 +237,10 @@ public class RobotCleanSweep implements Robot {
             }
             getPowerManager().updateBatteryLevel(cost);
             return;
+            
+            
         }
+
         switch(direction) {
 
             case NORTH:
@@ -239,8 +260,10 @@ public class RobotCleanSweep implements Robot {
                 break;
         }
         
-        removeUnvisited(RobotCleanSweep.getInstance().getLocation());
+        
         FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+
+        
         cost += floorDao.floorType.getCost();
         cost = cost / 2.0;
         buildGraph(getLocation(), floorDao.openPassages);
@@ -252,6 +275,8 @@ public class RobotCleanSweep implements Robot {
         if(getState() == MOVING_BACK) {
         	move(movingBack(), floorDao.floorType.getCost());
         }
+        
+
     }
 
     long getZeroTime() {
@@ -305,6 +330,11 @@ public class RobotCleanSweep implements Robot {
         }
         String key = Utilities.tupleToString(location.getX(), location.getY());
         this.location = location;
+        int x = location.getX();
+        int y = location.getY();
+
+        
+        
         this.unvisited.remove(location);
         this.visited.put(key, location);
     }
@@ -333,6 +363,10 @@ public class RobotCleanSweep implements Robot {
             }
             return false;
         }
+    }
+    
+    void putDirty(Location location) {
+    	this.unvisited.add(location);
     }
 
     boolean visitedAll() {
