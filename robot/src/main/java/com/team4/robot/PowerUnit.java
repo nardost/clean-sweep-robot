@@ -40,9 +40,9 @@ class PowerUnit implements PowerManager {
         double batteryNeededToReachToKnownChargingStation = 200;
         if(getBatteryLevel() <= 200) {
             for(Location chargingStation : RobotCleanSweep.getInstance().getChargingStations()) {
-            	AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),chargingStation ,2);
-            	if(aStar.search()!=null) {
-                	double temp = aStar.getPathNode().getMaxFloorCost() + 30.0;
+            	AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(), RobotCleanSweep.getInstance().getLocation(),chargingStation ,2);
+            	if(aStar.search() != null) {
+                	double temp = aStar.getPathNode().getMaxFloorCost() + 7.0;
                 	if(temp <= batteryNeededToReachToKnownChargingStation) {
                 		batteryNeededToReachToKnownChargingStation = temp;
                 		RobotCleanSweep.getInstance().setCurrentChargingStation(chargingStation);
