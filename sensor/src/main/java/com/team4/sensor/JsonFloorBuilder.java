@@ -88,7 +88,7 @@ class JsonFloorBuilder implements FloorBuilder {
                 tile = TileFactory.createTile(location);
                 tile.setFloorType(BARE);
                 tile.setClean(false);
-                tile.setDirtUnits(2);
+                tile.setDirtUnits(3);
                 tile.setWestOpen(true);
                 tile.setNorthOpen(true);
                 tile.setSouthOpen(true);

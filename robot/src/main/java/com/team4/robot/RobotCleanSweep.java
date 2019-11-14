@@ -179,7 +179,7 @@ public class RobotCleanSweep implements Robot {
                     //duplicate logic. find a way to refactor this.
                     double batteryLevelBefore = getPowerManager().getBatteryLevel();
                     while(!(SensorSimulator.getInstance().getLocationInfo(getLocation())).isClean && getState()!=LOW_BATTERY) {
-                    	//System.out.println("Cleaning!");
+                    	
                         getVacuumCleaner().clean(cost);
                     }
                     int dirtLevelAfter = getVacuumCleaner().getDirtLevel();
