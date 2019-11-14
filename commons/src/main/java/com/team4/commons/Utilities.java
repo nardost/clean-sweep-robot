@@ -1,5 +1,6 @@
 package com.team4.commons;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class Utilities {
@@ -135,5 +136,9 @@ public class Utilities {
         return String.format("[%02d:%02d:%02d.%3d]  ", h, m, s, decimals);
         */
         return String.format("[%02d:%02d:%02d]  ", h, m, s);
+    }
+    public static int getRandomInt(int minInclusive, int maxExclusive) {
+        Random random = new Random();
+        return random.ints(minInclusive, maxExclusive).findFirst().getAsInt();
     }
 }

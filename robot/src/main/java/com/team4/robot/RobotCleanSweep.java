@@ -147,8 +147,10 @@ public class RobotCleanSweep implements Robot {
                 Utilities.doTimeDelay(timeInTile);
 
                 FloorDao floorDaoBefore = SensorSimulator.getInstance().getLocationInfo(getLocation());
+                if(floorDaoBefore.isClean) {
+                    SensorSimulator.getInstance().setTileDone(location);
+                }
                 if(floorDaoBefore.chargingStations.length == 1) {
-                	
                 	RobotCleanSweep.getInstance().setCurrentChargingStation(floorDaoBefore.chargingStations[0]);
                 }
                 createLocations(floorDaoBefore.openPassages);
@@ -159,8 +161,8 @@ public class RobotCleanSweep implements Robot {
 
                 if(direction != null) {
                     double batteryLevelBefore = getPowerManager().getBatteryLevel();
-                    while(!(SensorSimulator.getInstance().getLocationInfo(getLocation())).isClean && getState()!=LOW_BATTERY) {
-                    	//System.out.println("Cleaning!");
+                    while(!(SensorSimulator.getInstance().getLocationInfo(getLocation())).isClean && getState()!= LOW_BATTERY) {
+                        System.out.println(getLocation() + " " + SensorSimulator.getInstance().getLocationInfo(getLocation()).isClean);
                         getVacuumCleaner().clean(cost);
                     }
                     int dirtLevelAfter = getVacuumCleaner().getDirtLevel();
@@ -178,8 +180,7 @@ public class RobotCleanSweep implements Robot {
                 } else {
                     //duplicate logic. find a way to refactor this.
                     double batteryLevelBefore = getPowerManager().getBatteryLevel();
-                    while(!(SensorSimulator.getInstance().getLocationInfo(getLocation())).isClean && getState()!=LOW_BATTERY) {
-                    	
+                    while(!(SensorSimulator.getInstance().getLocationInfo(getLocation())).isClean && getState()!= LOW_BATTERY) {
                         getVacuumCleaner().clean(cost);
                     }
                     int dirtLevelAfter = getVacuumCleaner().getDirtLevel();
