@@ -6,7 +6,6 @@ import com.team4.commons.*;
 
 import static com.team4.commons.Direction.*;
 import static com.team4.commons.FloorType.*;
-import static com.team4.sensor.DirtUnits.*;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -88,7 +87,7 @@ class JsonFloorBuilder implements FloorBuilder {
                 tile = TileFactory.createTile(location);
                 tile.setFloorType(BARE);
                 tile.setClean(false);
-                tile.setDirtUnits(Utilities.getRandomInt(0, 4));
+                tile.setDirtUnits(Utilities.getRandomInt());
                 tile.setWestOpen(true);
                 tile.setNorthOpen(true);
                 tile.setSouthOpen(true);
