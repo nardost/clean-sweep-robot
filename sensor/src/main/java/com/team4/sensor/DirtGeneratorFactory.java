@@ -13,6 +13,7 @@ public class DirtGeneratorFactory {
         switch (dirtGeneratorType) {
             case "random": return new DirtGeneratorRandom();
             case "simple": return new DirtGeneratorSimple();
+            case "gaussian": return new DirtGeneratorGaussian();
             default: throw new RobotException("Invalid dirt generator type: " + dirtGeneratorType);
         }
     }
