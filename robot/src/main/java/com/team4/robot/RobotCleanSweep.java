@@ -31,19 +31,17 @@ public class RobotCleanSweep implements Robot {
     private Stack<Location> unvisited = new Stack<Location>();
     //graph built as robot progresses
     private HashMap<Location, List<Location>> graph = new HashMap<>();
-    //Path class for printing
-    private HashMap<Location, DirtUnits> doneTiles = new HashMap<>();
-    
+
     private Location lastLocation;
     private LinkedList<Location> lastLocationList = new LinkedList<>();
     
     //Charging stations locations
-    
+
     private ArrayList<Location> chargingStations = new ArrayList<Location>();
     private Location currentChargingStation = null;
     
     private static RobotCleanSweep robotCleanSweep = null;
-    
+
 
     private RobotCleanSweep() {
         setZeroTime(System.currentTimeMillis());

@@ -35,16 +35,13 @@ class AStar {
 		 }
 	 }
 	  
-	  
-	  class gComparator implements Comparator<Node> {
-	 	//Heuristics h = new Heuristics(getGoal());
-	 	public int compare(Node a, Node b) {
-	 		 
-	 		if( a.getMaxFloorCost() < b.getMaxFloorCost() )return -1;
-	 		if( a.getMaxFloorCost() > b.getMaxFloorCost() )return 1;
+	class gComparator implements Comparator<Node> {
+		public int compare(Node a, Node b) {
+			if( a.getMaxFloorCost() < b.getMaxFloorCost() )return -1;
+			if( a.getMaxFloorCost() > b.getMaxFloorCost() )return 1;
 			return 0;
-		 }
-	 }
+		}
+	}
 	 
 	 Node getPathNode(){
 		 return this.pathNode;
@@ -56,8 +53,7 @@ class AStar {
 	 Stack<Direction> path(Node node){
 		 Node node1 = node;
 		 Stack<Direction> directions = new Stack<Direction>();
-		 while(node1.getParent()!=null) {
-			 //System.out.println(node1.getMaxFloorCost());
+		 while(node1.getParent()!= null) {
 			 directions.add(node1.getDirection());
 			 node1 = node1.getParent();
 		 }
@@ -78,10 +74,8 @@ class AStar {
 		 }
 		 else {
 			  pQueue = null;
-			
 		 }
-		 
-		 
+
 		 ArrayList<Location> expanded = new ArrayList<Location>();
 		 Node node = initial;
 		 pQueue.add(node);
@@ -105,20 +99,19 @@ class AStar {
 			 if(children != null) {
 				 
 				 for(Location child : children) {
-					 //System.out.println("hello");
 					 
 					 if(!expanded.contains(child)) {
-						 
-						 Node childNode = new Node(child);
-						 childNode.setParent(node);
-						 childNode.setCost(node.getCost()+1);
-						 childNode.setDirection();
+
+						Node childNode = new Node(child);
+						childNode.setParent(node);
+						childNode.setCost(node.getCost()+1);
+						childNode.setDirection();
 						double parentCost = childNode.getParent().getFloor().getCost();
 						double myCost = childNode.getFloor().getCost();
 						double cost = (parentCost + myCost)/2;
 						childNode.setFloorCost(cost);
 						childNode.setMaxFloorCost(childNode.getFloorCost() + childNode.getParent().getMaxFloorCost());
-						 pQueue.add(childNode);
+						pQueue.add(childNode);
 					 }
 				 }
 			 }
