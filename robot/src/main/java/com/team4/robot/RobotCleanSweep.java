@@ -147,7 +147,7 @@ public class RobotCleanSweep implements Robot {
                     SensorSimulator.getInstance().setTileDone(location);
                 }
                 if(floorDaoBefore.chargingStations.length == 1) {
-                	RobotCleanSweep.getInstance().setCurrentChargingStation(floorDaoBefore.chargingStations[0]);
+                	setCurrentChargingStation(floorDaoBefore.chargingStations[0]);
                 }
                 createLocations(floorDaoBefore.openPassages);
                 buildGraph(getLocation(), floorDaoBefore.openPassages);
@@ -180,22 +180,22 @@ public class RobotCleanSweep implements Robot {
                     }
                     int dirtLevelAfter = getVacuumCleaner().getDirtLevel();
                     double batteryLevelAfter = getPowerManager().getBatteryLevel();
-                    FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+                    FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(getLocation());
                     logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, dirtLevelAfter, direction, mode);
                     setState(STANDBY);
                     updateNumberOfRuns();
                 }
 
                 if(getState() == LOW_BATTERY) {
-                    FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+                    FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(getLocation());
                     buildGraph(getLocation(), floorDao.openPassages);
-                    RobotCleanSweep.getInstance().getLastLocationList().add(RobotCleanSweep.getInstance().getLocation());
+                    getLastLocationList().add(getLocation());
                     move(backToCharge(), floorDao.floorType.getCost());
                 }
                 
                 if(getState() == MOVING_BACK) {
-                	FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
-                	RobotCleanSweep.getInstance().getLastLocationList().add(RobotCleanSweep.getInstance().getLocation());
+                	FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(getLocation());
+                	getLastLocationList().add(getLocation());
                 	buildGraph(getLocation(), floorDao.openPassages);
                 	move(movingBack(), floorDao.floorType.getCost());
                 }
@@ -204,12 +204,11 @@ public class RobotCleanSweep implements Robot {
     }
 
     private void move(Direction direction, double cost) {
-        int currentX = RobotCleanSweep.getInstance().getLocation().getX();
-        int currentY = RobotCleanSweep.getInstance().getLocation().getY();
-        FloorDao check = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+        int currentX = getLocation().getX();
+        int currentY = getLocation().getY();
 
-        if(!check.isClean) {
-        	RobotCleanSweep.getInstance().putDirty(RobotCleanSweep.getInstance().getLocation());
+        if(!SensorSimulator.getInstance().getLocationInfo(getLocation()).isClean) {
+        	putDirty(getLocation());
         }
 
         if(direction == null) {
@@ -227,29 +226,29 @@ public class RobotCleanSweep implements Robot {
         switch(direction) {
 
             case NORTH:
-                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY - 1));
+                setLocation(LocationFactory.createLocation(currentX, currentY - 1));
                 break;
 
             case SOUTH:
-                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX, currentY + 1));
+                setLocation(LocationFactory.createLocation(currentX, currentY + 1));
                 break;
 
             case WEST:
-                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX - 1, currentY));
+                setLocation(LocationFactory.createLocation(currentX - 1, currentY));
                 break;
 
             case EAST:
-                RobotCleanSweep.getInstance().setLocation(LocationFactory.createLocation(currentX + 1, currentY));
+                setLocation(LocationFactory.createLocation(currentX + 1, currentY));
                 break;
         }
         
-        FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+        FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(getLocation());
         cost += floorDao.floorType.getCost();
         cost = cost / 2.0;
         buildGraph(getLocation(), floorDao.openPassages);
         getPowerManager().updateBatteryLevel(cost);
         if(getState() == LOW_BATTERY) {
-        	RobotCleanSweep.getInstance().getLastLocationList().add(RobotCleanSweep.getInstance().getLocation());
+        	getLastLocationList().add(getLocation());
         	move(backToCharge(), floorDao.floorType.getCost());
         }
         if(getState() == MOVING_BACK) {
@@ -398,8 +397,8 @@ public class RobotCleanSweep implements Robot {
     }
 
     void createLocations(Direction [] directions) {
-        int currentX = RobotCleanSweep.getInstance().getLocation().getX();
-        int currentY = RobotCleanSweep.getInstance().getLocation().getY();
+        int currentX = getLocation().getX();
+        int currentY = getLocation().getY();
 
         Location location;
         for(int i = 0; i < directions.length; i++) {
@@ -454,15 +453,15 @@ public class RobotCleanSweep implements Robot {
     Direction backToCharge() {
         if(getLocation().equals(getCurrentChargingStation())){
         	LogManager.print("...AT CHARGING STATION " + getLocation().toString() + " WITH BATTERY LEVEL "+ getPowerManager().getBatteryLevel(), getZeroTime());
-        	String dirtLevel = Integer.toString(RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel());
-        	String batteryLevel = Double.toString(RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel());
+        	String dirtLevel = Integer.toString(getVacuumCleaner().getDirtLevel());
+        	String batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
         	
         	for(int i =0; i<=4 ; i++) {
-        		LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "CHARGING",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
+        		LogManager.logForUnity(getLocation(), "CHARGING",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
         	}
-        	//LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "CHARGING",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
+        	//LogManager.logForUnity(getLocation(), "CHARGING",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
             getPowerManager().recharge();
-            batteryLevel = Double.toString(RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel());
+            batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
             LogManager.print("...BATTERY RECHARGED. NEW BATTERY LEVEL: " + getPowerManager().getBatteryLevel(), getZeroTime());
             LogManager.logForUnity(getLocation(), "CHARGED",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
             getLocBeforeCharge();
