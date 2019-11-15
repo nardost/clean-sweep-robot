@@ -137,10 +137,4 @@ public class Utilities {
         */
         return String.format("[%02d:%02d:%02d]  ", h, m, s);
     }
-    public static int getRandomInt() {
-        int minInclusive = 0;
-        int maxExclusive = 4;
-        Random random = new Random();
-        return random.ints(minInclusive, maxExclusive).findFirst().getAsInt();
-    }
 }

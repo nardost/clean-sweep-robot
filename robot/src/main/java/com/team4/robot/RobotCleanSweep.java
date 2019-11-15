@@ -36,12 +36,10 @@ public class RobotCleanSweep implements Robot {
     private LinkedList<Location> lastLocationList = new LinkedList<>();
     
     //Charging stations locations
-
     private ArrayList<Location> chargingStations = new ArrayList<Location>();
     private Location currentChargingStation = null;
     
     private static RobotCleanSweep robotCleanSweep = null;
-
 
     private RobotCleanSweep() {
         setZeroTime(System.currentTimeMillis());
@@ -201,12 +199,7 @@ public class RobotCleanSweep implements Robot {
                 	buildGraph(getLocation(), floorDao.openPassages);
                 	move(movingBack(), floorDao.floorType.getCost());
                 }
-                
-                
             }
-
-            
-            
         }
     }
 
@@ -216,14 +209,8 @@ public class RobotCleanSweep implements Robot {
         FloorDao check = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
 
         if(!check.isClean) {
-        	
-        	
         	RobotCleanSweep.getInstance().putDirty(RobotCleanSweep.getInstance().getLocation());
-
         }
-
-    
-        
 
         if(direction == null) {
             /**
@@ -235,8 +222,6 @@ public class RobotCleanSweep implements Robot {
             }
             getPowerManager().updateBatteryLevel(cost);
             return;
-            
-            
         }
 
         switch(direction) {
@@ -258,10 +243,7 @@ public class RobotCleanSweep implements Robot {
                 break;
         }
         
-        
         FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
-
-        
         cost += floorDao.floorType.getCost();
         cost = cost / 2.0;
         buildGraph(getLocation(), floorDao.openPassages);
@@ -273,8 +255,6 @@ public class RobotCleanSweep implements Robot {
         if(getState() == MOVING_BACK) {
         	move(movingBack(), floorDao.floorType.getCost());
         }
-        
-
     }
 
     long getZeroTime() {
@@ -328,11 +308,6 @@ public class RobotCleanSweep implements Robot {
         }
         String key = Utilities.tupleToString(location.getX(), location.getY());
         this.location = location;
-        int x = location.getX();
-        int y = location.getY();
-
-        
-        
         this.unvisited.remove(location);
         this.visited.put(key, location);
     }
@@ -375,10 +350,6 @@ public class RobotCleanSweep implements Robot {
         }
         Location lastUnvisited() {
         return this.unvisited.peek();
-    }
-    
-    void removeUnvisited(Location location){
-    	this.unvisited.remove(location);
     }
 
     private void setNavigator(Navigator navigator) {
