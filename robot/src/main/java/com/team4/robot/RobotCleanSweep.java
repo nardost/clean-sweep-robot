@@ -157,7 +157,7 @@ public class RobotCleanSweep implements Robot {
 
                 if(direction != null) {
                     double batteryLevelBefore = getPowerManager().getBatteryLevel();
-                    while(!(SensorSimulator.getInstance().getLocationInfo(getLocation())).isClean && getState()!= LOW_BATTERY) {
+                    while(!(SensorSimulator.getInstance().getLocationInfo(getLocation())).isClean && getState() != LOW_BATTERY) {
                         getVacuumCleaner().clean(cost);
                     }
                     int dirtLevelAfter = getVacuumCleaner().getDirtLevel();
@@ -456,8 +456,8 @@ public class RobotCleanSweep implements Robot {
         	String dirtLevel = Integer.toString(getVacuumCleaner().getDirtLevel());
         	String batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
         	
-        	for(int i =0; i<=4 ; i++) {
-        		LogManager.logForUnity(getLocation(), "CHARGING",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
+        	for(int i = 0; i <= 4 ; i++) {
+        		LogManager.logForUnity(getLocation(), "CHARGING", batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
         	}
         	//LogManager.logForUnity(getLocation(), "CHARGING",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
             getPowerManager().recharge();
@@ -469,7 +469,10 @@ public class RobotCleanSweep implements Robot {
             return null;
         }
         AStar aStar = new AStar(getGraph(), getLocation(), getCurrentChargingStation() ,2);
-        Direction direction = aStar.search().pop();
+        Direction direction = null;
+        if(aStar.search() != null && !aStar.search().empty()) {
+            direction = aStar.search().pop();
+        }
         return direction;
     }
     
