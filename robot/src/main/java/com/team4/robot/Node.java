@@ -5,8 +5,6 @@ import com.team4.sensor.FloorDao;
 import com.team4.sensor.SensorSimulator;
 import com.team4.commons.*;
 
-
-
 class Node {
 	private Location location;
 	private Node parent;
@@ -29,7 +27,6 @@ class Node {
 		setMaxFloorCost(0);
 		FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(location);
 		setFloor(floorDao.floorType);
-		
 	}
 
 	public Location getLocation() {
@@ -74,9 +71,8 @@ class Node {
 		int parentY = getParent().getLocation().getY();	
 		int meX = getLocation().getX();
 		int meY= getLocation().getY();
-		
-		
-		if(meX==parentX) {
+
+		if(meX == parentX) {
 			if(meY == parentY + 1) {
 				this.directionFromParent = Direction.SOUTH;
 				return;
@@ -87,20 +83,16 @@ class Node {
 			}
 		}
 		
-		if(meY==parentY) {
+		if(meY == parentY) {
 			if(meX == parentX + 1) {
 				this.directionFromParent = Direction.EAST;
 				return;
 			}
-			if(meX == parentX -1) {
+			if(meX == parentX - 1) {
 				this.directionFromParent = Direction.WEST;
 				return;
 			}
 		}
-		
-				
-			
-		
 	}
 
 	public int getF() {
@@ -151,10 +143,4 @@ class Node {
 	public void setFloor(FloorType floor) {
 		this.floor = floor;
 	}
-	
-	
-	
-	
-	
-
 }

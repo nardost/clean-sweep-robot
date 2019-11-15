@@ -5,6 +5,7 @@ import com.team4.commons.Location;
 class Heuristics {
 	
 	private Location goal;
+
 	public Heuristics(Location goal) {
 		this.goal = goal;
 	}
@@ -13,8 +14,8 @@ class Heuristics {
 		return this.goal;
 	}
 	
-	 int manhattan(Node node) {
-		 int val = Math.abs((node.getLocation().getX() - getGoal().getX())) + Math.abs(node.getLocation().getY() - getGoal().getY());
-		 return val;
-	 }
+	int manhattan(Node node) {
+		int val = Math.abs((node.getLocation().getX() - getGoal().getX())) + Math.abs(node.getLocation().getY() - getGoal().getY());
+		return val;
+	}
 }

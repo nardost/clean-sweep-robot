@@ -41,7 +41,7 @@ class PowerUnit implements PowerManager {
         if(getBatteryLevel() <= 200) {
             for(Location chargingStation : RobotCleanSweep.getInstance().getChargingStations()) {
 
-            	if(RobotCleanSweep.getInstance().getLocation().getX()==2 && RobotCleanSweep.getInstance().getLocation().getY()==6) {
+            	if(RobotCleanSweep.getInstance().getLocation().getX() == 2 && RobotCleanSweep.getInstance().getLocation().getY() == 6) {
             		//System.out.println(getBatteryLevel());
             		//System.out.println("HERE HERE HERE!!!!");
             	}
