@@ -176,7 +176,11 @@ public class RobotCleanSweep implements Robot {
                     
                 }
                 
+                
+                
                 else {
+                	
+
                 	
                 	
                     //duplicate logic. find a way to refactor this.
@@ -184,6 +188,8 @@ public class RobotCleanSweep implements Robot {
                     while(!(SensorSimulator.getInstance().getLocationInfo(getLocation())).isClean && getState()!= LOW_BATTERY) {
                         getVacuumCleaner().clean(cost);
                     }
+                    
+
 
                     
                     int dirtLevelAfter = getVacuumCleaner().getDirtLevel();
@@ -207,7 +213,31 @@ public class RobotCleanSweep implements Robot {
                 	buildGraph(getLocation(), floorDao.openPassages);
                 	move(movingBack(), floorDao.floorType.getCost());
                 }
+                
+
+                
             }
+            
+            // homing feature... go home after work is done.
+            if(SensorSimulator.getInstance().getDonePercentage()==100.0) {
+            	while(!(getLocation().equals(getCurrentChargingStation()))) {
+                	FloorDao floorDaoBefore = SensorSimulator.getInstance().getLocationInfo(getLocation());
+                	double batteryLevelBefore = getPowerManager().getBatteryLevel();
+                	move(backToCharge(), floorDaoBefore.floorType.getCost());
+                	FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(getLocation());
+                    int dirtLevelAfter = getVacuumCleaner().getDirtLevel();
+                    double batteryLevelAfter = getPowerManager().getBatteryLevel();
+                    
+                    logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, dirtLevelAfter, null, mode);
+            		
+            	}
+            	
+            	
+            	
+            	
+            }
+            
+            
 
 
         }
@@ -493,10 +523,12 @@ public class RobotCleanSweep implements Robot {
     	getLastLocationList().clear();
     	return getLastLocation();
     }
+    
+
 
     Direction movingBack() {
     	
-    	if(getLocation() == getLastLocation()) {
+    	if(getLocation().equals( getLastLocation())) {
         	String dirtLevel = Integer.toString(getVacuumCleaner().getDirtLevel());
         	String batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
         	LogManager.logForUnity(getLocation(), "RESUME",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
