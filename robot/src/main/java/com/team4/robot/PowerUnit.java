@@ -7,6 +7,7 @@ import com.team4.commons.RobotException;
 import com.team4.commons.Utilities;
 
 import static com.team4.commons.State.LOW_BATTERY;
+import static com.team4.commons.State.OFF;
 
 class PowerUnit implements PowerManager {
 
@@ -37,7 +38,14 @@ class PowerUnit implements PowerManager {
             throw new RobotException("Invalid power usage level.");
         }
         setBatteryLevel(getBatteryLevel() - units);
-        double batteryNeededToReachToKnownChargingStation = 200;
+        double batteryNeededToReachToKnownChargingStation;
+        if(RobotCleanSweep.getInstance().getChargingStations().size()>0) {
+        	 batteryNeededToReachToKnownChargingStation =200;
+        }
+        else {
+        	batteryNeededToReachToKnownChargingStation =0;
+        }
+        
         if(getBatteryLevel() <= batteryNeededToReachToKnownChargingStation) {
             for(Location chargingStation : RobotCleanSweep.getInstance().getChargingStations()) {
             	AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),chargingStation ,2);
@@ -62,8 +70,13 @@ class PowerUnit implements PowerManager {
 
     private void setBatteryLevel(double batteryLevel) {
         final int maxBatteryLevel = Integer.parseInt(ConfigManager.getConfiguration("maxBatteryLevel"));
-        if(batteryLevel < 0 || batteryLevel > maxBatteryLevel) {
+        if( batteryLevel > maxBatteryLevel) {
+        	
             throw new RobotException("Invalid battery level.");
+        }
+        if(batteryLevel<0) {
+        	RobotCleanSweep.getInstance().setState(OFF);
+        	return;
         }
         this.batteryLevel = batteryLevel;
     }

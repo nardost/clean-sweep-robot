@@ -56,6 +56,7 @@ class NavigatorOmega implements Navigator {
         	Location goal = RobotCleanSweep.getInstance().lastUnvisited();
         	AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(), current, goal,1);
         	if(aStar.search() != null && !aStar.search().empty()) {
+        	
         		return aStar.search().pop();
 			}
         }

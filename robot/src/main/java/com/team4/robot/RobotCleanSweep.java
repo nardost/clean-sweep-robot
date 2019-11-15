@@ -155,7 +155,7 @@ public class RobotCleanSweep implements Robot {
 
                 Direction direction = getNavigator().traverseFloor(floorDaoBefore.openPassages);
 
-                if(direction != null) {
+                if(direction != null ) {
                     double batteryLevelBefore = getPowerManager().getBatteryLevel();
                     while(!(SensorSimulator.getInstance().getLocationInfo(getLocation())).isClean && getState() != LOW_BATTERY) {
                         getVacuumCleaner().clean(cost);
@@ -172,12 +172,20 @@ public class RobotCleanSweep implements Robot {
                     logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, dirtLevelAfter, direction, mode);
                     
                     move(direction, cost);
-                } else {
+                    
+                    
+                }
+                
+                else {
+                	
+                	
                     //duplicate logic. find a way to refactor this.
                     double batteryLevelBefore = getPowerManager().getBatteryLevel();
                     while(!(SensorSimulator.getInstance().getLocationInfo(getLocation())).isClean && getState()!= LOW_BATTERY) {
                         getVacuumCleaner().clean(cost);
                     }
+
+                    
                     int dirtLevelAfter = getVacuumCleaner().getDirtLevel();
                     double batteryLevelAfter = getPowerManager().getBatteryLevel();
                     FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(getLocation());
@@ -200,6 +208,8 @@ public class RobotCleanSweep implements Robot {
                 	move(movingBack(), floorDao.floorType.getCost());
                 }
             }
+
+
         }
     }
 
@@ -207,9 +217,7 @@ public class RobotCleanSweep implements Robot {
         int currentX = getLocation().getX();
         int currentY = getLocation().getY();
 
-        if(!SensorSimulator.getInstance().getLocationInfo(getLocation()).isClean) {
-        	putDirty(getLocation());
-        }
+
 
         if(direction == null) {
             /**
@@ -221,6 +229,10 @@ public class RobotCleanSweep implements Robot {
             }
             getPowerManager().updateBatteryLevel(cost);
             return;
+        }
+        
+        if(!SensorSimulator.getInstance().getLocationInfo(getLocation()).isClean) {
+        	putDirty(getLocation());
         }
 
         switch(direction) {
