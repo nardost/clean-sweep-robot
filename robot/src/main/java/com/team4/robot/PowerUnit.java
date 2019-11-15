@@ -57,6 +57,12 @@ class PowerUnit implements PowerManager {
                 		RobotCleanSweep.getInstance().setCurrentChargingStation(chargingStation);
                 	}
             	}
+            	
+            	else {
+            		if(batteryNeededToReachToKnownChargingStation==200) {
+            			batteryNeededToReachToKnownChargingStation = 0;
+            		}
+            	}
             }
         }
         
