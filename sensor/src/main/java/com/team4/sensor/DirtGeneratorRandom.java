@@ -7,11 +7,15 @@ public class DirtGeneratorRandom implements DirtGenerator {
     DirtGeneratorRandom() {
     }
 
+    /**
+     * Generates dirt amounts randomly
+     * @return
+     */
     @Override
     public int generateDirt() {
-        int minInclusive = 0;
-        int maxExclusive = 4;
+        int min = 0;
+        int max = 3;
         Random random = new Random();
-        return random.ints(minInclusive, maxExclusive).findFirst().getAsInt();
+        return random.ints(min, max + 1).findFirst().getAsInt();
     }
 }

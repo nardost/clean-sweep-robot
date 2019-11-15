@@ -15,7 +15,7 @@
     <property name="floorPlan" value="floor-plan-1.json" />
     <property name="floorWidth" value="10" />
     <property name="floorLength" value="10" />
-    <property name="dirtGeneratorType" value="simple" />
+    <property name="dirtGeneratorType" value="random" />
 
     <!-- Unity -->
     <property name="unityLogHome" value="UNITY_LOGS_HOME" />
