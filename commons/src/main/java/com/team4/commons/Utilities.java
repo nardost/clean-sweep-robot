@@ -137,4 +137,12 @@ public class Utilities {
         */
         return String.format("[%02d:%02d:%02d]  ", h, m, s);
     }
+    public static boolean isPrime(int n) {
+        for(int i = 2; i <= Math.round(Math.sqrt(n)); i++) {
+            if(n % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
