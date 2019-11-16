@@ -12,7 +12,7 @@ public class TextFileLogger {
 
     public TextFileLogger(String logFile) {
         try {
-            String unityLogHome = ConfigManager.getConfiguration("unityLogHome");
+            String unityLogHome = ConfigManager.getConfiguration("logsHome");
             File logsDirectory = new File(System.getenv(unityLogHome));
             setLogFile(logsDirectory.getAbsolutePath() + File.separator + logFile);
             File file = new File(getLogFile());
