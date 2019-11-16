@@ -1,7 +1,6 @@
 package com.team4.robot;
 
 import com.team4.commons.*;
-import com.team4.sensor.DirtUnits;
 import com.team4.sensor.SensorSimulator;
 import com.team4.sensor.FloorDao;
 import static com.team4.commons.State.*;
@@ -36,7 +35,7 @@ public class RobotCleanSweep implements Robot {
     private LinkedList<Location> lastLocationList = new LinkedList<>();
     
     //Charging stations locations
-    private ArrayList<Location> chargingStations = new ArrayList<Location>();
+    private ArrayList<Location> chargingStations = new ArrayList<>();
     private Location currentChargingStation = null;
     
     private static RobotCleanSweep robotCleanSweep = null;
@@ -76,7 +75,7 @@ public class RobotCleanSweep implements Robot {
         setState(STANDBY);
         //Robot waits for cleaning schedule.
         int scheduledWait = Integer.parseInt(ConfigManager.getConfiguration("scheduledWait"));
-        Utilities.doLoopedTimeDelay("...WAITING FOR SCHEDULED CLEANING TIME AT LOCATION " + getLocation(), scheduledWait, getZeroTime());
+        Utilities.doLoopedTimeDelay("Waiting for cleaning schedule at " + getLocation(), scheduledWait, getZeroTime());
 
         //Robot begins work.
         WorkingMode mode = WorkingMode.DEPLOYED;
@@ -87,7 +86,8 @@ public class RobotCleanSweep implements Robot {
     @Override
     public void turnOff() throws  RobotException {
         setState(OFF);
-        LogManager.print("...TURNED OFF...", getZeroTime());
+        Utilities.printDonePercentage(SensorSimulator.getInstance().getDonePercentage(), getZeroTime());
+        LogManager.print("Turned Off", getZeroTime());
     }
 
     private void work(WorkingMode mode, long timeInTile) {
@@ -168,30 +168,15 @@ public class RobotCleanSweep implements Robot {
                     		getChargingStations().add(chargingStation);
                     	}
                     }
-                    
                     logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, dirtLevelAfter, direction, mode);
-                    
                     move(direction, cost);
-                    
-                    
                 }
-                
-                
-                
                 else {
-                	
-
-                	
-                	
                     //duplicate logic. find a way to refactor this.
                     double batteryLevelBefore = getPowerManager().getBatteryLevel();
                     while(!(SensorSimulator.getInstance().getLocationInfo(getLocation())).isClean && getState()!= LOW_BATTERY) {
                         getVacuumCleaner().clean(cost);
                     }
-                    
-
-
-                    
                     int dirtLevelAfter = getVacuumCleaner().getDirtLevel();
                     double batteryLevelAfter = getPowerManager().getBatteryLevel();
                     FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(getLocation());
@@ -213,13 +198,10 @@ public class RobotCleanSweep implements Robot {
                 	buildGraph(getLocation(), floorDao.openPassages);
                 	move(movingBack(), floorDao.floorType.getCost());
                 }
-                
-
-                
             }
-            
             // homing feature... go home after work is done.
-            if(SensorSimulator.getInstance().getDonePercentage()==100.0) {
+            if(SensorSimulator.getInstance().getDonePercentage() == 100.0) {
+                System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
             	while(!(getLocation().equals(getCurrentChargingStation()))) {
                 	FloorDao floorDaoBefore = SensorSimulator.getInstance().getLocationInfo(getLocation());
                 	double batteryLevelBefore = getPowerManager().getBatteryLevel();
@@ -227,32 +209,35 @@ public class RobotCleanSweep implements Robot {
                 	FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(getLocation());
                     int dirtLevelAfter = getVacuumCleaner().getDirtLevel();
                     double batteryLevelAfter = getPowerManager().getBatteryLevel();
-                    
+                    String batteryLevel = Double.toString(batteryLevelAfter);
+                    String dirtLevel = Integer.toString(dirtLevelAfter);
                     logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, dirtLevelAfter, null, mode);
-            		
             	}
-            	
-            	
-            	
-            	
+                if((getLocation().equals(getCurrentChargingStation()))) {
+                    String dirtLevel = Integer.toString(getVacuumCleaner().getDirtLevel());
+                    String batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
+
+                    for(int i = 0; i <= 4 ; i++) {
+                        LogManager.logForUnity(getLocation(), "CHARGING", batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
+                    }
+                    getPowerManager().recharge();
+                    batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
+                    LogManager.print("Battery recharged. Battery level: " + getPowerManager().getBatteryLevel(), getZeroTime());
+                    LogManager.logForUnity(getLocation(), "CHARGED",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
+                }
+                updateNumberOfRuns();
             }
-            
-            
-
-
         }
     }
 
     private void move(Direction direction, double cost) {
+
         int currentX = getLocation().getX();
         int currentY = getLocation().getY();
 
-
-
         if(direction == null) {
             /**
-             * Do not consume power right after recharging or
-             * right beforewithout moving any where.
+             * Do not consume power without moving.
              */
             if(getLocation() == getCurrentChargingStation() || getLocation() == getLastLocation()) {
                 cost = 0.0;
@@ -326,11 +311,6 @@ public class RobotCleanSweep implements Robot {
             throw new RobotException("Null state is not allowed.");
         }
         this.state = state;
-        if(getState() == STANDBY) {
-            System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
-            LogManager.print("PERCENTAGE OF DONE TILES = " + SensorSimulator.getInstance().getDonePercentage() + "%", getZeroTime());
-            System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
-        }
     }
     Location getLastLocation() {
     	return this.lastLocation;
@@ -494,7 +474,6 @@ public class RobotCleanSweep implements Robot {
 
     Direction backToCharge() {
         if(getLocation().equals(getCurrentChargingStation())){
-        	LogManager.print("...AT CHARGING STATION " + getLocation().toString() + " WITH BATTERY LEVEL "+ getPowerManager().getBatteryLevel(), getZeroTime());
         	String dirtLevel = Integer.toString(getVacuumCleaner().getDirtLevel());
         	String batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
         	
@@ -504,7 +483,6 @@ public class RobotCleanSweep implements Robot {
         	//LogManager.logForUnity(getLocation(), "CHARGING",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
             getPowerManager().recharge();
             batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
-            LogManager.print("...BATTERY RECHARGED. NEW BATTERY LEVEL: " + getPowerManager().getBatteryLevel(), getZeroTime());
             LogManager.logForUnity(getLocation(), "CHARGED",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
             getLocBeforeCharge();
             setState(MOVING_BACK);
@@ -518,16 +496,13 @@ public class RobotCleanSweep implements Robot {
         return direction;
     }
     
-    Location getLocBeforeCharge(){
+    Location getLocBeforeCharge() {
     	setLastLocation(getLastLocationList().removeFirst());
     	getLastLocationList().clear();
     	return getLastLocation();
     }
-    
-
 
     Direction movingBack() {
-    	
     	if(getLocation().equals( getLastLocation())) {
         	String dirtLevel = Integer.toString(getVacuumCleaner().getDirtLevel());
         	String batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
@@ -540,7 +515,7 @@ public class RobotCleanSweep implements Robot {
     	String dirtLevel = Integer.toString(getVacuumCleaner().getDirtLevel());
     	String batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
     	LogManager.logForUnity(getLocation(), "GO_LAST",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
-    	LogManager.print("...GOING BACK TO LAST LOCATION. NOW AT " + getLocation().toString() + "  Battery Level: " + getPowerManager().getBatteryLevel(), getZeroTime());
+    	LogManager.print("Going back to last location. Location: " + getLocation().toString() + "  Battery Level: " + getPowerManager().getBatteryLevel(), getZeroTime());
         return aStar.search().pop();
     }
 

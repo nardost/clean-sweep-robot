@@ -20,7 +20,7 @@ public class DirtGeneratorGaussian implements DirtGenerator {
         Random random = new Random();
         int randomGaussianInt;
         do {
-            double value = random.nextGaussian() * 0.5 + 1;
+            double value = random.nextGaussian() * 0.75 + 1;
             randomGaussianInt = (int) Math.round(value);
         } while (randomGaussianInt <= 0);
         return randomGaussianInt;

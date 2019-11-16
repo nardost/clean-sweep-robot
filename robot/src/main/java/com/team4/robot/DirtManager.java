@@ -3,6 +3,11 @@ package com.team4.robot;
 import com.team4.commons.*;
 import com.team4.sensor.*;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+
 class DirtManager implements VacuumCleaner {
 
 	private final int MAX_DIRT = Integer.parseInt(ConfigManager.getConfiguration("dirtCapacity"));
@@ -42,12 +47,12 @@ class DirtManager implements VacuumCleaner {
 		//press any key to continue is better.
     	String dirtLevel = Integer.toString(RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel());
     	String batteryLevel = Double.toString(RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel());
-    	for(int i =0; i<=4; i++) {
+    	for(int i =0; i<= 4; i++) {
     		LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "DIRT_FULL",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
     	}
     	
 		System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
-		Utilities.doLoopedTimeDelay("...DIRT TANK FULL... (awaiting human intervention)...", 3, RobotCleanSweep.getInstance().getZeroTime());
+		Utilities.doLoopedTimeDelay("Dirt tank full", 3, RobotCleanSweep.getInstance().getZeroTime());
 		emptyTank();
 	}
 
@@ -59,7 +64,7 @@ class DirtManager implements VacuumCleaner {
     	String batteryLevel = Double.toString(RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel());
     	clean(floorDao.floorType.getCost());
     	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "DIRT_EMPTY",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
-		LogManager.print("...DIRT TANK EMPTY... (human action completed)...", RobotCleanSweep.getInstance().getZeroTime());
+		LogManager.print("Dirt tank emptied", RobotCleanSweep.getInstance().getZeroTime());
 		System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
 		RobotCleanSweep.getInstance().setState(State.WORKING);
 	}

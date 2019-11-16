@@ -7,7 +7,7 @@
     { "from" : { "x" : 10, "y" : 0 }, "to" : { "x" : 10, "y" : 10 }, "obstacleType" : "WALL" }
   ],
   "passages":[],
-  "chargingStations": [{ "x" : 5, "y" : 5 }],
+  "chargingStations": [{ "x" : 0, "y" : 9 }],
   "areas":[
     { "topLeft" : { "x" : 0, "y" : 2 }, "bottomRight" : { "x" : 2, "y" : 8 }, "floorType" : "LOW_PILE" }
   ]

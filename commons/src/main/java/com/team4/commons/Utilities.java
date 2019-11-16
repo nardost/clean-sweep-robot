@@ -1,6 +1,5 @@
 package com.team4.commons;
 
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class Utilities {
@@ -124,6 +123,11 @@ public class Utilities {
         System.out.println("                                             |                     CLEAN SWEEP ROBOT                 |");
         System.out.println("                                             +=======================================================+");
         System.out.println();
+    }
+    public static void printDonePercentage(double percentage, long zeroTime) {
+        System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
+        LogManager.print("Percentage of Done Tiles = " + percentage + "%", zeroTime);
+        System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
     }
     public static String formatElapsedTime(long milliTime, long zeroTime) {
         long elapsedTime = milliTime - zeroTime;

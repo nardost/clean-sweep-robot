@@ -22,7 +22,7 @@ class PowerUnit implements PowerManager {
     @Override
     public void recharge() {
         int timeToCharge = Integer.parseInt(ConfigManager.getConfiguration("timeToCharge"));
-        Utilities.doLoopedTimeDelay("...CHARGING...", timeToCharge, RobotCleanSweep.getInstance().getZeroTime());
+        Utilities.doLoopedTimeDelay("Charging", timeToCharge, RobotCleanSweep.getInstance().getZeroTime());
         int maxBatteryLevel = Integer.parseInt(ConfigManager.getConfiguration("maxBatteryLevel"));
         setBatteryLevel(maxBatteryLevel);
     }
@@ -68,7 +68,7 @@ class PowerUnit implements PowerManager {
         	String dirtLevel = Integer.toString(RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel());
         	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "GO_CHARGE", Double.toString(getBatteryLevel()), dirtLevel, RobotCleanSweep.getNumberOfRuns());
         	
-        	LogManager.print("...GOING BACK TO CHARGING STATION. NOW AT " + RobotCleanSweep.getInstance().getLocation() + "  Battery Level: " + getBatteryLevel(), RobotCleanSweep.getInstance().getZeroTime());
+        	LogManager.print("Going back to charging station. Location: " + RobotCleanSweep.getInstance().getLocation() + "  Battery Level: " + getBatteryLevel(), RobotCleanSweep.getInstance().getZeroTime());
             RobotCleanSweep.getInstance().setState(LOW_BATTERY);
         }
     }

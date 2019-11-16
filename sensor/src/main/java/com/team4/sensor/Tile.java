@@ -90,7 +90,7 @@ class Tile {
     }
 
     void setDirtUnits(int dirtUnits) {
-        if(dirtUnits == 0 || dirtUnits == 1 || dirtUnits == 2 || dirtUnits == 3) {
+        if(0 <= dirtUnits && dirtUnits <= 10) {//(dirtUnits == 0 || dirtUnits == 1 || dirtUnits == 2 || dirtUnits == 3) {
             this.dirtUnits = dirtUnits;
             if(dirtUnits == 0) {
                 setClean(true);
