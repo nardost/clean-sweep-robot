@@ -124,6 +124,15 @@ public class Utilities {
         System.out.println("                                             +=======================================================+");
         System.out.println();
     }
+    public static void printStateTransition(String state) {
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < 13 - state.length(); i++) {
+            sb.append("-");
+        }
+        System.out.println();
+        System.out.println("<" + state + ">" + sb.toString() + "--------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
+        System.out.println();
+    }
     public static void printDonePercentage(double percentage, long zeroTime) {
         System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
         LogManager.print("Percentage of Done Tiles = " + percentage + "%", zeroTime);

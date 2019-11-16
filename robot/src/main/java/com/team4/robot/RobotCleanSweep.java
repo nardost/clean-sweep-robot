@@ -70,7 +70,6 @@ public class RobotCleanSweep implements Robot {
 
     @Override
     public void turnOn() {
-        Utilities.printLogo();
         setState(STANDBY);
         //Robot waits for cleaning schedule.
         int scheduledWait = Integer.parseInt(ConfigManager.getConfiguration("scheduledWait"));
@@ -308,7 +307,7 @@ public class RobotCleanSweep implements Robot {
             throw new RobotException("Null state is not allowed.");
         }
         this.state = state;
-        System.out.println("[" + Utilities.padSpacesToFront(getState().toString(), 11) + "]--------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
+        Utilities.printStateTransition(getState().toString());
     }
     Location getLastLocation() {
     	return this.lastLocation;
