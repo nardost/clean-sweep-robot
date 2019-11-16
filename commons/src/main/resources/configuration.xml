@@ -8,7 +8,7 @@
     <property name="navigator" value="omega" />
     <property name="scheduledWait" value="5" />
     <property name="timeInTile" value="0" />
-    <property name="timeToCharge" value="5" />
+    <property name="timeToCharge" value="1" />
 
     <!-- Sensor Simulator Configuration Parameters -->
     <property name="floorBuilderType" value="json" />

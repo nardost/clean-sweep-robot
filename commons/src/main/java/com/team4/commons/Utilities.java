@@ -93,7 +93,7 @@ public class Utilities {
 
     public static void printFormattedHeader(WorkingMode mode) {
         if(mode == WorkingMode.DEPLOYED) {
-            System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
+            //System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
             System.out.println("     CLOCK  DIRECTION  LOCATION     BEFORE      AFTER  FLOOR TYPE  BATTERY BEFORE  BATTERY AFTER  DIRT LEVEL               OPEN DIRECTIONS\tCHARGING STATIONS NEARBY");
             System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
         }

@@ -3,11 +3,6 @@ package com.team4.robot;
 import com.team4.commons.*;
 import com.team4.sensor.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Scanner;
-
 class DirtManager implements VacuumCleaner {
 
 	private final int MAX_DIRT = Integer.parseInt(ConfigManager.getConfiguration("dirtCapacity"));
@@ -51,8 +46,8 @@ class DirtManager implements VacuumCleaner {
     		LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "DIRT_FULL",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
     	}
     	
-		System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
-		Utilities.doLoopedTimeDelay("Dirt tank full", 3, RobotCleanSweep.getInstance().getZeroTime());
+		//System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
+		Utilities.doLoopedTimeDelay("Dirt tank full", 1, RobotCleanSweep.getInstance().getZeroTime());
 		emptyTank();
 	}
 
@@ -65,7 +60,7 @@ class DirtManager implements VacuumCleaner {
     	clean(floorDao.floorType.getCost());
     	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "DIRT_EMPTY",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
 		LogManager.print("Dirt tank emptied", RobotCleanSweep.getInstance().getZeroTime());
-		System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
+		//System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
 		RobotCleanSweep.getInstance().setState(State.WORKING);
 	}
 }

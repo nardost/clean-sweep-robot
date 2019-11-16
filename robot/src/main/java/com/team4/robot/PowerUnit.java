@@ -1,10 +1,8 @@
 package com.team4.robot;
 
-import com.team4.commons.ConfigManager;
-import com.team4.commons.Location;
-import com.team4.commons.LogManager;
-import com.team4.commons.RobotException;
-import com.team4.commons.Utilities;
+import com.team4.commons.*;
+import com.team4.sensor.FloorDao;
+import com.team4.sensor.SensorSimulator;
 
 import static com.team4.commons.State.LOW_BATTERY;
 import static com.team4.commons.State.OFF;
@@ -12,7 +10,6 @@ import static com.team4.commons.State.OFF;
 class PowerUnit implements PowerManager {
 
     private double batteryLevel;
-
 
     PowerUnit() {
         int maxBatteryLevel = Integer.parseInt(ConfigManager.getConfiguration("maxBatteryLevel"));
@@ -67,9 +64,19 @@ class PowerUnit implements PowerManager {
         if(getBatteryLevel() <= batteryNeededToReachToKnownChargingStation) {
         	String dirtLevel = Integer.toString(RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel());
         	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "GO_CHARGE", Double.toString(getBatteryLevel()), dirtLevel, RobotCleanSweep.getNumberOfRuns());
-        	
-        	LogManager.print("Going back to charging station. Location: " + RobotCleanSweep.getInstance().getLocation() + "  Battery Level: " + getBatteryLevel(), RobotCleanSweep.getInstance().getZeroTime());
-            RobotCleanSweep.getInstance().setState(LOW_BATTERY);
+            if(RobotCleanSweep.getInstance().getState() != LOW_BATTERY) {
+                RobotCleanSweep.getInstance().setState(LOW_BATTERY);
+            }
+            FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+            RobotCleanSweep.getInstance().logTileInfo(
+                    floorDao,
+                    floorDao,
+                    RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel(),
+                    RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel(),
+                    RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel(),
+                    null,
+                    WorkingMode.DEPLOYED);
+        	//LogManager.print("Going back to charging station. Location: " + RobotCleanSweep.getInstance().getLocation() + "  Battery Level: " + getBatteryLevel(), RobotCleanSweep.getInstance().getZeroTime());
         }
     }
 
