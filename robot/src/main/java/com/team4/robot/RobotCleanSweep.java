@@ -349,43 +349,13 @@ public class RobotCleanSweep implements Robot {
         this.vacuumCleaner = vacuumCleaner;
     }
 
-    HashMap<String, Location>  getVisited(){
-        return this.visited;
-    }
-
     HashMap<Location, List<Location>> getGraph() {
         return graph;
     }
 
-    void setGraph(HashMap<Location, List<Location>> graph) {
-        if(graph == null) {
-            throw new RobotException("Null graph not allowed.");
-        }
-        this.graph = graph;
-    }
-    void createLocations(Direction [] directions) {
-        int currentX = getLocation().getX();
-        int currentY = getLocation().getY();
-
-        Location location;
+    private void createLocations(Direction [] directions) {
         for(int i = 0; i < directions.length; i++) {
-            switch(directions[i]) {
-                case NORTH:
-                    location = LocationFactory.createLocation(currentX, currentY - 1);
-                    break;
-                case SOUTH:
-                    location = LocationFactory.createLocation(currentX, currentY + 1);
-                    break;
-                case WEST:
-                    location =  LocationFactory.createLocation(currentX - 1, currentY);
-                    break;
-                case EAST:
-                    location = LocationFactory.createLocation(currentX + 1, currentY);
-                    break;
-                default:
-                    throw new RobotException("Impossible direction. Only N, S, E, W directions are available.");
-            }
-            putUnvisited(location);
+            putUnvisited(Utilities.getNeighbor(getLocation(), directions[i]));
         }
     }
 
@@ -396,25 +366,11 @@ public class RobotCleanSweep implements Robot {
      * @param directions
      */
     private void buildGraph(Location location, Direction [] directions) {
-        int x = location.getX();
-        int y = location.getY();
         List<Location> neighbors = new ArrayList<>();
         for(Direction direction : directions) {
-            neighbors.add(getNeighbor(location, direction));
+            neighbors.add(Utilities.getNeighbor(location, direction));
         }
         getGraph().put(location, neighbors);
-    }
-
-    private Location getNeighbor(Location location, Direction direction) {
-        int x = location.getX();
-        int y = location.getY();
-        switch (direction) {
-            case NORTH: return LocationFactory.createLocation(x, y - 1);
-            case SOUTH: return LocationFactory.createLocation(x, y + 1);
-            case EAST: return LocationFactory.createLocation(x + 1, y);
-            case WEST: return LocationFactory.createLocation(x - 1, y);
-            default: throw new RobotException("Impossible direction. Only N, S, E, W directions are available.");
-        }
     }
 
     Direction backToCharge() {
@@ -546,16 +502,8 @@ public class RobotCleanSweep implements Robot {
 		return lastLocationList;
 	}
 
-	public void setLastLocationList(LinkedList<Location> lastLocation) {
-		this.lastLocationList = lastLocation;
-	}
-
 	public ArrayList<Location> getChargingStations() {
 		return chargingStations;
-	}
-
-	public void setChargingStations(ArrayList<Location> chargingStations) {
-		this.chargingStations = chargingStations;
 	}
 
 	public Location getCurrentChargingStation() {

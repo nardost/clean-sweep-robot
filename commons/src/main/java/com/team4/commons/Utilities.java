@@ -160,14 +160,14 @@ public class Utilities {
     }
 
     public static Location getNeighbor(Location location, Direction direction) {
-        int currentX = location.getX();
-        int currentY = location.getY();
-        switch(direction) {
-            case NORTH: return LocationFactory.createLocation(currentX, currentY - 1);
-            case SOUTH: return LocationFactory.createLocation(currentX, currentY + 1);
-            case WEST: return LocationFactory.createLocation(currentX - 1, currentY);
-            case EAST: return LocationFactory.createLocation(currentX + 1, currentY);
-            default: throw new RobotException("Invalid direction. Only N, S, E, W allowed");
+        int x = location.getX();
+        int y = location.getY();
+        switch (direction) {
+            case NORTH: return LocationFactory.createLocation(x, y - 1);
+            case SOUTH: return LocationFactory.createLocation(x, y + 1);
+            case EAST: return LocationFactory.createLocation(x + 1, y);
+            case WEST: return LocationFactory.createLocation(x - 1, y);
+            default: throw new RobotException("Impossible direction. Only N, S, E, W directions are available.");
         }
     }
 }
