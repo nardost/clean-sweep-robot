@@ -130,7 +130,7 @@ public class Utilities {
             sb.append("-");
         }
         System.out.println();
-        System.out.println("<" + state + ">" + sb.toString() + "--------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
+        System.out.println("[" + state + "]" + sb.toString() + "--------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
         System.out.println();
     }
     public static void printDonePercentage(double percentage, long zeroTime) {
@@ -157,5 +157,17 @@ public class Utilities {
             }
         }
         return true;
+    }
+
+    public static Location getNeighbor(Location location, Direction direction) {
+        int currentX = location.getX();
+        int currentY = location.getY();
+        switch(direction) {
+            case NORTH: return LocationFactory.createLocation(currentX, currentY - 1);
+            case SOUTH: return LocationFactory.createLocation(currentX, currentY + 1);
+            case WEST: return LocationFactory.createLocation(currentX - 1, currentY);
+            case EAST: return LocationFactory.createLocation(currentX + 1, currentY);
+            default: throw new RobotException("Invalid direction. Only N, S, E, W allowed");
+        }
     }
 }

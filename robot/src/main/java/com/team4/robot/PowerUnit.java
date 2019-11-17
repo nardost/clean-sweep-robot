@@ -76,7 +76,6 @@ class PowerUnit implements PowerManager {
                     RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel(),
                     null,
                     WorkingMode.DEPLOYED);
-        	//LogManager.print("Going back to charging station. Location: " + RobotCleanSweep.getInstance().getLocation() + "  Battery Level: " + getBatteryLevel(), RobotCleanSweep.getInstance().getZeroTime());
         }
     }
 
