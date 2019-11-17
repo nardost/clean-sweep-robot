@@ -124,6 +124,39 @@ public class Utilities {
         System.out.println("                                             +=======================================================+");
         System.out.println();
     }
+    public static void printConfiguration() {
+        String initLocation = ConfigManager.getConfiguration("initLocation");
+        String maxBatteryLevel = ConfigManager.getConfiguration("maxBatteryLevel");
+        String dirtCapacity = ConfigManager.getConfiguration("dirtCapacity");
+        String chargingStationDetectionRadius = ConfigManager.getConfiguration("chargingStationDetectionRadius");
+        String navigator = ConfigManager.getConfiguration("navigator");
+        String scheduledWait = ConfigManager.getConfiguration("scheduledWait");
+        String timeInTile = ConfigManager.getConfiguration("timeInTile");
+        String timeToCharge = ConfigManager.getConfiguration("timeToCharge");
+        String floorBuilderType = ConfigManager.getConfiguration("floorBuilderType");
+        String floorPlan = ConfigManager.getConfiguration("floorPlan");
+        String dirtGeneratorType = ConfigManager.getConfiguration("dirtGeneratorType");
+        String logsHome = ConfigManager.getConfiguration("logsHome");
+        String unityLogFile = ConfigManager.getConfiguration("unityLogFile");
+
+        System.out.println();
+        System.out.println("                                             +==================== CONFIGURATION ====================+");
+        System.out.println("                                             |                  Initial Location: " + initLocation + nSpaces(19 - initLocation.length()) + "|");
+        System.out.println("                                             |             Maximum Battery Level: " + maxBatteryLevel + nSpaces(19 - maxBatteryLevel.length()) + "|");
+        System.out.println("                                             |            Dirt Carrying Capacity: " + dirtCapacity + nSpaces(19 - dirtCapacity.length()) + "|");
+        System.out.println("                                             | Charging Station Detection Radius: " + chargingStationDetectionRadius + nSpaces(19 - chargingStationDetectionRadius.length()) + "|");
+        System.out.println("                                             |                 Navigator Version: " + navigator + nSpaces(19 - navigator.length()) + "|");
+        System.out.println("                                             |          Scheduled Wait (seconds): " + scheduledWait + nSpaces(19 - scheduledWait.length()) + "|");
+        System.out.println("                                             |            Time in Tile (seconds): " + timeInTile + nSpaces(19 - timeInTile.length()) + "|");
+        System.out.println("                                             |          Time to Charge (seconds): " + timeToCharge + nSpaces(19 - timeToCharge.length()) + "|");
+        System.out.println("                                             |                Floor Builder Type: " + floorBuilderType + nSpaces(19 - floorBuilderType.length()) + "|");
+        System.out.println("                                             |                   Floor Plan File: " + floorPlan + nSpaces(19 - floorPlan.length()) + "|");
+        System.out.println("                                             |               Dirt Generator Type: " + dirtGeneratorType + nSpaces(19 - dirtGeneratorType.length()) + "|");
+        System.out.println("                                             |    Logs Home Environment Variable: " + logsHome + nSpaces(19 - logsHome.length()) + "|");
+        System.out.println("                                             |                    Unity Log File: " + unityLogFile + nSpaces(19 - unityLogFile.length()) + "|");
+        System.out.println("                                             +=======================================================+");
+        System.out.println();
+    }
     public static void printStateTransition(String state) {
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < 13 - state.length(); i++) {
@@ -169,5 +202,15 @@ public class Utilities {
             case WEST: return LocationFactory.createLocation(x - 1, y);
             default: throw new RobotException("Impossible direction. Only N, S, E, W directions are available.");
         }
+    }
+    public static String nSpaces(int n) {
+        if(n < 0) {
+            throw new RobotException("Invalid number of white spaces: " + n);
+        }
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < n; i++) {
+            sb.append(" ");
+        }
+        return sb.toString();
     }
 }

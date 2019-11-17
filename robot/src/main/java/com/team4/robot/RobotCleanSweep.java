@@ -428,7 +428,7 @@ public class RobotCleanSweep implements Robot {
     	String batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
     	LogManager.logForUnity(getLocation(), "GO_LAST",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
         FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
-        if(workingMode == DEPLOYED) { //if(getLocation() != getLastLocation()) {
+        if(workingMode == DEPLOYED) {
             RobotCleanSweep.getInstance().logTileInfo(
                     floorDao,
                     floorDao,
