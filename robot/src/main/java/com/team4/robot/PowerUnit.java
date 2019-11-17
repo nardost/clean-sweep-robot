@@ -72,6 +72,8 @@ class PowerUnit implements PowerManager {
             }
             FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
             if(RobotCleanSweep.workingMode == DEPLOYED) {
+                Long timeInTile = Long.parseLong(ConfigManager.getConfiguration("timeInTile"));
+                Utilities.doTimeDelay(timeInTile);
                 RobotCleanSweep.getInstance().logTileInfo(
                         floorDao,
                         floorDao,

@@ -16,6 +16,7 @@ public class RobotCleanSweep implements Robot {
 
     private static long zeroTime;
     private static int numberOfRuns;
+    //To suppress logging during the test phase.
     public static WorkingMode workingMode;
 
     private State state;
@@ -28,7 +29,7 @@ public class RobotCleanSweep implements Robot {
     //Robot's memory of visited cells
     private HashMap<String, Location> visited = new HashMap<>();
     //unvisited cells
-    private Stack<Location> unvisited = new Stack<Location>();
+    private Stack<Location> unvisited = new Stack<>();
     //graph built as robot progresses
     private HashMap<Location, List<Location>> graph = new HashMap<>();
 
@@ -77,17 +78,13 @@ public class RobotCleanSweep implements Robot {
         //Robot waits for cleaning schedule.
         int scheduledWait = Integer.parseInt(ConfigManager.getConfiguration("scheduledWait"));
         Utilities.doLoopedTimeDelay("Waiting for cleaning schedule at " + getLocation(), scheduledWait, getZeroTime());
-
-        //Robot begins work.
-        //WorkingMode mode = DEPLOYED;
-        //Long timeInTile = Long.parseLong(ConfigManager.getConfiguration("timeInTile"));
         work();
     }
 
     @Override
     public void turnOff() throws  RobotException {
         setState(OFF);
-        LogManager.print("Bye!", getZeroTime());
+        LogManager.print("Cleaning Completed", getZeroTime());
         Utilities.printDonePercentage(SensorSimulator.getInstance().getDonePercentage(), getZeroTime());
     }
 
@@ -429,6 +426,8 @@ public class RobotCleanSweep implements Robot {
     	LogManager.logForUnity(getLocation(), "GO_LAST",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
         FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
         if(workingMode == DEPLOYED) {
+            Long timeInTile = Long.parseLong(ConfigManager.getConfiguration("timeInTile"));
+            Utilities.doTimeDelay(timeInTile);
             RobotCleanSweep.getInstance().logTileInfo(
                     floorDao,
                     floorDao,
