@@ -3,6 +3,8 @@ package com.team4.robot;
 import com.team4.commons.*;
 import com.team4.sensor.*;
 
+import static com.team4.commons.WorkingMode.DEPLOYED;
+
 class DirtManager implements VacuumCleaner {
 
 	private final int MAX_DIRT = Integer.parseInt(ConfigManager.getConfiguration("dirtCapacity"));
@@ -39,15 +41,14 @@ class DirtManager implements VacuumCleaner {
 	}
 
 	private void waitUntilTankEmpty() {
-		//press any key to continue is better.
     	String dirtLevel = Integer.toString(RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel());
     	String batteryLevel = Double.toString(RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel());
     	for(int i =0; i<= 4; i++) {
     		LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "DIRT_FULL",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
     	}
-    	
-		//System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
-		Utilities.doLoopedTimeDelay("Dirt tank full", 1, RobotCleanSweep.getInstance().getZeroTime());
+		if(RobotCleanSweep.workingMode == DEPLOYED) {
+			Utilities.doLoopedTimeDelay("Dirt tank full", 1, RobotCleanSweep.getInstance().getZeroTime());
+		}
 		emptyTank();
 	}
 
@@ -59,8 +60,9 @@ class DirtManager implements VacuumCleaner {
     	String batteryLevel = Double.toString(RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel());
     	clean(floorDao.floorType.getCost());
     	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "DIRT_EMPTY",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
-		LogManager.print("Dirt tank emptied", RobotCleanSweep.getInstance().getZeroTime());
-		//System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
+		if(RobotCleanSweep.workingMode == DEPLOYED) {
+			LogManager.print("Dirt tank emptied", RobotCleanSweep.getInstance().getZeroTime());
+		}
 		RobotCleanSweep.getInstance().setState(State.WORKING);
 	}
 }

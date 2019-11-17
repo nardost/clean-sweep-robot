@@ -6,6 +6,7 @@ import com.team4.sensor.SensorSimulator;
 
 import static com.team4.commons.State.LOW_BATTERY;
 import static com.team4.commons.State.OFF;
+import static com.team4.commons.WorkingMode.DEPLOYED;
 
 class PowerUnit implements PowerManager {
 
@@ -19,7 +20,9 @@ class PowerUnit implements PowerManager {
     @Override
     public void recharge() {
         int timeToCharge = Integer.parseInt(ConfigManager.getConfiguration("timeToCharge"));
-        Utilities.doLoopedTimeDelay("Charging", timeToCharge, RobotCleanSweep.getInstance().getZeroTime());
+        if(RobotCleanSweep.workingMode == DEPLOYED) {
+            Utilities.doLoopedTimeDelay("Charging", timeToCharge, RobotCleanSweep.getInstance().getZeroTime());
+        }
         int maxBatteryLevel = Integer.parseInt(ConfigManager.getConfiguration("maxBatteryLevel"));
         setBatteryLevel(maxBatteryLevel);
     }
@@ -68,14 +71,15 @@ class PowerUnit implements PowerManager {
                 RobotCleanSweep.getInstance().setState(LOW_BATTERY);
             }
             FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
-            RobotCleanSweep.getInstance().logTileInfo(
-                    floorDao,
-                    floorDao,
-                    RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel(),
-                    RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel(),
-                    RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel(),
-                    null,
-                    WorkingMode.DEPLOYED);
+            if(RobotCleanSweep.workingMode == DEPLOYED) {
+                RobotCleanSweep.getInstance().logTileInfo(
+                        floorDao,
+                        floorDao,
+                        RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel(),
+                        RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel(),
+                        RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel(),
+                        null);
+            }
         }
     }
 

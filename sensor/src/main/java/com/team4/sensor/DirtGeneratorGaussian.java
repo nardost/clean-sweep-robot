@@ -10,8 +10,8 @@ public class DirtGeneratorGaussian implements DirtGenerator {
     /**
      * Generates dirt amounts randomly using the Gaussian (normal) distribution
      * Mean = 1.0
-     *   SD = 0.5
-     * The Javadoc says Mean ± 1 SD (1.0 ± 0.5) contain 68.2% of all values.
+     *   SD = 0.75
+     * The Javadoc says Mean ± 1 SD (1.0 ± 0.75) contain 68.2% of all values.
      * => 68% of the time the dirt unit is going to be 1.
      * @return
      */

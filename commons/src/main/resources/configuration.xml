@@ -12,7 +12,7 @@
 
     <!-- Sensor Simulator Configuration Parameters -->
     <property name="floorBuilderType" value="json" />
-    <property name="floorPlan" value="floor-plan-1.json" />
+    <property name="floorPlan" value="floor-plan-2.json" />
     <property name="dirtGeneratorType" value="gaussian" />
 
     <!-- floorWidth and floorLength used only in InMemoryFloorBuilder -->

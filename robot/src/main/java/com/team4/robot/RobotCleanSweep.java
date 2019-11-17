@@ -4,6 +4,7 @@ import com.team4.commons.*;
 import com.team4.sensor.SensorSimulator;
 import com.team4.sensor.FloorDao;
 import static com.team4.commons.State.*;
+import static com.team4.commons.WorkingMode.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ public class RobotCleanSweep implements Robot {
 
     private static long zeroTime;
     private static int numberOfRuns;
+    public static WorkingMode workingMode;
 
     private State state;
     private Location location;
@@ -42,6 +44,7 @@ public class RobotCleanSweep implements Robot {
     private RobotCleanSweep() {
         setZeroTime(System.currentTimeMillis());
         numberOfRuns = 0;
+        workingMode = DEPLOYED;
         setState(OFF);
         String locationTuple = ConfigManager.getConfiguration("initLocation");
         int x = Utilities.xFromTupleString(locationTuple);
@@ -76,9 +79,9 @@ public class RobotCleanSweep implements Robot {
         Utilities.doLoopedTimeDelay("Waiting for cleaning schedule at " + getLocation(), scheduledWait, getZeroTime());
 
         //Robot begins work.
-        WorkingMode mode = WorkingMode.DEPLOYED;
-        Long timeInTile = Long.parseLong(ConfigManager.getConfiguration("timeInTile"));
-        work(mode, timeInTile);
+        //WorkingMode mode = DEPLOYED;
+        //Long timeInTile = Long.parseLong(ConfigManager.getConfiguration("timeInTile"));
+        work();
     }
 
     @Override
@@ -88,7 +91,7 @@ public class RobotCleanSweep implements Robot {
         Utilities.printDonePercentage(SensorSimulator.getInstance().getDonePercentage(), getZeroTime());
     }
 
-    private void work(WorkingMode mode, long timeInTile) {
+    private void work() {
         /** //check if there is enough battery to make it to the nearest charging station
          *  //if(there is enough battery to make it to the nearest charging station) {
          *  //    continue working... ?
@@ -130,8 +133,12 @@ public class RobotCleanSweep implements Robot {
          */
         if (getState() != OFF) {
             setState(WORKING);
-            Utilities.printFormattedHeader(mode);
+            Utilities.printFormattedHeader(workingMode);
             while(getState() == WORKING) {
+                Long timeInTile = Long.parseLong(ConfigManager.getConfiguration("timeInTile"));
+                if(workingMode != DEPLOYED) {
+                    timeInTile = 0L;
+                }
                 Utilities.doTimeDelay(timeInTile);
                 FloorDao floorDaoBefore = SensorSimulator.getInstance().getLocationInfo(getLocation());
                 if(floorDaoBefore.isClean) {
@@ -159,7 +166,9 @@ public class RobotCleanSweep implements Robot {
                     		getChargingStations().add(chargingStation);
                     	}
                     }
-                    logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, dirtLevelAfter, direction, mode);
+                    if(workingMode == DEPLOYED) {
+                        logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, dirtLevelAfter, direction);
+                    }
                     move(direction, cost);
                 }
                 else {
@@ -171,7 +180,9 @@ public class RobotCleanSweep implements Robot {
                     int dirtLevelAfter = getVacuumCleaner().getDirtLevel();
                     double batteryLevelAfter = getPowerManager().getBatteryLevel();
                     FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(getLocation());
-                    logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, dirtLevelAfter, direction, mode);
+                    if(workingMode == DEPLOYED) {
+                        logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, dirtLevelAfter, direction);
+                    }
                     setState(STANDBY);
                     updateNumberOfRuns();
                 }
@@ -257,7 +268,9 @@ public class RobotCleanSweep implements Robot {
             throw new RobotException("Null state is not allowed.");
         }
         this.state = state;
-        Utilities.printStateTransition(getState().toString());
+        if(workingMode == DEPLOYED) {
+            Utilities.printStateTransition(getState().toString());
+        }
     }
     Location getLastLocation() {
     	return this.lastLocation;
@@ -415,15 +428,14 @@ public class RobotCleanSweep implements Robot {
     	String batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
     	LogManager.logForUnity(getLocation(), "GO_LAST",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
         FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
-        if(getLocation() != getLastLocation()) {
+        if(workingMode == DEPLOYED) { //if(getLocation() != getLastLocation()) {
             RobotCleanSweep.getInstance().logTileInfo(
                     floorDao,
                     floorDao,
                     getPowerManager().getBatteryLevel(),
                     getVacuumCleaner().getDirtLevel(),
                     getVacuumCleaner().getDirtLevel(),
-                    null,
-                    WorkingMode.DEPLOYED);
+                    null);
         }
     	return aStar.search().pop();
     }
@@ -439,7 +451,9 @@ public class RobotCleanSweep implements Robot {
             FloorDao floorDaoAfter = SensorSimulator.getInstance().getLocationInfo(getLocation());
             int dirtLevelAfter = getVacuumCleaner().getDirtLevel();
             double batteryLevelAfter = getPowerManager().getBatteryLevel();
-            logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, dirtLevelAfter, null, WorkingMode.DEPLOYED);
+            if(workingMode == DEPLOYED) {
+                logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, dirtLevelAfter, null);
+            }
         }
         if((getLocation().equals(getCurrentChargingStation()))) {
             String dirtLevel = Integer.toString(getVacuumCleaner().getDirtLevel());
@@ -450,52 +464,52 @@ public class RobotCleanSweep implements Robot {
             }
             getPowerManager().recharge();
             batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
-            LogManager.print("Battery recharged. Battery level: " + getPowerManager().getBatteryLevel(), getZeroTime());
+            if(workingMode == DEPLOYED) {
+                LogManager.print("Battery recharged. Battery level: " + getPowerManager().getBatteryLevel(), getZeroTime());
+            }
             LogManager.logForUnity(getLocation(), "CHARGED",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
         }
         updateNumberOfRuns();
     }
 
-    void logTileInfo(FloorDao floorDaoBefore, FloorDao floorDaoAfter, double batteryLevelBefore, double batteryLevelAfter, int dirtLevelAfter, Direction direction, WorkingMode mode) {
+    void logTileInfo(FloorDao floorDaoBefore, FloorDao floorDaoAfter, double batteryLevelBefore, double batteryLevelAfter, int dirtLevelAfter, Direction direction) {
+        StringBuilder simple = new StringBuilder();
+        simple.append(Utilities.padSpacesToFront("pos" + "(" + getLocation().getX() + ", " + getLocation().getY() + ")", 8));
+        simple.append(" ");
+        simple.append(Utilities.padSpacesToFront((floorDaoBefore.isClean) ? "act[ALREADY_CLEAN] " : "", 9));
+        simple.append(" ");
+        simple.append(Utilities.padSpacesToFront((floorDaoAfter.isClean && floorDaoBefore.isClean) ? "act[CLEAN]" : "", 9));
+        LogManager.logForUnity(getLocation(), floorDaoBefore.isClean, floorDaoAfter.isClean,Double.toString(batteryLevelAfter), Integer.toString(dirtLevelAfter), getNumberOfRuns());
 
-        if(mode == WorkingMode.DEPLOYED) {
-        	StringBuilder simple = new StringBuilder();
-            simple.append(Utilities.padSpacesToFront("pos" + "(" + getLocation().getX() + ", " + getLocation().getY() + ")", 8));
-            simple.append(" ");
-            simple.append(Utilities.padSpacesToFront((floorDaoBefore.isClean) ? "act[ALREADY_CLEAN] " : "", 9));
-            simple.append(" ");
-            simple.append(Utilities.padSpacesToFront((floorDaoAfter.isClean && floorDaoBefore.isClean) ? "act[CLEAN]" : "", 9));
-            LogManager.logForUnity(getLocation(), floorDaoBefore.isClean, floorDaoAfter.isClean,Double.toString(batteryLevelAfter), Integer.toString(dirtLevelAfter), getNumberOfRuns());
-
-            StringBuilder sb = new StringBuilder();
-            sb.append(Utilities.padSpacesToFront((direction == null) ? "" : direction.toString(), 9));
-            sb.append("  ");
-            sb.append(Utilities.padSpacesToFront("(" + getLocation().getX() + ", " + getLocation().getY() + ")", 8));
-            sb.append("  ");
-            sb.append(Utilities.padSpacesToFront((floorDaoBefore.isClean) ? "CLEAN" : "NOT CLEAN", 9));
-            sb.append("  ");
-            sb.append(Utilities.padSpacesToFront((floorDaoAfter.isClean) ? "CLEAN" : "NOT CLEAN", 9));
-            sb.append("  ");
-            sb.append(Utilities.padSpacesToFront(floorDaoBefore.floorType.toString(), 10));
-            sb.append("  ");
-            sb.append(Utilities.padSpacesToFront(Double.toString(batteryLevelBefore), 14));
-            sb.append("  ");
-            sb.append(Utilities.padSpacesToFront(Double.toString(batteryLevelAfter), 13));
-            sb.append("  ");
-            sb.append(Utilities.padSpacesToFront(Integer.toString(dirtLevelAfter), 10));
-            sb.append("  ");
-            sb.append(Utilities.padSpacesToFront(Utilities.arrayToString(floorDaoBefore.openPassages), 28));
-            sb.append("\t");
-            sb.append(Utilities.arrayToString(floorDaoBefore.chargingStations));
-            LogManager.print(sb.toString(), getZeroTime());
-        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(Utilities.padSpacesToFront((direction == null) ? "" : direction.toString(), 9));
+        sb.append("  ");
+        sb.append(Utilities.padSpacesToFront("(" + getLocation().getX() + ", " + getLocation().getY() + ")", 8));
+        sb.append("  ");
+        sb.append(Utilities.padSpacesToFront((floorDaoBefore.isClean) ? "CLEAN" : "NOT CLEAN", 9));
+        sb.append("  ");
+        sb.append(Utilities.padSpacesToFront((floorDaoAfter.isClean) ? "CLEAN" : "NOT CLEAN", 9));
+        sb.append("  ");
+        sb.append(Utilities.padSpacesToFront(floorDaoBefore.floorType.toString(), 10));
+        sb.append("  ");
+        sb.append(Utilities.padSpacesToFront(Double.toString(batteryLevelBefore), 14));
+        sb.append("  ");
+        sb.append(Utilities.padSpacesToFront(Double.toString(batteryLevelAfter), 13));
+        sb.append("  ");
+        sb.append(Utilities.padSpacesToFront(Integer.toString(dirtLevelAfter), 10));
+        sb.append("  ");
+        sb.append(Utilities.padSpacesToFront(Utilities.arrayToString(floorDaoBefore.openPassages), 28));
+        sb.append("\t");
+        sb.append(Utilities.arrayToString(floorDaoBefore.chargingStations));
+        LogManager.print(sb.toString(), getZeroTime());
     }
 
     /**
      * For testing purposes.
      */
     void dryRun() {
-        work(WorkingMode.TESTING, 0L);
+        workingMode = TESTING;
+        work();
     }
 
 	public LinkedList<Location> getLastLocationList() {
