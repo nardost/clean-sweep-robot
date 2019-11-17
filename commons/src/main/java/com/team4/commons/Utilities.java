@@ -169,7 +169,7 @@ public class Utilities {
     }
     public static void printDonePercentage(double percentage, long zeroTime) {
         System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
-        LogManager.print("Percentage of Done Tiles = " + percentage + "%", zeroTime);
+        System.out.println("Percentage of Done Tiles = " + percentage + "%");
         System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
     }
     public static String formatElapsedTime(long milliTime, long zeroTime) {
@@ -180,7 +180,6 @@ public class Utilities {
         long h = (elapsedSeconds - (elapsedSeconds - s) % 3600) / 60;
         //show milliseconds...
         long decimals = (elapsedTime - 3600000 * h - 60000 * m - 1000 * s);
-        decimals = decimals - decimals % 10;
         return String.format("[%02d:%02d:%02d.%03d]  ", h, m, s, decimals);
         //do not show milli seconds
         //return String.format("[%02d:%02d:%02d]  ", h, m, s);

@@ -1,11 +1,20 @@
 package com.team4.commons;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class LogManager {
 
     public static void print(String msg, long zeroTime) {
         StringBuilder sb = new StringBuilder(Utilities.formatElapsedTime(System.currentTimeMillis(), zeroTime));
         sb.append(msg);
+
         System.out.println(sb.toString());
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String logFileName = formatter.format(new Date()) + ".log";
+        TextFileLogger textFileLogger = new TextFileLogger(logFileName);
+        textFileLogger.log(sb.toString());
     }
 
     public static void logForUnity(Location location, boolean floorIsCleanBefore, boolean floorIsCleanAfter, String batteryAfter, String dirtAfter, int numberOfRuns) {
