@@ -47,7 +47,7 @@ class DirtManager implements VacuumCleaner {
     		LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "DIRT_FULL",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
     	}
 		if(RobotCleanSweep.workingMode == DEPLOYED) {
-			Utilities.doLoopedTimeDelay("Dirt tank full", 1, RobotCleanSweep.getInstance().getZeroTime());
+			Utilities.doLoopedTimeDelay("Dirt tank full", 1000L, RobotCleanSweep.getInstance().getZeroTime());
 		}
 		emptyTank();
 	}

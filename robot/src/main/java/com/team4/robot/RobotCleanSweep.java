@@ -75,9 +75,7 @@ public class RobotCleanSweep implements Robot {
     @Override
     public void turnOn() {
         setState(STANDBY);
-        //Robot waits for cleaning schedule.
-        int scheduledWait = Integer.parseInt(ConfigManager.getConfiguration("scheduledWait"));
-        Utilities.doLoopedTimeDelay("Waiting for cleaning schedule at " + getLocation(), scheduledWait, getZeroTime());
+        waitForScheduledCleaningTime();
         work();
     }
 
@@ -444,6 +442,11 @@ public class RobotCleanSweep implements Robot {
      */
     private void homeToNearestChargingStation() {
         while(!(getLocation().equals(getCurrentChargingStation()))) {
+            Long timeInTile = Long.parseLong(ConfigManager.getConfiguration("timeInTile"));
+            if(workingMode != DEPLOYED) {
+                timeInTile = 0L;
+            }
+            Utilities.doTimeDelay(timeInTile);
             FloorDao floorDaoBefore = SensorSimulator.getInstance().getLocationInfo(getLocation());
             double batteryLevelBefore = getPowerManager().getBatteryLevel();
             move(backToCharge(), floorDaoBefore.floorType.getCost());
@@ -469,6 +472,12 @@ public class RobotCleanSweep implements Robot {
             LogManager.logForUnity(getLocation(), "CHARGED",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
         }
         updateNumberOfRuns();
+    }
+
+    private void waitForScheduledCleaningTime() {
+        long scheduledWait = Long.parseLong(ConfigManager.getConfiguration("scheduledWait"));
+        LogManager.print("Waiting for cleaning schedule at " + getLocation(), getZeroTime());
+        Utilities.doTimeDelay(scheduledWait);
     }
 
     void logTileInfo(FloorDao floorDaoBefore, FloorDao floorDaoAfter, double batteryLevelBefore, double batteryLevelAfter, int dirtLevelAfter, Direction direction) {

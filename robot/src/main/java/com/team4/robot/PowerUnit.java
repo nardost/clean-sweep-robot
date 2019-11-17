@@ -5,6 +5,7 @@ import com.team4.sensor.FloorDao;
 import com.team4.sensor.SensorSimulator;
 
 import static com.team4.commons.State.LOW_BATTERY;
+import static com.team4.commons.State.CHARGING;
 import static com.team4.commons.State.OFF;
 import static com.team4.commons.WorkingMode.DEPLOYED;
 
@@ -19,9 +20,11 @@ class PowerUnit implements PowerManager {
 
     @Override
     public void recharge() {
-        int timeToCharge = Integer.parseInt(ConfigManager.getConfiguration("timeToCharge"));
+        RobotCleanSweep.getInstance().setState(CHARGING);
+        long timeToCharge = Long.parseLong(ConfigManager.getConfiguration("timeToCharge"));
         if(RobotCleanSweep.workingMode == DEPLOYED) {
-            Utilities.doLoopedTimeDelay("Charging", timeToCharge, RobotCleanSweep.getInstance().getZeroTime());
+            LogManager.print("Charging", RobotCleanSweep.getInstance().getZeroTime());
+            Utilities.doTimeDelay(timeToCharge);
         }
         int maxBatteryLevel = Integer.parseInt(ConfigManager.getConfiguration("maxBatteryLevel"));
         setBatteryLevel(maxBatteryLevel);

@@ -99,14 +99,15 @@ public class Utilities {
         }
     }
 
-    public static void doTimeDelay(long seconds) {
+    public static void doTimeDelay(long millis) {
         try {
-            Thread.sleep(seconds * 1000L);
+            Thread.sleep(millis);
         } catch (InterruptedException ie) {
             ie.printStackTrace();
         }
     }
-    public static void doLoopedTimeDelay(String msg, int numberOfLoops, long zeroTime) {
+    public static void doLoopedTimeDelay(String msg, long millis, long zeroTime) {
+        int numberOfLoops = (int) (millis / 1000L);
         try {
             for(int i = 1; i <= numberOfLoops; i++){
                 LogManager.print(msg, zeroTime);
@@ -146,9 +147,9 @@ public class Utilities {
         System.out.println("                                             |            Dirt Carrying Capacity: " + dirtCapacity + nSpaces(19 - dirtCapacity.length()) + "|");
         System.out.println("                                             | Charging Station Detection Radius: " + chargingStationDetectionRadius + nSpaces(19 - chargingStationDetectionRadius.length()) + "|");
         System.out.println("                                             |                 Navigator Version: " + navigator + nSpaces(19 - navigator.length()) + "|");
-        System.out.println("                                             |          Scheduled Wait (seconds): " + scheduledWait + nSpaces(19 - scheduledWait.length()) + "|");
-        System.out.println("                                             |            Time in Tile (seconds): " + timeInTile + nSpaces(19 - timeInTile.length()) + "|");
-        System.out.println("                                             |          Time to Charge (seconds): " + timeToCharge + nSpaces(19 - timeToCharge.length()) + "|");
+        System.out.println("                                             |    Scheduled Wait (milli seconds): " + scheduledWait + nSpaces(19 - scheduledWait.length()) + "|");
+        System.out.println("                                             |      Time in Tile (milli seconds): " + timeInTile + nSpaces(19 - timeInTile.length()) + "|");
+        System.out.println("                                             |    Time to Charge (milli seconds): " + timeToCharge + nSpaces(19 - timeToCharge.length()) + "|");
         System.out.println("                                             |                Floor Builder Type: " + floorBuilderType + nSpaces(19 - floorBuilderType.length()) + "|");
         System.out.println("                                             |                   Floor Plan File: " + floorPlan + nSpaces(19 - floorPlan.length()) + "|");
         System.out.println("                                             |               Dirt Generator Type: " + dirtGeneratorType + nSpaces(19 - dirtGeneratorType.length()) + "|");
@@ -177,11 +178,12 @@ public class Utilities {
         long s = elapsedSeconds % 60;
         long m = ((elapsedSeconds - s) % 3600) / 60;
         long h = (elapsedSeconds - (elapsedSeconds - s) % 3600) / 60;
-        /* to show milliseconds...
+        //show milliseconds...
         long decimals = (elapsedTime - 3600000 * h - 60000 * m - 1000 * s);
-        return String.format("[%02d:%02d:%02d.%3d]  ", h, m, s, decimals);
-        */
-        return String.format("[%02d:%02d:%02d]  ", h, m, s);
+        decimals = decimals - decimals % 10;
+        return String.format("[%02d:%02d:%02d.%03d]  ", h, m, s, decimals);
+        //do not show milli seconds
+        //return String.format("[%02d:%02d:%02d]  ", h, m, s);
     }
     public static boolean isPrime(int n) {
         for(int i = 2; i <= Math.round(Math.sqrt(n)); i++) {
