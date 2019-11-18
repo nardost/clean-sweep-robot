@@ -93,9 +93,9 @@ public class Utilities {
 
     public static void printFormattedHeader(WorkingMode mode) {
         if(mode == WorkingMode.DEPLOYED) {
-            //System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
-            System.out.println("     CLOCK  DIRECTION  LOCATION     BEFORE      AFTER  FLOOR TYPE  BATTERY BEFORE  BATTERY AFTER  DIRT LEVEL               OPEN DIRECTIONS\tCHARGING STATIONS NEARBY");
-            System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
+            //System.out.println("--------------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
+            System.out.println("         CLOCK  DIRECTION  LOCATION     BEFORE      AFTER  FLOOR TYPE  BATTERY BEFORE  BATTERY AFTER  DIRT LEVEL               OPEN DIRECTIONS\tCHARGING STATIONS NEARBY");
+            System.out.println("--------------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
         }
     }
 
@@ -158,19 +158,17 @@ public class Utilities {
         System.out.println("                                             +=======================================================+");
         System.out.println();
     }
-    public static void printStateTransition(String state) {
+    public static void printStateTransition(String state, long zeroTime) {
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < 13 - state.length(); i++) {
+        for(int i = 0; i < 11 - state.length(); i++) {
             sb.append("-");
         }
         System.out.println();
-        System.out.println("[" + state + "]" + sb.toString() + "--------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
+        LogManager.print("[" + state + "]  " + sb.toString() + "----  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------", zeroTime);
         System.out.println();
     }
     public static void printDonePercentage(double percentage, long zeroTime) {
-        System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
         System.out.println("Percentage of Done Tiles = " + percentage + "%");
-        System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
     }
     public static String formatElapsedTime(long milliTime, long zeroTime) {
         long elapsedTime = milliTime - zeroTime;

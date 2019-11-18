@@ -264,7 +264,7 @@ public class RobotCleanSweep implements Robot {
         }
         this.state = state;
         if(workingMode == DEPLOYED) {
-            Utilities.printStateTransition(getState().toString());
+            Utilities.printStateTransition(getState().toString(), getZeroTime());
         }
     }
     Location getLastLocation() {
