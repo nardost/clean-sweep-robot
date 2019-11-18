@@ -17,6 +17,38 @@ public class LogManager {
         textFileLogger.log(sb.toString());
     }
 
+    /**
+     * Save performance figures for each run.
+     * @param zeroTime
+     * @param currentMillis
+     * @param initLocation
+     * @param lastLocation
+     * @param percentDone
+     */
+    //START_DATETIME    FINISH_DATETIME INITIAL_LOCATION    FINAL_LOCATION  PERCENTAGE_DONE TIME_TAKEN
+    public static void logCurrentRun(long zeroTime, long currentMillis, String initLocation, String lastLocation, double percentDone) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        Date startTime = new Date(zeroTime);
+        Date finishTime = new Date(currentMillis);
+        long duration = currentMillis - zeroTime;
+        StringBuilder sb = new StringBuilder();
+        sb.append(formatter.format(startTime));
+        sb.append("\t");
+        sb.append(formatter.format(finishTime));
+        sb.append("\t");
+        sb.append(initLocation);
+        sb.append("\t");
+        sb.append(lastLocation);
+        sb.append("\t");
+        sb.append(percentDone);
+        sb.append("\t");
+        sb.append(duration);
+
+        String currentRunLogFile = "runs.log";
+        TextFileLogger textFileLogger = new TextFileLogger(currentRunLogFile);
+        textFileLogger.log(sb.toString());
+    }
+
     public static void logForUnity(Location location, boolean floorIsCleanBefore, boolean floorIsCleanAfter, String batteryAfter, String dirtAfter, int numberOfRuns) {
         StringBuilder simple = new StringBuilder();
         String loc = location.toString().replace(", ", ",");

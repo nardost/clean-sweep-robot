@@ -82,8 +82,13 @@ public class RobotCleanSweep implements Robot {
     @Override
     public void turnOff() throws  RobotException {
         setState(OFF);
-        LogManager.print("Cleaning Completed", getZeroTime());
-        Utilities.printDonePercentage(SensorSimulator.getInstance().getDonePercentage(), getZeroTime());
+        Utilities.printSummary(
+                getZeroTime(),
+                System.currentTimeMillis(),
+                numberOfRuns,
+                ConfigManager.getConfiguration("initLocation"),
+                getLocation().toString(),
+                SensorSimulator.getInstance().getDonePercentage());
     }
 
     private void work() {
@@ -179,7 +184,6 @@ public class RobotCleanSweep implements Robot {
                         logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, dirtLevelAfter, direction);
                     }
                     setState(STANDBY);
-                    updateNumberOfRuns();
                 }
 
                 if(getState() == LOW_BATTERY) {
@@ -457,20 +461,21 @@ public class RobotCleanSweep implements Robot {
                 logTileInfo(floorDaoBefore, floorDaoAfter, batteryLevelBefore, batteryLevelAfter, dirtLevelAfter, null);
             }
         }
-        if((getLocation().equals(getCurrentChargingStation()))) {
-            String dirtLevel = Integer.toString(getVacuumCleaner().getDirtLevel());
-            String batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
+        LogManager.print("Cleaning Completed", getZeroTime());
+        LogManager.logCurrentRun(getZeroTime(),  System.currentTimeMillis(), ConfigManager.getConfiguration("initLocation"),getLocation().toString(), SensorSimulator.getInstance().getDonePercentage());
+        String dirtLevel = Integer.toString(getVacuumCleaner().getDirtLevel());
+        String batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
 
-            for(int i = 0; i <= 4 ; i++) {
-                LogManager.logForUnity(getLocation(), "CHARGING", batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
-            }
-            getPowerManager().recharge();
-            batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
-            if(workingMode == DEPLOYED) {
-                LogManager.print("Battery recharged. Battery level: " + getPowerManager().getBatteryLevel(), getZeroTime());
-            }
-            LogManager.logForUnity(getLocation(), "CHARGED",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
+        for(int i = 0; i <= 4 ; i++) {
+            LogManager.logForUnity(getLocation(), "CHARGING", batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
         }
+
+        getPowerManager().recharge();
+        batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
+        if(workingMode == DEPLOYED) {
+            LogManager.print("Battery recharged. Battery level: " + getPowerManager().getBatteryLevel(), getZeroTime());
+        }
+        LogManager.logForUnity(getLocation(), "CHARGED", batteryLevel, dirtLevel, RobotCleanSweep.getNumberOfRuns());
         updateNumberOfRuns();
     }
 

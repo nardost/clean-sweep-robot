@@ -1,5 +1,7 @@
 package com.team4.commons;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class Utilities {
@@ -93,7 +95,7 @@ public class Utilities {
 
     public static void printFormattedHeader(WorkingMode mode) {
         if(mode == WorkingMode.DEPLOYED) {
-            //System.out.println("--------------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
+            System.out.println("--------------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
             System.out.println("         CLOCK  DIRECTION  LOCATION     BEFORE      AFTER  FLOOR TYPE  BATTERY BEFORE  BATTERY AFTER  DIRT LEVEL               OPEN DIRECTIONS\tCHARGING STATIONS NEARBY");
             System.out.println("--------------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
         }
@@ -155,6 +157,26 @@ public class Utilities {
         System.out.println("                                             |               Dirt Generator Type: " + dirtGeneratorType + nSpaces(19 - dirtGeneratorType.length()) + "|");
         System.out.println("                                             |    Logs Home Environment Variable: " + logsHome + nSpaces(19 - logsHome.length()) + "|");
         System.out.println("                                             |                    Unity Log File: " + unityLogFile + nSpaces(19 - unityLogFile.length()) + "|");
+        System.out.println("                                             +=======================================================+");
+        System.out.println();
+    }
+    public static void printSummary(long zeroTime, long currentMillis, int numberOfRuns, String initLocation, String finalLocation, double percentDone) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        Date startTime = new Date(zeroTime);
+        String start = formatter.format(startTime);
+        Date finishTime = new Date(currentMillis);
+        String end = formatter.format(finishTime);
+        long duration = currentMillis - zeroTime;
+        String percentage = percentDone + "%";
+        System.out.println();
+        System.out.println("                                             +======================= SUMMARY =======================+");
+        System.out.println("                                             |               Initial Location: " + initLocation + nSpaces(22 - initLocation.length()) + "|");
+        System.out.println("                                             |                 Final Location: " + finalLocation + nSpaces(22 - finalLocation.length()) + "|");
+        System.out.println("                                             |                     Run Number: " + numberOfRuns + nSpaces(22 - (numberOfRuns + "").length()) + "|");
+        System.out.println("                                             |                Start Date Time: " + start + nSpaces(22 - start.length()) + "|");
+        System.out.println("                                             |               Finish Date Time: " + end + nSpaces(22 - end.length()) + "|");
+        System.out.println("                                             |     Time Taken (milli seconds): " + duration + nSpaces(22 - Long.toString(duration).length()) + "|");
+        System.out.println("                                             |                Percentage Done: " + percentage + nSpaces(22 - percentage.length()) + "|");
         System.out.println("                                             +=======================================================+");
         System.out.println();
     }
