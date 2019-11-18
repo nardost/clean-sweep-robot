@@ -44,7 +44,7 @@ class DirtManager implements VacuumCleaner {
     	String dirtLevel = Integer.toString(RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel());
     	String batteryLevel = Double.toString(RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel());
     	for(int i =0; i<= 4; i++) {
-    		LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "DIRT_FULL",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
+    		LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "DIRT_FULL",batteryLevel , dirtLevel);
     	}
 		if(RobotCleanSweep.workingMode == DEPLOYED) {
 			Utilities.doLoopedTimeDelay("Dirt tank full", 1000L, RobotCleanSweep.getInstance().getZeroTime());
@@ -59,7 +59,7 @@ class DirtManager implements VacuumCleaner {
     	String dirtLevel = Integer.toString(RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel());
     	String batteryLevel = Double.toString(RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel());
     	clean(floorDao.floorType.getCost());
-    	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "DIRT_EMPTY",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
+    	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "DIRT_EMPTY",batteryLevel , dirtLevel);
 		if(RobotCleanSweep.workingMode == DEPLOYED) {
 			LogManager.print("Dirt tank emptied", RobotCleanSweep.getInstance().getZeroTime());
 		}

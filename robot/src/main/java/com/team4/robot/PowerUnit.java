@@ -69,7 +69,7 @@ class PowerUnit implements PowerManager {
         
         if(getBatteryLevel() <= batteryNeededToReachToKnownChargingStation) {
         	String dirtLevel = Integer.toString(RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel());
-        	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "GO_CHARGE", Double.toString(getBatteryLevel()), dirtLevel, RobotCleanSweep.getNumberOfRuns());
+        	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "GO_CHARGE", Double.toString(getBatteryLevel()), dirtLevel);
             if(RobotCleanSweep.getInstance().getState() != LOW_BATTERY) {
                 RobotCleanSweep.getInstance().setState(LOW_BATTERY);
             }

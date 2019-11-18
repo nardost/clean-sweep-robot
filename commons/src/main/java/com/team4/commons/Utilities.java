@@ -140,6 +140,7 @@ public class Utilities {
         String floorPlan = ConfigManager.getConfiguration("floorPlan");
         String dirtGeneratorType = ConfigManager.getConfiguration("dirtGeneratorType");
         String logsHome = ConfigManager.getConfiguration("logsHome");
+        String summaryLogFile = ConfigManager.getConfiguration("summaryLogFile");
         String unityLogFile = ConfigManager.getConfiguration("unityLogFile");
 
         System.out.println();
@@ -156,6 +157,7 @@ public class Utilities {
         System.out.println("                                             |                   Floor Plan File: " + floorPlan + nSpaces(19 - floorPlan.length()) + "|");
         System.out.println("                                             |               Dirt Generator Type: " + dirtGeneratorType + nSpaces(19 - dirtGeneratorType.length()) + "|");
         System.out.println("                                             |    Logs Home Environment Variable: " + logsHome + nSpaces(19 - logsHome.length()) + "|");
+        System.out.println("                                             |                  Summary Log File: " + summaryLogFile + nSpaces(19 - summaryLogFile.length()) + "|");
         System.out.println("                                             |                    Unity Log File: " + unityLogFile + nSpaces(19 - unityLogFile.length()) + "|");
         System.out.println("                                             +=======================================================+");
         System.out.println();

@@ -391,11 +391,11 @@ public class RobotCleanSweep implements Robot {
         	String batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
         	
         	for(int i = 0; i <= 4 ; i++) {
-        		LogManager.logForUnity(getLocation(), "CHARGING", batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
+        		LogManager.logForUnity(getLocation(), "CHARGING", batteryLevel , dirtLevel);
         	}
         	getPowerManager().recharge();
             batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
-            LogManager.logForUnity(getLocation(), "CHARGED",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
+            LogManager.logForUnity(getLocation(), "CHARGED",batteryLevel , dirtLevel);
             getLocBeforeCharge();
             setState(MOVING_BACK);
             return null;
@@ -418,14 +418,14 @@ public class RobotCleanSweep implements Robot {
     	if(getLocation().equals( getLastLocation())) {
         	String dirtLevel = Integer.toString(getVacuumCleaner().getDirtLevel());
         	String batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
-        	LogManager.logForUnity(getLocation(), "RESUME",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
+        	LogManager.logForUnity(getLocation(), "RESUME",batteryLevel , dirtLevel);
             setState(WORKING);
     		return null;
     	}
         AStar aStar = new AStar(getGraph(), getLocation(), getLastLocation() ,2);
     	String dirtLevel = Integer.toString(getVacuumCleaner().getDirtLevel());
     	String batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
-    	LogManager.logForUnity(getLocation(), "GO_LAST",batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
+    	LogManager.logForUnity(getLocation(), "GO_LAST",batteryLevel , dirtLevel);
         FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
         if(workingMode == DEPLOYED) {
             Long timeInTile = Long.parseLong(ConfigManager.getConfiguration("timeInTile"));
@@ -467,7 +467,7 @@ public class RobotCleanSweep implements Robot {
         String batteryLevel = Double.toString(getPowerManager().getBatteryLevel());
 
         for(int i = 0; i <= 4 ; i++) {
-            LogManager.logForUnity(getLocation(), "CHARGING", batteryLevel , dirtLevel, RobotCleanSweep.getNumberOfRuns());
+            LogManager.logForUnity(getLocation(), "CHARGING", batteryLevel , dirtLevel);
         }
 
         getPowerManager().recharge();
@@ -475,7 +475,7 @@ public class RobotCleanSweep implements Robot {
         if(workingMode == DEPLOYED) {
             LogManager.print("Battery recharged. Battery level: " + getPowerManager().getBatteryLevel(), getZeroTime());
         }
-        LogManager.logForUnity(getLocation(), "CHARGED", batteryLevel, dirtLevel, RobotCleanSweep.getNumberOfRuns());
+        LogManager.logForUnity(getLocation(), "CHARGED", batteryLevel, dirtLevel);
         updateNumberOfRuns();
     }
 
@@ -492,7 +492,7 @@ public class RobotCleanSweep implements Robot {
         simple.append(Utilities.padSpacesToFront((floorDaoBefore.isClean) ? "act[ALREADY_CLEAN] " : "", 9));
         simple.append(" ");
         simple.append(Utilities.padSpacesToFront((floorDaoAfter.isClean && floorDaoBefore.isClean) ? "act[CLEAN]" : "", 9));
-        LogManager.logForUnity(getLocation(), floorDaoBefore.isClean, floorDaoAfter.isClean,Double.toString(batteryLevelAfter), Integer.toString(dirtLevelAfter), getNumberOfRuns());
+        LogManager.logForUnity(getLocation(), floorDaoBefore.isClean, floorDaoAfter.isClean,Double.toString(batteryLevelAfter), Integer.toString(dirtLevelAfter));
 
         StringBuilder sb = new StringBuilder();
         sb.append(Utilities.padSpacesToFront((direction == null) ? "" : direction.toString(), 9));

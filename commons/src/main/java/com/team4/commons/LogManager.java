@@ -12,7 +12,7 @@ public class LogManager {
         System.out.println(sb.toString());
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String logFileName = formatter.format(new Date()) + ".log";
+        String logFileName = formatter.format(new Date()) + "-daily.log";
         TextFileLogger textFileLogger = new TextFileLogger(logFileName);
         textFileLogger.log(sb.toString());
     }
@@ -44,12 +44,12 @@ public class LogManager {
         sb.append("\t");
         sb.append(duration);
 
-        String currentRunLogFile = "runs.log";
-        TextFileLogger textFileLogger = new TextFileLogger(currentRunLogFile);
+        String summaryLogFile = ConfigManager.getConfiguration("summaryLogFile");
+        TextFileLogger textFileLogger = new TextFileLogger(summaryLogFile);
         textFileLogger.log(sb.toString());
     }
 
-    public static void logForUnity(Location location, boolean floorIsCleanBefore, boolean floorIsCleanAfter, String batteryAfter, String dirtAfter, int numberOfRuns) {
+    public static void logForUnity(Location location, boolean floorIsCleanBefore, boolean floorIsCleanAfter, String batteryAfter, String dirtAfter) {
         StringBuilder simple = new StringBuilder();
         String loc = location.toString().replace(", ", ",");
         simple.append(Utilities.padSpacesToFront("pos" + loc.replace("(", "[").replace(")", "]"), 8));
@@ -62,10 +62,10 @@ public class LogManager {
         simple.append(" ");
         simple.append(Utilities.padSpacesToFront( "d[" + dirtAfter + "]"  ,0));
         
-        TextFileLogger textFileLogger = new TextFileLogger(ConfigManager.getConfiguration("unityLogFile") + "-" + numberOfRuns + ".txt");
+        TextFileLogger textFileLogger = new TextFileLogger(ConfigManager.getConfiguration("unityLogFile"));
         textFileLogger.log(simple.toString());
     }
-    public static void logForUnity(Location location, String state, String batteryAfter, String dirtAfter,  int numberOfRuns) {
+    public static void logForUnity(Location location, String state, String batteryAfter, String dirtAfter) {
         StringBuilder simple = new StringBuilder();
         String loc = location.toString().replace(", ", ",");
         simple.append(Utilities.padSpacesToFront("pos" + loc.replace("(", "[").replace(")", "]"), 8));
@@ -75,7 +75,7 @@ public class LogManager {
         simple.append(Utilities.padSpacesToFront( "b[" + batteryAfter + "]"  ,0));
         simple.append(" ");
         simple.append(Utilities.padSpacesToFront( "d[" + dirtAfter + "]"  ,0));
-        TextFileLogger textFileLogger = new TextFileLogger(ConfigManager.getConfiguration("unityLogFile") + "-" + numberOfRuns + ".txt");
+        TextFileLogger textFileLogger = new TextFileLogger(ConfigManager.getConfiguration("unityLogFile"));
         textFileLogger.log(simple.toString());
     }
 }

@@ -21,5 +21,6 @@
 
     <!-- Log files -->
     <property name="logsHome" value="LOGS_HOME" />
-    <property name="unityLogFile" value="unity.txt" />
+    <property name="summaryLogFile" value="summary.log" />
+    <property name="unityLogFile" value="unity.log" />
 </configuration>
