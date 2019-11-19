@@ -5,17 +5,17 @@ using System.IO;
 
 public class FloorBuilder : MonoBehaviour {
     string floorFilePathRelativeToAssets = "/../CleanSweepData/";//"/../../../sensor/src/main/resources/";
-    [SerializeField] string floorFileName = "floor-plan-1.json";
+    //[SerializeField] string floorFileName = "floor-plan-1.json";
     [SerializeField] private GameObject tilePrefab;
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private LayerMask wallLayerMask;
     [SerializeField] private LayerMask tileLayerMask;
     [SerializeField] private string passageLayer;
-    [SerializeField] private string chargingStationLayer;
 
     [SerializeField] Sprite barefloorTexture;
     [SerializeField] Sprite lowpileTexture;
     [SerializeField] Sprite highpileTexture;
+    [SerializeField] Sprite doorTexture;
 
     [SerializeField] private Transform visibility;
 
@@ -23,7 +23,7 @@ public class FloorBuilder : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        //buildFloor(floorFileName);
+
     }
 	
 	// Update is called once per frame
@@ -120,8 +120,10 @@ public class FloorBuilder : MonoBehaviour {
             //Debug.DrawRay(from, to - from, Color.red, 50);
             if (hit)
             {
-                hit.collider.GetComponent<SpriteRenderer>().color = passageColor;
-                hit.collider.gameObject.layer = LayerMask.NameToLayer(passageLayer);
+                Destroy(hit.collider.gameObject);
+                //hit.collider.GetComponent<SpriteRenderer>().sprite = doorTexture;
+                //hit.collider.GetComponent<SpriteRenderer>().color = Color.clear;
+                //hit.collider.gameObject.layer = LayerMask.NameToLayer(passageLayer);
             }
         }
 
@@ -134,7 +136,7 @@ public class FloorBuilder : MonoBehaviour {
             Collider2D tileCollider = Physics2D.OverlapPoint(csVec, tileLayerMask);
             if (tileCollider != null)
             {
-                tileCollider.GetComponent<SpriteRenderer>().color = Color.blue;
+                tileCollider.GetComponent<SpriteRenderer>().color = Color.red;
             }
 
         }

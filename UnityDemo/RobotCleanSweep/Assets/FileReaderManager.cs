@@ -48,4 +48,15 @@ public class FileReaderManager : MonoBehaviour {
             visibility.enabled = true;
         }
     }
+    public void ToggleNegate()
+    {
+        if (robot.negated)
+        {
+            robot.negated = false;
+        }
+        else
+        {
+            robot.negated = true;
+        }
+    }
 }
