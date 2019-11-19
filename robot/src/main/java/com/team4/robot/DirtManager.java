@@ -3,6 +3,8 @@ package com.team4.robot;
 import com.team4.commons.*;
 import com.team4.sensor.*;
 
+import static com.team4.commons.WorkingMode.DEPLOYED;
+
 class DirtManager implements VacuumCleaner {
 
 	private final int MAX_DIRT = Integer.parseInt(ConfigManager.getConfiguration("dirtCapacity"));
@@ -22,7 +24,7 @@ class DirtManager implements VacuumCleaner {
 		} else {
 			setDirtLevel(newDirtLevel);
 			RobotCleanSweep.getInstance().getPowerManager().updateBatteryLevel(cost);
-			SensorSimulator.getInstance().setTileDone(RobotCleanSweep.getInstance().getLocation());
+			SensorSimulator.getInstance().removeDirtFromLocation(RobotCleanSweep.getInstance().getLocation());
 		}
 	}
 
@@ -39,18 +41,28 @@ class DirtManager implements VacuumCleaner {
 	}
 
 	private void waitUntilTankEmpty() {
-		//press any key to continue is better.
-		System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
-		Utilities.doLoopedTimeDelay("...DIRT TANK FULL... (awaiting human intervention)...", 3, RobotCleanSweep.getInstance().getZeroTime());
+    	String dirtLevel = Integer.toString(RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel());
+    	String batteryLevel = Double.toString(RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel());
+    	for(int i =0; i<= 4; i++) {
+    		LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "DIRT_FULL",batteryLevel , dirtLevel);
+    	}
+		if(RobotCleanSweep.workingMode == DEPLOYED) {
+			Utilities.doLoopedTimeDelay("Dirt tank full", 1000L, RobotCleanSweep.getInstance().getZeroTime());
+		}
 		emptyTank();
 	}
 
 	private void emptyTank() {
 		setDirtLevel(0);
 		FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
-		clean(floorDao.floorType.getCost());
-		LogManager.print("...DIRT TANK EMPTY... (human action completed)...", RobotCleanSweep.getInstance().getZeroTime());
-		System.out.println("----------  ---------  --------  ---------  ---------  ----------  --------------  -------------  ----------  ----------------------------\t------------------------");
+		
+    	String dirtLevel = Integer.toString(RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel());
+    	String batteryLevel = Double.toString(RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel());
+    	clean(floorDao.floorType.getCost());
+    	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "DIRT_EMPTY",batteryLevel , dirtLevel);
+		if(RobotCleanSweep.workingMode == DEPLOYED) {
+			LogManager.print("Dirt tank emptied", RobotCleanSweep.getInstance().getZeroTime());
+		}
 		RobotCleanSweep.getInstance().setState(State.WORKING);
 	}
 }

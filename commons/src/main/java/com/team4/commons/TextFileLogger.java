@@ -12,8 +12,8 @@ public class TextFileLogger {
 
     public TextFileLogger(String logFile) {
         try {
-            String unityLogHome = ConfigManager.getConfiguration("unityLogHome");
-            File logsDirectory = new File(System.getenv(unityLogHome));
+            String logsHome = ConfigManager.getConfiguration("logsHome");
+            File logsDirectory = new File(System.getenv(logsHome));
             setLogFile(logsDirectory.getAbsolutePath() + File.separator + logFile);
             File file = new File(getLogFile());
             if(!file.exists()) {

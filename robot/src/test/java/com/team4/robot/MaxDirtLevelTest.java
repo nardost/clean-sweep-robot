@@ -1,6 +1,7 @@
 package com.team4.robot;
 
 import com.team4.commons.ConfigManager;
+import com.team4.sensor.SensorSimulator;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -23,7 +24,9 @@ public class MaxDirtLevelTest {
         robot.setState(WORKING);
         int dirtCapacity = Integer.parseInt(ConfigManager.getConfiguration("dirtCapacity"));
         for(int i = 0; i < dirtCapacity; i++) {
-            this.dirtManager.clean(3.0);
+            if(!SensorSimulator.getInstance().getLocationInfo(robot.getLocation()).isClean) {
+                this.dirtManager.clean(3.0);
+            }
         }
         assertEquals(WORKING, robot.getState());
     }

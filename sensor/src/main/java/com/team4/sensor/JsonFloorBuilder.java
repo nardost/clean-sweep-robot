@@ -16,11 +16,13 @@ class JsonFloorBuilder implements FloorBuilder {
 
     private FloorPlan floorPlan;
     private HashMap<Location, Tile> tiles;
+    private DirtGenerator dirtGenerator;
 
     JsonFloorBuilder(HashMap<Location, Tile> tiles) {
         if(tiles == null) {
             throw new RobotException("Null HashMap not allowed for tiles.");
         }
+        setDirtGenerator(DirtGeneratorFactory.createDirtGenerator());
         setTiles(tiles);
         setFloorPlan(deserialize());
     }
@@ -34,6 +36,17 @@ class JsonFloorBuilder implements FloorBuilder {
             throw new RobotException("Null tiles encountered.");
         }
         this.tiles = tiles;
+    }
+
+    DirtGenerator getDirtGenerator() {
+        return dirtGenerator;
+    }
+
+    void setDirtGenerator(DirtGenerator dirtGenerator) {
+        if(dirtGenerator == null) {
+            throw new RobotException("Null dirt generator encountered.");
+        }
+        this.dirtGenerator = dirtGenerator;
     }
 
     private FloorPlan getFloorPlan() {
@@ -76,19 +89,18 @@ class JsonFloorBuilder implements FloorBuilder {
         for(FloorPlan.Area area : getFloorPlan().getAreas()) {
             setFloorType(area);
         }
-        Location location = LocationFactory.createLocation(0,9);
-        Tile tile = getTiles().get(location);
     }
 
     private void buildTiles(int w, int l) {
         for(int i = 0; i < w; i++) {
             for(int j = 0; j < l; j++) {
-                Tile tile = null;
-                Location location = null;
+                Tile tile;
+                Location location;
                 location = LocationFactory.createLocation(i, j);
                 tile = TileFactory.createTile(location);
                 tile.setFloorType(BARE);
                 tile.setClean(false);
+                tile.setDirtUnits(getDirtGenerator().generateDirt());
                 tile.setWestOpen(true);
                 tile.setNorthOpen(true);
                 tile.setSouthOpen(true);

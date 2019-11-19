@@ -2,21 +2,25 @@
 <configuration>
     <!-- Robot Configuration Parameters -->
     <property name="initLocation" value="(0, 9)" />
-    <property name="maxBatteryLevel" value="250" ></property>
+    <property name="maxBatteryLevel" value="250" />
     <property name="dirtCapacity" value="50" />
     <property name="chargingStationDetectionRadius" value="2" />
     <property name="navigator" value="omega" />
-    <property name="scheduledWait" value="2" />
-    <property name="timeInTile" value="1" />
-    <property name="timeToCharge" value="1" />
+    <property name="scheduledWait" value="5000" />
+    <property name="timeInTile" value="250" />
+    <property name="timeToCharge" value="1000" />
 
     <!-- Sensor Simulator Configuration Parameters -->
     <property name="floorBuilderType" value="json" />
-    <property name="floorPlan" value="floor-plan-1.json" />
+    <property name="floorPlan" value="FP2.json" />
+    <property name="dirtGeneratorType" value="gaussian" />
+
+    <!-- floorWidth and floorLength used only in InMemoryFloorBuilder -->
     <property name="floorWidth" value="10" />
     <property name="floorLength" value="10" />
 
-    <!-- Unity -->
-    <property name="unityLogHome" value="UNITY_LOGS_HOME" />
-    <property name="unityLogFile" value="unity-log-file.txt" />
+    <!-- Log files -->
+    <property name="logsHome" value="LOGS_HOME" />
+    <property name="summaryLogFile" value="summary.log" />
+    <property name="unityLogFile" value="unity.log" />
 </configuration>

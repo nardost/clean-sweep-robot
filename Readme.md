@@ -6,6 +6,35 @@
 2. Nardos Tessema
 3. Ruiming Chen
 4. Vinit Patel
+## Clean Sweep Robot Configuration
+Configuration of Clean Sweep Robot is externalized to an xml file. The configuration options are listed below.
+```
+    <property name="initLocation" value="(0, 9)" />
+    <property name="maxBatteryLevel" value="250" />
+    <property name="dirtCapacity" value="50" />
+    <property name="chargingStationDetectionRadius" value="2" />
+    <property name="navigator" value="omega" />
+    <property name="scheduledWait" value="2" />
+    <property name="timeInTile" value="0" />
+    <property name="timeToCharge" value="0" />
+
+    <!-- Sensor Simulator Configuration Parameters -->
+    <property name="floorBuilderType" value="json" />
+    <property name="floorPlan" value="floor-plan-1.json" />
+    <property name="floorWidth" value="10" />
+    <property name="floorLength" value="10" />
+    <property name="dirtGeneratorType" value="gaussian" />
+
+    <!-- Unity -->
+    <property name="unityLogHome" value="UNITY_LOGS_HOME" />
+    <property name="unityLogFile" value="unity-log-file.txt" />
+```
+1. ```navigator``` - The navigator implementation deployed (Strategy pattern used)
+    - omega (Current implementation. Do not use other implementations.)
+    - alpha (Deprecated. Basic navigator used in earlier version of software)
+2. ```scheduledWait``` - The time in seconds the robot waits for scheduled cleaning time after it gets turned on.
+3. ```timeInTile``` - The total amount of time in seconds the robot stays in a tile while working and traveling.
+4. ```timeToCharge``` - The amount of time in seconds needed to recharge the battery from battery level 0 to full.
 ## Clean Sweep Robotic Vacuum Cleaner & Sensor Simulator
 Your company has assembled a small team of developers and business people to work on the
 implementation of the Clean Sweep robotic vacuum cleaner control system.

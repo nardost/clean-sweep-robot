@@ -1,17 +1,17 @@
 package com.team4.robot;
 
-import com.team4.commons.ConfigManager;
-import com.team4.commons.LocationFactory;
-import com.team4.commons.LogManager;
-import com.team4.commons.RobotException;
-import com.team4.commons.Utilities;
+import com.team4.commons.*;
+import com.team4.sensor.FloorDao;
+import com.team4.sensor.SensorSimulator;
 
 import static com.team4.commons.State.LOW_BATTERY;
+import static com.team4.commons.State.CHARGING;
+import static com.team4.commons.State.OFF;
+import static com.team4.commons.WorkingMode.DEPLOYED;
 
 class PowerUnit implements PowerManager {
 
     private double batteryLevel;
-
 
     PowerUnit() {
         int maxBatteryLevel = Integer.parseInt(ConfigManager.getConfiguration("maxBatteryLevel"));
@@ -20,8 +20,12 @@ class PowerUnit implements PowerManager {
 
     @Override
     public void recharge() {
-        int timeToCharge = Integer.parseInt(ConfigManager.getConfiguration("timeToCharge"));
-        Utilities.doLoopedTimeDelay("...CHARGING...", timeToCharge, RobotCleanSweep.getInstance().getZeroTime());
+        RobotCleanSweep.getInstance().setState(CHARGING);
+        long timeToCharge = Long.parseLong(ConfigManager.getConfiguration("timeToCharge"));
+        if(RobotCleanSweep.workingMode == DEPLOYED) {
+            LogManager.print("Charging", RobotCleanSweep.getInstance().getZeroTime());
+            Utilities.doTimeDelay(timeToCharge);
+        }
         int maxBatteryLevel = Integer.parseInt(ConfigManager.getConfiguration("maxBatteryLevel"));
         setBatteryLevel(maxBatteryLevel);
     }
@@ -38,27 +42,60 @@ class PowerUnit implements PowerManager {
         }
         setBatteryLevel(getBatteryLevel() - units);
 
-        //battery needed to reach Charging station
-        AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),LocationFactory.createLocation(0, 9) ,2);
-        //searching path from current location to charging station
-        
         double batteryNeededToReachToKnownChargingStation;
-
-        //an allowance of 3.0 just in case robot needs to do one more move.
-        aStar.search();
-        batteryNeededToReachToKnownChargingStation  = aStar.getPathNode().getMaxFloorCost() + 3.0;
-
+        if(RobotCleanSweep.getInstance().getChargingStations().size() > 0) {
+        	 batteryNeededToReachToKnownChargingStation = 200;
+        } else {
+        	batteryNeededToReachToKnownChargingStation = 0;
+        }
+        
         if(getBatteryLevel() <= batteryNeededToReachToKnownChargingStation) {
-        	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), RobotCleanSweep.getNumberOfRuns());
-        	LogManager.print("...GOING BACK TO CHARGING STATION. NOW AT " + RobotCleanSweep.getInstance().getLocation(), RobotCleanSweep.getInstance().getZeroTime());
-            RobotCleanSweep.getInstance().setState(LOW_BATTERY);
+            for(Location chargingStation : RobotCleanSweep.getInstance().getChargingStations()) {
+            	AStar aStar = new AStar(RobotCleanSweep.getInstance().getGraph(),RobotCleanSweep.getInstance().getLocation(),chargingStation ,2);
+            	if(aStar.search()!=null) {
+                	double temp = aStar.getPathNode().getMaxFloorCost() + 7.0;
+                	
+                	if(temp <= batteryNeededToReachToKnownChargingStation) {
+                		batteryNeededToReachToKnownChargingStation = temp;
+                		RobotCleanSweep.getInstance().setCurrentChargingStation(chargingStation);
+                	}
+            	} else {
+            		if(batteryNeededToReachToKnownChargingStation == 200) {
+            			batteryNeededToReachToKnownChargingStation = 0;
+            		}
+            	}
+            }
+        }
+        
+        if(getBatteryLevel() <= batteryNeededToReachToKnownChargingStation) {
+        	String dirtLevel = Integer.toString(RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel());
+        	LogManager.logForUnity(RobotCleanSweep.getInstance().getLocation(), "GO_CHARGE", Double.toString(getBatteryLevel()), dirtLevel);
+            if(RobotCleanSweep.getInstance().getState() != LOW_BATTERY) {
+                RobotCleanSweep.getInstance().setState(LOW_BATTERY);
+            }
+            FloorDao floorDao = SensorSimulator.getInstance().getLocationInfo(RobotCleanSweep.getInstance().getLocation());
+            if(RobotCleanSweep.workingMode == DEPLOYED) {
+                Long timeInTile = Long.parseLong(ConfigManager.getConfiguration("timeInTile"));
+                Utilities.doTimeDelay(timeInTile);
+                RobotCleanSweep.getInstance().logTileInfo(
+                        floorDao,
+                        floorDao,
+                        RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel(),
+                        RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel(),
+                        RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel(),
+                        null);
+            }
         }
     }
 
     private void setBatteryLevel(double batteryLevel) {
         final int maxBatteryLevel = Integer.parseInt(ConfigManager.getConfiguration("maxBatteryLevel"));
-        if(batteryLevel < 0 || batteryLevel > maxBatteryLevel) {
+        if( batteryLevel > maxBatteryLevel) {
             throw new RobotException("Invalid battery level.");
+        }
+        if(batteryLevel < 0) {
+        	RobotCleanSweep.getInstance().setState(OFF);
+        	return;
         }
         this.batteryLevel = batteryLevel;
     }
