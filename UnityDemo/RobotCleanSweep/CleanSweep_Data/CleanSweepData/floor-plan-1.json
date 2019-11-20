@@ -1,0 +1,47 @@
+{
+  "southEastCornerCoordinates": {"x":  10, "y":  10},
+  "obstacles" : [
+    { "from" : { "x" : 0, "y" : 0 }, "to" : { "x" : 10, "y" : 0 }, "obstacleType" : "WALL" },
+    { "from" : { "x" : 0, "y" : 0 }, "to" : { "x" : 0, "y" : 10 }, "obstacleType" : "WALL" },
+    { "from" : { "x" : 0, "y" : 10 }, "to" : { "x" : 10, "y" : 10 }, "obstacleType" : "WALL" },
+    { "from" : { "x" : 10, "y" : 0 }, "to" : { "x" : 10, "y" : 10 }, "obstacleType" : "WALL" },
+    { "from" : { "x" : 4, "y" : 0 }, "to" : { "x" : 4, "y" : 10 }, "obstacleType" : "WALL" },
+    { "from" : { "x" : 2, "y" : 3 }, "to" : { "x" : 2, "y" : 4 }, "obstacleType" : "WALL" },
+    { "from" : { "x" : 6, "y" : 1 }, "to" : { "x" : 6, "y" : 10 }, "obstacleType" : "WALL" },
+    { "from" : { "x" : 8, "y" : 0 }, "to" : { "x" : 8, "y" : 3 }, "obstacleType" : "WALL" },
+    { "from" : { "x" : 4, "y" : 1 }, "to" : { "x" : 8, "y" : 1 }, "obstacleType" : "WALL" },
+    { "from" : { "x" : 4, "y" : 2 }, "to" : { "x" : 6, "y" : 2 }, "obstacleType" : "WALL" },
+    { "from" : { "x" : 0, "y" : 3 }, "to" : { "x" : 4, "y" : 3 }, "obstacleType" : "WALL" },
+    { "from" : { "x" : 8, "y" : 3 }, "to" : { "x" : 10, "y" : 3 }, "obstacleType" : "WALL" },
+    { "from" : { "x" : 0, "y" : 4 }, "to" : { "x" : 4, "y" : 4 }, "obstacleType" : "WALL" },
+    { "from" : { "x" : 0, "y" : 5 }, "to" : { "x" : 4, "y" : 5 }, "obstacleType" : "WALL" },
+    { "from" : { "x" : 4, "y" : 10 }, "to" : { "x" : 5, "y" : 10 }, "obstacleType" : "STAIRS" }
+  ],
+  "passages" : [
+    { "from" : { "x" : 6, "y" : 0 }, "to" : { "x" : 6, "y" : 1 } },
+    { "from" : { "x" : 7, "y" : 0 }, "to" : { "x" : 7, "y" : 1 } },
+    { "from" : { "x" : 7, "y" : 1 }, "to" : { "x" : 8, "y" : 1 } },
+    { "from" : { "x" : 4, "y" : 1 }, "to" : { "x" : 4, "y" : 2 } },
+    { "from" : { "x" : 5, "y" : 1 }, "to" : { "x" : 5, "y" : 2 } },
+    { "from" : { "x" : 5, "y" : 2 }, "to" : { "x" : 6, "y" : 2 } },
+    { "from" : { "x" : 3, "y" : 2 }, "to" : { "x" : 4, "y" : 2 } },
+    { "from" : { "x" : 0, "y" : 2 }, "to" : { "x" : 0, "y" : 3 } },
+    { "from" : { "x" : 1, "y" : 2 }, "to" : { "x" : 1, "y" : 3 } },
+    { "from" : { "x" : 3, "y" : 3 }, "to" : { "x" : 4, "y" : 3 } },
+    { "from" : { "x" : 1, "y" : 4 }, "to" : { "x" : 1, "y" : 5 } },
+    { "from" : { "x" : 2, "y" : 4 }, "to" : { "x" : 2, "y" : 5 } },
+    { "from" : { "x" : 3, "y" : 6 }, "to" : { "x" : 4, "y" : 6 } }
+  ],
+  "chargingStations" : [
+    { "x" : 0, "y" : 9 },
+    { "x" : 9, "y" : 0 },
+    { "x" : 0, "y" : 0 },
+    { "x" : 9, "y" : 9 }
+
+  ],
+  "areas" : [
+    { "topLeft" : { "x" : 0, "y" : 0 }, "bottomRight" : { "x" : 3, "y" : 2 }, "floorType" : "LOW_PILE" },
+    { "topLeft" : { "x" : 0, "y" : 5 }, "bottomRight" : { "x" : 3, "y" : 9 }, "floorType" : "LOW_PILE" },
+    { "topLeft" : { "x" : 7, "y" : 4 }, "bottomRight" : { "x" : 8, "y" : 8 }, "floorType" : "HIGH_PILE" }
+  ]
+}
