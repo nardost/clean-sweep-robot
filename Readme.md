@@ -6,6 +6,12 @@
 2. Nardos Tessema
 3. Ruiming Chen
 4. Vinit Patel
+
+## Demo of Smart Robot Vacuum
+
+![](SmartRobotVacuum.gif)
+
+
 ## Clean Sweep Robot Configuration
 Configuration of Clean Sweep Robot is externalized to an xml file. The configuration options are listed below.
 ```
