@@ -434,7 +434,7 @@ public class RobotCleanSweep implements Robot {
                     floorDao,
                     floorDao,
                     getPowerManager().getBatteryLevel(),
-                    getVacuumCleaner().getDirtLevel(),
+                    getPowerManager().getBatteryLevel(),
                     getVacuumCleaner().getDirtLevel(),
                     null);
         }

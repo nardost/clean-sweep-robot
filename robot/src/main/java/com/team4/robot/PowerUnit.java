@@ -41,7 +41,7 @@ class PowerUnit implements PowerManager {
             throw new RobotException("Invalid power usage level.");
         }
         setBatteryLevel(getBatteryLevel() - units);
-
+        double initialBatteryLevel = getBatteryLevel();
         double batteryNeededToReachToKnownChargingStation;
         if(RobotCleanSweep.getInstance().getChargingStations().size() > 0) {
         	 batteryNeededToReachToKnownChargingStation = 200;
@@ -80,8 +80,8 @@ class PowerUnit implements PowerManager {
                 RobotCleanSweep.getInstance().logTileInfo(
                         floorDao,
                         floorDao,
+                        initialBatteryLevel,
                         RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel(),
-                        RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel(),
                         RobotCleanSweep.getInstance().getVacuumCleaner().getDirtLevel(),
                         null);
             }
