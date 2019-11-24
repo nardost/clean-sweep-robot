@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -27,7 +26,7 @@ public class GetLocationInfoNeighborsWithinRadiusTest {
 
     @Parameters
     public static Collection<Object[]> data() {
-        return (ArrayList<Object[]>) Stream.of(new Object[][] {
+        return Stream.of(new Object[][] {
                 {
                     LocationFactory.createLocation(0, 0),
                     new Location [] {

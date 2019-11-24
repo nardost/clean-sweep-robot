@@ -1,20 +1,18 @@
 package com.team4.sensor;
 
-import com.team4.commons.Location;
 import com.team4.commons.LocationFactory;
-import com.team4.commons.RobotException;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 @RunWith(Parameterized.class)
 public class TileFactoryTest {
@@ -29,7 +27,7 @@ public class TileFactoryTest {
 
     @Parameters(name = "{index}")
     public static Collection<Object[]> data() {
-        return (ArrayList<Object[]>) Stream.of(new Object[][] {
+        return Stream.of(new Object[][] {
                 { TileFactory.createTile(LocationFactory.createLocation(0, 0)), TileFactory.createTile(LocationFactory.createLocation(0, 0)) },
                 { TileFactory.createTile(LocationFactory.createLocation(10, 0)), TileFactory.createTile(LocationFactory.createLocation(10, 0)) },
                 { TileFactory.createTile(LocationFactory.createLocation(0, 10)), TileFactory.createTile(LocationFactory.createLocation(0, 10)) },
@@ -39,6 +37,6 @@ public class TileFactoryTest {
 
     @Test
     public void tile_factory_creates_only_one_tile_object_per_unique_location() {
-        assertEquals(first, second);
+        assertThat(first, is(equalTo(second)));
     }
 }

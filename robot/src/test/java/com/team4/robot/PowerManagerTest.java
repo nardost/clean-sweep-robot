@@ -7,6 +7,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 public class PowerManagerTest {
@@ -17,9 +20,10 @@ public class PowerManagerTest {
     }
     @Test
     public void power_manager_charges_robot_to_100_percent() {
-        int maxBatteryLevel = Integer.parseInt(ConfigManager.getConfiguration("maxBatteryLevel"));
+        double maxBatteryLevel = Double.parseDouble(ConfigManager.getConfiguration("maxBatteryLevel"));
         RobotCleanSweep.getInstance().getPowerManager().recharge();
-        assertEquals(maxBatteryLevel, RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel(), .5);
+        //assertEquals(maxBatteryLevel, RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel(), .5);
+        assertThat(maxBatteryLevel, is(equalTo(RobotCleanSweep.getInstance().getPowerManager().getBatteryLevel())));
     }
     @Test(expected = RobotException.class)
     public void power_manager_throws_exception_on_invalid_power_usage_level() {
@@ -31,7 +35,7 @@ public class PowerManagerTest {
             RobotCleanSweep.getInstance().getPowerManager().updateBatteryLevel(1);
         }
         RobotCleanSweep.getInstance().getPowerManager().updateBatteryLevel(1);
-        assertEquals(State.LOW_BATTERY, RobotCleanSweep.getInstance().getState());
+        assertThat(State.LOW_BATTERY, is(equalTo(RobotCleanSweep.getInstance().getState())));
     }
     @After
     public void resetRobt() {

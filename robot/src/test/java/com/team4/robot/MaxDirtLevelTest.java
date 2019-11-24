@@ -3,11 +3,12 @@ package com.team4.robot;
 import com.team4.commons.ConfigManager;
 import com.team4.sensor.SensorSimulator;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.team4.commons.State.WORKING;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 public class MaxDirtLevelTest {
 
@@ -28,6 +29,6 @@ public class MaxDirtLevelTest {
                 this.dirtManager.clean(3.0);
             }
         }
-        assertEquals(WORKING, robot.getState());
+        assertThat(WORKING, is(equalTo(robot.getState())));
     }
 }
